@@ -33,6 +33,10 @@
             <artifactId>navi-boot-starter-mybatis</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.navistack.boot</groupId>
+            <artifactId>navi-boot-starter-captcha</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
         </dependency>

@@ -31,6 +31,8 @@ public class SecurityConfig {
                         .anonymous()
                     .antMatchers("/doc.html", "/webjars/**", "/swagger-resources", "/v3/api-docs")
                         .anonymous()
+                    .antMatchers("/sys/simple-captcha/**")
+                        .anonymous()
                     .anyRequest()
                         .authenticated()
                 .and()
