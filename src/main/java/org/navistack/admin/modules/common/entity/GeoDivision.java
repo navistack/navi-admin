@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.navistack.admin.support.entity.AuditingEntity;
+import org.navistack.framework.crudsupport.entity.AuditingEntity;
 
 /**
  * @see <a href="https://en.wikipedia.org/wiki/ISO_3166-2">ISO3166-2</a>

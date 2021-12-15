@@ -1,8 +1,8 @@
 package org.navistack.admin.modules.mgmt.service.dto;
 
 import lombok.Data;
-import org.navistack.admin.support.validation.groups.Create;
-import org.navistack.admin.support.validation.groups.Modify;
+import org.navistack.framework.crudsupport.validation.groups.Create;
+import org.navistack.framework.crudsupport.validation.groups.Modify;
 
 import javax.validation.constraints.*;
 import java.util.List;

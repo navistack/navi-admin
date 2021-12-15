@@ -3,13 +3,12 @@ package org.navistack.admin.modules.mgmt.web.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.navistack.admin.modules.common.entity.Role;
 import org.navistack.admin.modules.mgmt.service.RoleService;
 import org.navistack.admin.modules.mgmt.service.dto.RoleDto;
 import org.navistack.admin.modules.mgmt.service.dto.RoleQueryParams;
 import org.navistack.admin.modules.mgmt.service.vm.RoleDetailVm;
-import org.navistack.admin.support.validation.groups.Create;
-import org.navistack.admin.support.validation.groups.Modify;
+import org.navistack.framework.crudsupport.validation.groups.Create;
+import org.navistack.framework.crudsupport.validation.groups.Modify;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
 import org.navistack.framework.web.rest.RestResult;
@@ -36,7 +35,7 @@ public class RoleController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Role Management")
-    public RestResult<Page<Role>, ?> paginate(RoleQueryParams queryParams, PageRequest pageRequest) {
+    public RestResult<Page<RoleDto>, ?> paginate(RoleQueryParams queryParams, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(queryParams, pageRequest));
     }
 

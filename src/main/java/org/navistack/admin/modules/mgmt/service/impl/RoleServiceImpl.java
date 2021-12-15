@@ -12,11 +12,9 @@ import org.navistack.admin.modules.mgmt.service.RoleService;
 import org.navistack.admin.modules.mgmt.service.dto.RoleDto;
 import org.navistack.admin.modules.mgmt.service.dto.RoleQueryParams;
 import org.navistack.admin.modules.mgmt.service.vm.RoleDetailVm;
-import org.navistack.admin.support.problems.EntityDuplicatedProblem;
-import org.navistack.admin.utils.MyBatisPlusUtils;
 import org.navistack.framework.core.utils.StaticModelMapper;
-import org.navistack.framework.data.Page;
-import org.navistack.framework.data.Pageable;
+import org.navistack.framework.crudsupport.AbstractCrudService;
+import org.navistack.framework.crudsupport.problems.DuplicatedEntityProblem;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,39 +24,33 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class RoleServiceImpl implements RoleService {
-    private final RoleDao roleDao;
+public class RoleServiceImpl
+        extends AbstractCrudService<Long, Role, RoleDto, RoleQueryParams, RoleDao>
+        implements RoleService {
     private final PrivilegeDao privilegeDao;
     private final RolePrivilegeDao rolePrivilegeDao;
 
     public RoleServiceImpl(RoleDao roleDao, PrivilegeDao privilegeDao, RolePrivilegeDao rolePrivilegeDao) {
-        this.roleDao = roleDao;
+        super(roleDao);
         this.privilegeDao = privilegeDao;
         this.rolePrivilegeDao = rolePrivilegeDao;
     }
 
     @Override
-    public Page<Role> paginate(RoleQueryParams queryParams, Pageable pageable) {
+    protected Wrapper<Role> buildWrapper(RoleQueryParams queryParams) {
         Long id = queryParams.getId();
         String code = queryParams.getCode();
         String name = queryParams.getName();
 
-        Wrapper<Role> wrapper = Wrappers.<Role>lambdaQuery()
+        return Wrappers.<Role>lambdaQuery()
                 .eq(id != null, Role::getId, id)
                 .eq(code != null, Role::getCode, code)
                 .like(name != null, Role::getName, name);
-
-        return MyBatisPlusUtils.PageUtils.toPage(
-                roleDao.selectPage(
-                        MyBatisPlusUtils.PageUtils.fromPageable(pageable),
-                        wrapper
-                )
-        );
     }
 
     @Override
     public RoleDetailVm queryDetailById(Long roleId) {
-        Role role = roleDao.selectById(roleId);
+        Role role = dao.selectById(roleId);
 
         RoleDetailVm vm = StaticModelMapper.map(role, RoleDetailVm.class);
 
@@ -80,43 +72,37 @@ public class RoleServiceImpl implements RoleService {
     public void create(RoleDto dto) {
         dto.setId(null);
 
-        Long cnt = roleDao.selectCount(
+        Long cnt = dao.selectCount(
                 Wrappers.<Role>lambdaQuery()
                         .eq(Role::getCode, dto.getCode())
         );
 
         if (cnt > 0) {
-            throw new EntityDuplicatedProblem("Role existed");
+            throw new DuplicatedEntityProblem("Role existed");
         }
 
         Role role = StaticModelMapper.map(dto, Role.class);
 
-        roleDao.insert(role);
+        dao.insert(role);
 
         replacePrivilegesOf(role.getId(), dto.getPrivilegeIds());
+
+        StaticModelMapper.map(role, dto);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void modify(RoleDto dto) {
-        Long cnt = roleDao.selectCount(
+    protected void preModify(RoleDto dto) {
+        super.preModify(dto);
+
+        Long cnt = dao.selectCount(
                 Wrappers.<Role>lambdaQuery()
                         .eq(Role::getCode, dto.getCode())
                         .ne(Role::getId, dto.getId())
         );
 
         if (cnt > 0) {
-            throw new EntityDuplicatedProblem("Role existed");
+            throw new DuplicatedEntityProblem("Role existed");
         }
-
-        Role role = StaticModelMapper.map(dto, Role.class);
-
-        roleDao.updateById(role);
-    }
-
-    @Override
-    public void remove(Long id) {
-        roleDao.deleteById(id);
     }
 
     protected void replacePrivilegesOf(Long roleId, List<Long> privilegeIds) {

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.navistack.admin.support.entity.AuditingEntity;
+import org.navistack.framework.crudsupport.entity.AuditingEntity;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

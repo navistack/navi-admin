@@ -3,13 +3,12 @@ package org.navistack.admin.modules.mgmt.web.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.navistack.admin.modules.common.entity.User;
 import org.navistack.admin.modules.mgmt.service.UserService;
 import org.navistack.admin.modules.mgmt.service.dto.UserDto;
 import org.navistack.admin.modules.mgmt.service.dto.UserQueryParams;
 import org.navistack.admin.modules.mgmt.service.vm.UserDetailVm;
-import org.navistack.admin.support.validation.groups.Create;
-import org.navistack.admin.support.validation.groups.Modify;
+import org.navistack.framework.crudsupport.validation.groups.Create;
+import org.navistack.framework.crudsupport.validation.groups.Modify;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
 import org.navistack.framework.web.rest.RestResult;
@@ -36,7 +35,7 @@ public class UserController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "User Management")
-    public RestResult<Page<User>, ?> paginate(UserQueryParams queryParams, PageRequest pageRequest) {
+    public RestResult<Page<UserDto>, ?> paginate(UserQueryParams queryParams, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(queryParams, pageRequest));
     }
 

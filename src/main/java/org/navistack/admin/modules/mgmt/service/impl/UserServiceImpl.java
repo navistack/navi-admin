@@ -13,11 +13,9 @@ import org.navistack.admin.modules.mgmt.service.UserService;
 import org.navistack.admin.modules.mgmt.service.dto.UserDto;
 import org.navistack.admin.modules.mgmt.service.dto.UserQueryParams;
 import org.navistack.admin.modules.mgmt.service.vm.UserDetailVm;
-import org.navistack.admin.support.problems.EntityDuplicatedProblem;
-import org.navistack.admin.utils.MyBatisPlusUtils;
 import org.navistack.framework.core.utils.StaticModelMapper;
-import org.navistack.framework.data.Page;
-import org.navistack.framework.data.Pageable;
+import org.navistack.framework.crudsupport.AbstractCrudService;
+import org.navistack.framework.crudsupport.problems.DuplicatedEntityProblem;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,41 +25,35 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService {
-    private final UserDao userDao;
+public class UserServiceImpl
+        extends AbstractCrudService<Long, User, UserDto, UserQueryParams, UserDao>
+        implements UserService {
     private final RoleDao roleDao;
     private final UserRoleDao userRoleDao;
 
     public UserServiceImpl(UserDao userDao, RoleDao roleDao, UserRoleDao userRoleDao) {
-        this.userDao = userDao;
+        super(userDao);
         this.roleDao = roleDao;
         this.userRoleDao = userRoleDao;
     }
 
     @Override
-    public Page<User> paginate(UserQueryParams queryParams, Pageable pageable) {
+    protected Wrapper<User> buildWrapper(UserQueryParams queryParams) {
         String loginName = queryParams.getLoginName();
         String mobileNumber = queryParams.getMobileNumber();
         String emailAddress = queryParams.getEmailAddress();
         UserStatus status = queryParams.getStatus();
 
-        Wrapper<User> wrapper = Wrappers.<User>lambdaQuery()
+        return Wrappers.<User>lambdaQuery()
                 .eq(loginName != null, User::getLoginName, loginName)
                 .eq(mobileNumber != null, User::getMobileNumber, mobileNumber)
                 .eq(emailAddress != null, User::getEmailAddress, emailAddress)
                 .eq(status != null, User::getStatus, status);
-
-        return MyBatisPlusUtils.PageUtils.toPage(
-                userDao.selectPage(
-                        MyBatisPlusUtils.PageUtils.fromPageable(pageable),
-                        wrapper
-                )
-        );
     }
 
     @Override
     public UserDetailVm queryDetailById(Long userId) {
-        User user = userDao.selectById(userId);
+        User user = dao.selectById(userId);
 
         UserDetailVm vm = StaticModelMapper.map(user, UserDetailVm.class);
 
@@ -83,7 +75,7 @@ public class UserServiceImpl implements UserService {
     public void create(UserDto dto) {
         dto.setId(null);
 
-        Long cnt = userDao.selectCount(
+        Long cnt = dao.selectCount(
                 Wrappers.<User>lambdaQuery()
                         .eq(User::getEmailAddress, dto.getEmailAddress())
                         .or()
@@ -96,19 +88,21 @@ public class UserServiceImpl implements UserService {
         );
 
         if (cnt > 0) {
-            throw new EntityDuplicatedProblem("User existed");
+            throw new DuplicatedEntityProblem("User existed");
         }
 
         User user = StaticModelMapper.map(dto, User.class);
-        userDao.insert(user);
+        dao.insert(user);
 
         replaceRolesOf(user.getId(), dto.getRoleIds());
+
+        StaticModelMapper.map(user, dto);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void modify(UserDto dto) {
-        Long cnt = userDao.selectCount(
+        Long cnt = dao.selectCount(
                 Wrappers.<User>lambdaQuery()
                         .and(w -> w
                                 .eq(User::getEmailAddress, dto.getEmailAddress())
@@ -124,18 +118,13 @@ public class UserServiceImpl implements UserService {
         );
 
         if (cnt > 0) {
-            throw new EntityDuplicatedProblem("User existed");
+            throw new DuplicatedEntityProblem("User existed");
         }
 
         User user = StaticModelMapper.map(dto, User.class);
 
-        userDao.updateById(user);
+        dao.updateById(user);
         replaceRolesOf(user.getId(), dto.getRoleIds());
-    }
-
-    @Override
-    public void remove(Long id) {
-        userDao.deleteById(id);
     }
 
     protected void replaceRolesOf(Long userId, List<Long> roleIds) {

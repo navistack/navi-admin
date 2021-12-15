@@ -3,12 +3,11 @@ package org.navistack.admin.modules.mgmt.web.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.navistack.admin.modules.common.entity.DictItem;
 import org.navistack.admin.modules.mgmt.service.DictItemService;
 import org.navistack.admin.modules.mgmt.service.dto.DictItemDto;
 import org.navistack.admin.modules.mgmt.service.dto.DictItemQueryParams;
-import org.navistack.admin.support.validation.groups.Create;
-import org.navistack.admin.support.validation.groups.Modify;
+import org.navistack.framework.crudsupport.validation.groups.Create;
+import org.navistack.framework.crudsupport.validation.groups.Modify;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
 import org.navistack.framework.web.rest.RestResult;
@@ -35,7 +34,7 @@ public class DictItemController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Dictionary Item Management")
-    public RestResult<Page<DictItem>, ?> paginate(DictItemQueryParams params, PageRequest pageRequest) {
+    public RestResult<Page<DictItemDto>, ?> paginate(DictItemQueryParams params, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(params, pageRequest));
     }
 
