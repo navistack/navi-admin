@@ -3,7 +3,7 @@ package org.navistack.admin.modules.mgmt.service.dto;
 import lombok.Data;
 
 @Data
-public class GeoDivisionQueryParams {
+public class RegionQueryParams {
     private Long id;
 
     private String code;

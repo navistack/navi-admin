@@ -7,9 +7,9 @@ import org.navistack.framework.crudsupport.validation.groups.Modify;
 import javax.validation.constraints.*;
 
 @Data
-public class GeoDivisionDto {
+public class RegionDto {
     protected static final String CODE_PATTERN = "^[A-Za-z0-9-]+$";
-    protected static final String CODE_VALIDATION_MESSAGE = "{Pattern.GeoDivision.code}";
+    protected static final String CODE_VALIDATION_MESSAGE = "{Pattern.Region.code}";
 
     @Null(groups = Create.class)
     @NotNull(groups = Modify.class)

@@ -11,7 +11,7 @@ import org.navistack.framework.crudsupport.entity.AuditingEntity;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GeoDivision extends AuditingEntity<Long> {
+public class Region extends AuditingEntity<Long> {
     @TableId(type = IdType.AUTO)
     private Long id;
 

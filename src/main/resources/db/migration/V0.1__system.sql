@@ -43,10 +43,10 @@ CREATE TABLE `dict_item`
 );
 
 # ########################################
-# Geo Regions
+# Regions
 # ########################################
 
-CREATE TABLE `geo_division`
+CREATE TABLE `region`
 (
     `id`          BIGINT      NOT NULL PRIMARY KEY AUTO_INCREMENT,
 
