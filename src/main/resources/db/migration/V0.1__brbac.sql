@@ -66,6 +66,28 @@ CREATE TABLE `role_privilege`
 );
 
 # ########################################
+# Organization
+# ########################################
+
+CREATE TABLE `org`
+(
+    `id`          BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
+
+    `code`        CHAR(48) NOT NULL,
+    `name`        VARCHAR(80),
+    `super_id`    BIGINT,
+
+    `description` VARCHAR(140),
+
+    `created_at`  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at`  DATETIME,
+    `created_by`  BIGINT,
+    `updated_by`  BIGINT,
+    `deleted_by`  BIGINT
+);
+
+# ########################################
 # User
 # ########################################
 
@@ -88,6 +110,8 @@ CREATE TABLE `user`
     `password`      CHAR(80),
 
     `status`        CHAR(48),
+
+    `org_id`        BIGINT,
 
     `created_at`    DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`    DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

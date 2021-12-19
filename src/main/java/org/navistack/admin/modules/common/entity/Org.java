@@ -1,0 +1,22 @@
+package org.navistack.admin.modules.common.entity;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.navistack.framework.crudsupport.entity.AuditingEntity;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class Org extends AuditingEntity<Long> {
+    @TableId(type = IdType.AUTO)
+    private Long id;
+
+    private String code;
+
+    private String name;
+
+    private Long superId;
+
+    private String description;
+}
