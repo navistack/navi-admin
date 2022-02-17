@@ -40,12 +40,12 @@ public class PrivilegeServiceImpl
 
         dto.setId(null);
 
-        Long cnt = dao.selectCount(
+        boolean existing = dao.exists(
                 Wrappers.<Privilege>lambdaQuery()
                         .eq(Privilege::getCode, dto.getCode())
         );
 
-        if (cnt > 0) {
+        if (existing) {
             throw new DuplicatedEntityProblem("Privilege existed");
         }
     }
@@ -54,13 +54,13 @@ public class PrivilegeServiceImpl
     protected void preModify(PrivilegeDto dto) {
         super.preModify(dto);
 
-        Long cnt = dao.selectCount(
+        boolean existing = dao.exists(
                 Wrappers.<Privilege>lambdaQuery()
                         .eq(Privilege::getCode, dto.getCode())
                         .ne(Privilege::getId, dto.getId())
         );
 
-        if (cnt > 0) {
+        if (existing) {
             throw new DuplicatedEntityProblem("Privilege existed");
         }
     }

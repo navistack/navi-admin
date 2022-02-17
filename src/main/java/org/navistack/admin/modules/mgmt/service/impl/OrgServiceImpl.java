@@ -38,12 +38,12 @@ public class OrgServiceImpl
 
         dto.setId(null);
 
-        Long cnt = dao.selectCount(
+        boolean existing = dao.exists(
                 Wrappers.<Org>lambdaQuery()
                         .eq(Org::getCode, dto.getCode())
         );
 
-        if (cnt > 0) {
+        if (existing) {
             throw new DuplicatedEntityProblem("Organization existed");
         }
     }
@@ -52,13 +52,13 @@ public class OrgServiceImpl
     protected void preModify(OrgDto dto) {
         super.preModify(dto);
 
-        Long cnt = dao.selectCount(
+        boolean existing = dao.exists(
                 Wrappers.<Org>lambdaQuery()
                         .eq(Org::getCode, dto.getCode())
                         .ne(Org::getId, dto.getId())
         );
 
-        if (cnt > 0) {
+        if (existing) {
             throw new DuplicatedEntityProblem("Organization existed");
         }
     }

@@ -41,12 +41,12 @@ public class RegionServiceImpl
 
         dto.setId(null);
 
-        Long cnt = dao.selectCount(
+        boolean existing = dao.exists(
                 Wrappers.<Region>lambdaQuery()
                         .eq(Region::getCode, dto.getCode())
         );
 
-        if (cnt > 0) {
+        if (existing) {
             throw new DuplicatedEntityProblem("Item existed");
         }
     }
@@ -56,13 +56,13 @@ public class RegionServiceImpl
     protected void preModify(RegionDto dto) {
         super.preModify(dto);
 
-        Long cnt = dao.selectCount(
+        boolean existing = dao.exists(
                 Wrappers.<Region>lambdaQuery()
                         .eq(Region::getCode, dto.getCode())
                         .ne(Region::getId, dto.getId())
         );
 
-        if (cnt > 0) {
+        if (existing) {
             throw new DuplicatedEntityProblem("Item existed");
         }
     }

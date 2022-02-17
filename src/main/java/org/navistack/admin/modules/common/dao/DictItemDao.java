@@ -1,9 +1,9 @@
 package org.navistack.admin.modules.common.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.navistack.admin.modules.common.entity.DictItem;
+import org.navistack.framework.mybatisplus.CrudMapper;
 
 @Mapper
-public interface DictItemDao extends BaseMapper<DictItem> {
+public interface DictItemDao extends CrudMapper<DictItem> {
 }

@@ -1,9 +1,9 @@
 package org.navistack.admin.modules.common.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.navistack.admin.modules.common.entity.Privilege;
+import org.navistack.framework.mybatisplus.CrudMapper;
 
 @Mapper
-public interface PrivilegeDao extends BaseMapper<Privilege> {
+public interface PrivilegeDao extends CrudMapper<Privilege> {
 }

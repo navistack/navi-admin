@@ -36,12 +36,12 @@ public class DictServiceImpl
         super.preCreate(dto);
 
         dto.setId(null);
-        Long cnt = dao.selectCount(
+        boolean existing = dao.exists(
                 Wrappers.<Dict>lambdaQuery()
                         .eq(Dict::getCode, dto.getCode())
         );
 
-        if (cnt > 0) {
+        if (existing) {
             throw new DuplicatedEntityProblem("Dict existed");
         }
     }
@@ -50,13 +50,13 @@ public class DictServiceImpl
     protected void preModify(DictDto dto) {
         super.preModify(dto);
 
-        Long cnt = dao.selectCount(
+        boolean existing = dao.exists(
                 Wrappers.<Dict>lambdaQuery()
                         .eq(Dict::getCode, dto.getCode())
                         .ne(Dict::getId, dto.getId())
         );
 
-        if (cnt > 0) {
+        if (existing) {
             throw new DuplicatedEntityProblem("Dict existed");
         }
     }

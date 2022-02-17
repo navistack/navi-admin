@@ -1,9 +1,9 @@
 package org.navistack.admin.modules.common.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.navistack.admin.modules.common.entity.Role;
+import org.navistack.framework.mybatisplus.CrudMapper;
 
 @Mapper
-public interface RoleDao extends BaseMapper<Role> {
+public interface RoleDao extends CrudMapper<Role> {
 }

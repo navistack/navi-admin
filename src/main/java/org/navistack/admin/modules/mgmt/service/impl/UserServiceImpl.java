@@ -75,7 +75,7 @@ public class UserServiceImpl
     public void create(UserDto dto) {
         dto.setId(null);
 
-        Long cnt = dao.selectCount(
+        boolean existing = dao.exists(
                 Wrappers.<User>lambdaQuery()
                         .eq(User::getEmailAddress, dto.getEmailAddress())
                         .or()
@@ -87,7 +87,7 @@ public class UserServiceImpl
                         .eq(User::getLoginName, dto.getLoginName())
         );
 
-        if (cnt > 0) {
+        if (existing) {
             throw new DuplicatedEntityProblem("User existed");
         }
 
@@ -102,7 +102,7 @@ public class UserServiceImpl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void modify(UserDto dto) {
-        Long cnt = dao.selectCount(
+        boolean existing = dao.exists(
                 Wrappers.<User>lambdaQuery()
                         .and(w -> w
                                 .eq(User::getEmailAddress, dto.getEmailAddress())
@@ -117,7 +117,7 @@ public class UserServiceImpl
                         .ne(User::getId, dto.getId())
         );
 
-        if (cnt > 0) {
+        if (existing) {
             throw new DuplicatedEntityProblem("User existed");
         }
 

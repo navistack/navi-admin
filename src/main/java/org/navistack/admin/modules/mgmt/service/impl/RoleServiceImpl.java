@@ -72,12 +72,12 @@ public class RoleServiceImpl
     public void create(RoleDto dto) {
         dto.setId(null);
 
-        Long cnt = dao.selectCount(
+        boolean existing = dao.exists(
                 Wrappers.<Role>lambdaQuery()
                         .eq(Role::getCode, dto.getCode())
         );
 
-        if (cnt > 0) {
+        if (existing) {
             throw new DuplicatedEntityProblem("Role existed");
         }
 
@@ -94,13 +94,13 @@ public class RoleServiceImpl
     protected void preModify(RoleDto dto) {
         super.preModify(dto);
 
-        Long cnt = dao.selectCount(
+        boolean existing = dao.exists(
                 Wrappers.<Role>lambdaQuery()
                         .eq(Role::getCode, dto.getCode())
                         .ne(Role::getId, dto.getId())
         );
 
-        if (cnt > 0) {
+        if (existing) {
             throw new DuplicatedEntityProblem("Role existed");
         }
     }
