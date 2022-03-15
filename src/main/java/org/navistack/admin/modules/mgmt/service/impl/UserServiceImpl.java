@@ -14,8 +14,8 @@ import org.navistack.admin.modules.mgmt.service.dto.UserDto;
 import org.navistack.admin.modules.mgmt.service.dto.UserQueryParams;
 import org.navistack.admin.modules.mgmt.service.vm.UserDetailVm;
 import org.navistack.framework.core.utils.StaticModelMapper;
-import org.navistack.framework.crudsupport.AbstractCrudService;
-import org.navistack.framework.crudsupport.problems.DuplicatedEntityProblem;
+import org.navistack.framework.mybatisplusplus.AbstractCrudService;
+import org.navistack.framework.mybatisplusplus.problems.DuplicatedEntityProblem;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

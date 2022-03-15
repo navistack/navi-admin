@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.navistack.framework.crudsupport.entity.AuditingEntity;
+import org.navistack.framework.mybatisplusplus.entity.AuditingEntity;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

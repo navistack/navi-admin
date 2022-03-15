@@ -3,8 +3,8 @@ package org.navistack.admin.modules.mgmt.service.dto;
 import lombok.Data;
 import org.navistack.admin.modules.common.enums.Gender;
 import org.navistack.admin.modules.common.enums.UserStatus;
-import org.navistack.framework.crudsupport.validation.groups.Create;
-import org.navistack.framework.crudsupport.validation.groups.Modify;
+import org.navistack.framework.mybatisplusplus.validation.groups.Create;
+import org.navistack.framework.mybatisplusplus.validation.groups.Modify;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;

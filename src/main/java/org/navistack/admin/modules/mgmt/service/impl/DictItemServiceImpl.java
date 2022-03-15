@@ -7,8 +7,8 @@ import org.navistack.admin.modules.common.entity.DictItem;
 import org.navistack.admin.modules.mgmt.service.DictItemService;
 import org.navistack.admin.modules.mgmt.service.dto.DictItemDto;
 import org.navistack.admin.modules.mgmt.service.dto.DictItemQueryParams;
-import org.navistack.framework.crudsupport.AbstractCrudService;
-import org.navistack.framework.crudsupport.problems.DuplicatedEntityProblem;
+import org.navistack.framework.mybatisplusplus.AbstractCrudService;
+import org.navistack.framework.mybatisplusplus.problems.DuplicatedEntityProblem;
 import org.springframework.stereotype.Service;
 
 @Service

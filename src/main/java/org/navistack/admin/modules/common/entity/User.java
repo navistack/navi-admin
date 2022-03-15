@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.navistack.admin.modules.common.enums.Gender;
 import org.navistack.admin.modules.common.enums.UserStatus;
-import org.navistack.framework.crudsupport.entity.IdEntity;
+import org.navistack.framework.mybatisplusplus.entity.IdEntity;
 
 import java.time.LocalDate;
 
