@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="javax.validation.constraints.Null.message">无效的参数</entry>
+    <entry key="javax.validation.constraints.NotNull.message">不能为空</entry>
+    <entry key="javax.validation.constraints.NotEmpty.message">不能为空</entry>
+    <entry key="javax.validation.constraints.Size.message">须不短于 {min} 且不长于 {max}</entry>
+    <entry key="javax.validation.constraints.Pattern.message">不符合规则</entry>
+    <entry key="javax.validation.constraints.Email.message">不是有效的邮箱地址</entry>
+    <entry key="Pattern.Dict.code">只能包含字符、数字和下划线</entry>
+    <entry key="Pattern.DictItem.itKey">只能包含字符、数字和下划线</entry>
+    <entry key="Pattern.Region.code">只能包含字符、数字和横杠</entry>
+    <entry key="Pattern.Privilege.code">只能包含字符、数字和冒号</entry>
+    <entry key="Pattern.Role.code">只能包含字符、数字和下划线</entry>
+    <entry key="Pattern.User.loginName">只能包含字符、数字和下划线、点和横杠</entry>
+    <entry key="Pattern.User.mobilePrefix">无效的手机区号</entry>
+    <entry key="Pattern.User.mobileNumber">无效的手机号码</entry>
+    <entry key="Pattern.Org.code">只能包含字符、数字和横杠</entry>
+</properties>
