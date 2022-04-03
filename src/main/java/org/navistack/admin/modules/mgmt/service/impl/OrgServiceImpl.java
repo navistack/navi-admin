@@ -7,8 +7,8 @@ import org.navistack.admin.modules.common.entity.Org;
 import org.navistack.admin.modules.mgmt.service.OrgService;
 import org.navistack.admin.modules.mgmt.service.dto.OrgDto;
 import org.navistack.admin.modules.mgmt.service.dto.OrgQueryParams;
+import org.navistack.framework.core.problem.DomainProblems;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
-import org.navistack.framework.mybatisplusplus.problems.DuplicatedEntityProblem;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,7 +44,7 @@ public class OrgServiceImpl
         );
 
         if (existing) {
-            throw new DuplicatedEntityProblem("Organization existed");
+            throw DomainProblems.entityDuplicated("Organization existed");
         }
     }
 
@@ -59,7 +59,7 @@ public class OrgServiceImpl
         );
 
         if (existing) {
-            throw new DuplicatedEntityProblem("Organization existed");
+            throw DomainProblems.entityDuplicated("Organization existed");
         }
     }
 }

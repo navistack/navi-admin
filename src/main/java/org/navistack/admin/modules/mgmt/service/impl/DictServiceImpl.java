@@ -7,8 +7,8 @@ import org.navistack.admin.modules.common.entity.Dict;
 import org.navistack.admin.modules.mgmt.service.DictService;
 import org.navistack.admin.modules.mgmt.service.dto.DictDto;
 import org.navistack.admin.modules.mgmt.service.dto.DictQueryParams;
+import org.navistack.framework.core.problem.DomainProblems;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
-import org.navistack.framework.mybatisplusplus.problems.DuplicatedEntityProblem;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,7 +42,7 @@ public class DictServiceImpl
         );
 
         if (existing) {
-            throw new DuplicatedEntityProblem("Dict existed");
+            throw DomainProblems.entityDuplicated("Dict existed");
         }
     }
 
@@ -57,7 +57,7 @@ public class DictServiceImpl
         );
 
         if (existing) {
-            throw new DuplicatedEntityProblem("Dict existed");
+            throw DomainProblems.entityDuplicated("Dict existed");
         }
     }
 }

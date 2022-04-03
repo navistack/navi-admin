@@ -7,8 +7,8 @@ import org.navistack.admin.modules.common.entity.Region;
 import org.navistack.admin.modules.mgmt.service.RegionService;
 import org.navistack.admin.modules.mgmt.service.dto.RegionDto;
 import org.navistack.admin.modules.mgmt.service.dto.RegionQueryParams;
+import org.navistack.framework.core.problem.DomainProblems;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
-import org.navistack.framework.mybatisplusplus.problems.DuplicatedEntityProblem;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +47,7 @@ public class RegionServiceImpl
         );
 
         if (existing) {
-            throw new DuplicatedEntityProblem("Item existed");
+            throw DomainProblems.entityDuplicated("Item existed");
         }
     }
 
@@ -63,7 +63,7 @@ public class RegionServiceImpl
         );
 
         if (existing) {
-            throw new DuplicatedEntityProblem("Item existed");
+            throw DomainProblems.entityDuplicated("Item existed");
         }
     }
 }

@@ -13,9 +13,9 @@ import org.navistack.admin.modules.mgmt.service.UserService;
 import org.navistack.admin.modules.mgmt.service.dto.UserDto;
 import org.navistack.admin.modules.mgmt.service.dto.UserQueryParams;
 import org.navistack.admin.modules.mgmt.service.vm.UserDetailVm;
+import org.navistack.framework.core.problem.DomainProblems;
 import org.navistack.framework.core.utils.StaticModelMapper;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
-import org.navistack.framework.mybatisplusplus.problems.DuplicatedEntityProblem;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,7 +88,7 @@ public class UserServiceImpl
         );
 
         if (existing) {
-            throw new DuplicatedEntityProblem("User existed");
+            throw DomainProblems.entityDuplicated("User existed");
         }
 
         User user = StaticModelMapper.map(dto, User.class);
@@ -118,7 +118,7 @@ public class UserServiceImpl
         );
 
         if (existing) {
-            throw new DuplicatedEntityProblem("User existed");
+            throw DomainProblems.entityDuplicated("User existed");
         }
 
         User user = StaticModelMapper.map(dto, User.class);
