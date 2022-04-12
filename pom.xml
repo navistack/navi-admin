@@ -78,24 +78,35 @@
 
     <profiles>
         <profile>
+            <!-- Development -->
             <id>dev</id>
             <properties>
                 <spring.profiles.active>dev</spring.profiles.active>
             </properties>
         </profile>
         <profile>
+            <!-- System Integration Test -->
+            <id>sit</id>
+            <properties>
+                <spring.profiles.active>sit</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <!-- User Acceptance Test -->
+            <id>uat</id>
+            <properties>
+                <spring.profiles.active>uat</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <!-- Production -->
             <id>prod</id>
             <properties>
                 <spring.profiles.active>prod</spring.profiles.active>
             </properties>
         </profile>
         <profile>
-            <id>test</id>
-            <properties>
-                <spring.profiles.active>test</spring.profiles.active>
-            </properties>
-        </profile>
-        <profile>
+            <!-- Local -->
             <id>local</id>
             <properties>
                 <spring.profiles.active>local</spring.profiles.active>
