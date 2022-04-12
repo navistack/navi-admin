@@ -1,6 +1,6 @@
 package org.navistack.admin.config;
 
-import org.navistack.boot.autoconfigure.security.AuthTokenConfigurer;
+import org.navistack.framework.security.jwt.JwtTokenConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -22,7 +22,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            AuthTokenConfigurer authTokenConfigurer
+            JwtTokenConfigurer jwtTokenConfigurer
     ) throws Exception {
         // @formatter:off
         return http
@@ -43,7 +43,11 @@ public class SecurityConfig {
                     .disable()
                 .httpBasic()
                     .disable()
-                .apply(authTokenConfigurer)
+                .formLogin()
+                    .disable()
+                .logout()
+                    .disable()
+                .apply(jwtTokenConfigurer)
                 .and()
                 .build();
         // @formatter:on

@@ -12,7 +12,7 @@ spring:
       matching-strategy: ant_path_matcher
 
   #navi:
-#  auth:
-#    token:
+#  security:
+#    jwt:
 #      validity: ${TOKEN_VALIDITY_IN_MILLISECONDS}
 #      secret: ${BASE64_ENCODED_SECRET}
