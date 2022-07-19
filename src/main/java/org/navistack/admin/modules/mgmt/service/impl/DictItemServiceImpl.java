@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DictItemServiceImpl
-        extends AbstractCrudService<Long, DictItem, DictItemDto, DictItemQueryParams, DictItemDao>
+        extends AbstractCrudService<DictItem, Long, DictItemDto, DictItemQueryParams, DictItemDao>
         implements DictItemService {
 
     public DictItemServiceImpl(DictItemDao dao) {

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImpl
-        extends AbstractCrudService<Long, Role, RoleDto, RoleQueryParams, RoleDao>
+        extends AbstractCrudService<Role, Long, RoleDto, RoleQueryParams, RoleDao>
         implements RoleService {
     private final PrivilegeDao privilegeDao;
     private final RolePrivilegeDao rolePrivilegeDao;

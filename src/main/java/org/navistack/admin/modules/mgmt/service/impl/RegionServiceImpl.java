@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RegionServiceImpl
-        extends AbstractCrudService<Long, Region, RegionDto, RegionQueryParams, RegionDao>
+        extends AbstractCrudService<Region, Long, RegionDto, RegionQueryParams, RegionDao>
         implements RegionService {
 
     public RegionServiceImpl(RegionDao dao) {

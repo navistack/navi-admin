@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PrivilegeServiceImpl
-        extends AbstractCrudService<Long, Privilege, PrivilegeDto, PrivilegeQueryParams, PrivilegeDao>
+        extends AbstractCrudService<Privilege, Long, PrivilegeDto, PrivilegeQueryParams, PrivilegeDao>
         implements PrivilegeService {
 
     public PrivilegeServiceImpl(PrivilegeDao dao) {

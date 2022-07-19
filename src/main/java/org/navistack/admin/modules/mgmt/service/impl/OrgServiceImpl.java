@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class OrgServiceImpl
-        extends AbstractCrudService<Long, Org, OrgDto, OrgQueryParams, OrgDao>
+        extends AbstractCrudService<Org, Long, OrgDto, OrgQueryParams, OrgDao>
         implements OrgService {
 
     public OrgServiceImpl(OrgDao dao) {

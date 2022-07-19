@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl
-        extends AbstractCrudService<Long, User, UserDto, UserQueryParams, UserDao>
+        extends AbstractCrudService<User, Long, UserDto, UserQueryParams, UserDao>
         implements UserService {
     private final RoleDao roleDao;
     private final UserRoleDao userRoleDao;
