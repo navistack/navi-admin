@@ -30,7 +30,7 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(summary = "Login by password")
     @Tag(name = "System")
-//    @CaptchaTest
+    @CaptchaTest
     public RestResult<JwtTokenVo, ?> login(@Valid PasswordLoginVm vm) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 vm.getLoginName(),
