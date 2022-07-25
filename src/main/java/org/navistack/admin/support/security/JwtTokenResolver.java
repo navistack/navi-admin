@@ -1,11 +1,11 @@
 package org.navistack.admin.support.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.impl.DefaultClaims;
 import org.navistack.admin.modules.common.entity.Privilege;
 import org.navistack.admin.modules.common.entity.User;
 import org.navistack.admin.modules.system.service.AuthenticationService;
 import org.navistack.admin.modules.system.service.AuthorityService;
+import org.navistack.framework.security.jwt.DefaultJwtClaims;
+import org.navistack.framework.security.jwt.JwtClaims;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,16 +29,16 @@ public class JwtTokenResolver implements org.navistack.framework.security.jwt.Jw
     }
 
     @Override
-    public Claims getClaims(Authentication authentication) {
+    public JwtClaims getClaims(Authentication authentication) {
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        Claims claims = new DefaultClaims();
-        claims.setSubject(loginUser.getUsername());
+        JwtClaims claims = new DefaultJwtClaims();
+        claims.putSubject(loginUser.getUsername());
         claims.put(USER_UID_KEY, loginUser.getId());
         return claims;
     }
 
     @Override
-    public Authentication getAuthentication(Claims claims) {
+    public Authentication getAuthentication(JwtClaims claims) {
         Optional<User> user = authenticationService.findUserByLoginName(claims.getSubject());
 
         if (!user.isPresent()) {
