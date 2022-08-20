@@ -14,8 +14,8 @@ import org.navistack.admin.modules.mgmt.service.dto.UserDto;
 import org.navistack.admin.modules.mgmt.service.dto.UserQueryParams;
 import org.navistack.admin.modules.mgmt.service.vm.UserDetailVm;
 import org.navistack.framework.core.problem.DomainProblems;
-import org.navistack.framework.core.utils.StaticModelMapper;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
+import org.navistack.framework.utils.ModelMappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +55,7 @@ public class UserServiceImpl
     public UserDetailVm queryDetailById(Long userId) {
         User user = dao.selectById(userId);
 
-        UserDetailVm vm = StaticModelMapper.map(user, UserDetailVm.class);
+        UserDetailVm vm = ModelMappers.map(user, UserDetailVm.class);
 
         List<Long> roleIds = userRoleDao.selectList(
                         Wrappers.<UserRole>lambdaQuery()
@@ -91,12 +91,12 @@ public class UserServiceImpl
             throw DomainProblems.entityDuplicated("User existed");
         }
 
-        User user = StaticModelMapper.map(dto, User.class);
+        User user = ModelMappers.map(dto, User.class);
         dao.insert(user);
 
         replaceRolesOf(user.getId(), dto.getRoleIds());
 
-        StaticModelMapper.map(user, dto);
+        ModelMappers.map(user, dto);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class UserServiceImpl
             throw DomainProblems.entityDuplicated("User existed");
         }
 
-        User user = StaticModelMapper.map(dto, User.class);
+        User user = ModelMappers.map(dto, User.class);
 
         dao.updateById(user);
         replaceRolesOf(user.getId(), dto.getRoleIds());

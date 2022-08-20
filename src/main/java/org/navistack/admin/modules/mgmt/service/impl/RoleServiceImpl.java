@@ -13,8 +13,8 @@ import org.navistack.admin.modules.mgmt.service.dto.RoleDto;
 import org.navistack.admin.modules.mgmt.service.dto.RoleQueryParams;
 import org.navistack.admin.modules.mgmt.service.vm.RoleDetailVm;
 import org.navistack.framework.core.problem.DomainProblems;
-import org.navistack.framework.core.utils.StaticModelMapper;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
+import org.navistack.framework.utils.ModelMappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +52,7 @@ public class RoleServiceImpl
     public RoleDetailVm queryDetailById(Long roleId) {
         Role role = dao.selectById(roleId);
 
-        RoleDetailVm vm = StaticModelMapper.map(role, RoleDetailVm.class);
+        RoleDetailVm vm = ModelMappers.map(role, RoleDetailVm.class);
 
         List<Long> privilegeIds = rolePrivilegeDao.selectList(
                         Wrappers.<RolePrivilege>lambdaQuery()
@@ -81,13 +81,13 @@ public class RoleServiceImpl
             throw DomainProblems.entityDuplicated("Role existed");
         }
 
-        Role role = StaticModelMapper.map(dto, Role.class);
+        Role role = ModelMappers.map(dto, Role.class);
 
         dao.insert(role);
 
         replacePrivilegesOf(role.getId(), dto.getPrivilegeIds());
 
-        StaticModelMapper.map(role, dto);
+        ModelMappers.map(role, dto);
     }
 
     @Override
