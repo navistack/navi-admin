@@ -45,7 +45,7 @@ public class RegionController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Region Management")
-    public RestResult.Ok<Void> create(@Validated({Default.class, Create.class}) RegionDto dto) {
+    public RestResult.None create(@Validated({Default.class, Create.class}) RegionDto dto) {
         service.create(dto);
         return RestResult.ok();
     }
@@ -57,7 +57,7 @@ public class RegionController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Region Management")
-    public RestResult.Ok<Void> modify(@Validated({Default.class, Modify.class}) RegionDto dto) {
+    public RestResult.None modify(@Validated({Default.class, Modify.class}) RegionDto dto) {
         service.modify(dto);
         return RestResult.ok();
     }
@@ -69,7 +69,7 @@ public class RegionController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Region Management")
-    public RestResult.Ok<Void> remove(@RequestParam Long id) {
+    public RestResult.None remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();
     }

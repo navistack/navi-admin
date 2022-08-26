@@ -57,7 +57,7 @@ public class RoleController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Role Management")
-    public RestResult.Ok<Void> create(@Validated({Default.class, Create.class}) RoleDto dto) {
+    public RestResult.None create(@Validated({Default.class, Create.class}) RoleDto dto) {
         service.create(dto);
         return RestResult.ok();
     }
@@ -69,7 +69,7 @@ public class RoleController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Role Management")
-    public RestResult.Ok<Void> modify(@Validated({Default.class, Modify.class}) RoleDto dto) {
+    public RestResult.None modify(@Validated({Default.class, Modify.class}) RoleDto dto) {
         service.modify(dto);
         return RestResult.ok();
     }
@@ -81,7 +81,7 @@ public class RoleController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Role Management")
-    public RestResult.Ok<Void> remove(@RequestParam Long id) {
+    public RestResult.None remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();
     }

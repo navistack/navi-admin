@@ -45,7 +45,7 @@ public class DictController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Dictionary Management")
-    public RestResult.Ok<Void> create(@Validated({Default.class, Create.class}) DictDto dto) {
+    public RestResult.None create(@Validated({Default.class, Create.class}) DictDto dto) {
         service.create(dto);
         return RestResult.ok();
     }
@@ -57,7 +57,7 @@ public class DictController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Dictionary Management")
-    public RestResult.Ok<Void> modify(@Validated({Default.class, Modify.class}) DictDto dto) {
+    public RestResult.None modify(@Validated({Default.class, Modify.class}) DictDto dto) {
         service.modify(dto);
         return RestResult.ok();
     }
@@ -69,7 +69,7 @@ public class DictController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Dictionary Management")
-    public RestResult.Ok<Void> remove(@RequestParam Long id) {
+    public RestResult.None remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();
     }
