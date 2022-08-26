@@ -7,10 +7,10 @@ import org.navistack.admin.modules.mgmt.service.RoleService;
 import org.navistack.admin.modules.mgmt.service.dto.RoleDto;
 import org.navistack.admin.modules.mgmt.service.dto.RoleQueryParams;
 import org.navistack.admin.modules.mgmt.service.vm.RoleDetailVm;
-import org.navistack.framework.mybatisplusplus.validation.groups.Create;
-import org.navistack.framework.mybatisplusplus.validation.groups.Modify;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
+import org.navistack.framework.mybatisplusplus.validation.groups.Create;
+import org.navistack.framework.mybatisplusplus.validation.groups.Modify;
 import org.navistack.framework.web.rest.RestResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -35,7 +35,7 @@ public class RoleController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Role Management")
-    public RestResult<Page<RoleDto>, ?> paginate(RoleQueryParams queryParams, PageRequest pageRequest) {
+    public RestResult.Ok<Page<RoleDto>> paginate(RoleQueryParams queryParams, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(queryParams, pageRequest));
     }
 
@@ -46,7 +46,7 @@ public class RoleController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Role Management")
-    public RestResult<RoleDetailVm, ?> detail(@PathVariable Long id) {
+    public RestResult.Ok<RoleDetailVm> detail(@PathVariable Long id) {
         return RestResult.ok(service.queryDetailById(id));
     }
 
@@ -57,7 +57,7 @@ public class RoleController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Role Management")
-    public RestResult<Void, ?> create(@Validated({Default.class, Create.class}) RoleDto dto) {
+    public RestResult.Ok<Void> create(@Validated({Default.class, Create.class}) RoleDto dto) {
         service.create(dto);
         return RestResult.ok();
     }
@@ -69,7 +69,7 @@ public class RoleController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Role Management")
-    public RestResult<Void, ?> modify(@Validated({Default.class, Modify.class}) RoleDto dto) {
+    public RestResult.Ok<Void> modify(@Validated({Default.class, Modify.class}) RoleDto dto) {
         service.modify(dto);
         return RestResult.ok();
     }
@@ -81,7 +81,7 @@ public class RoleController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Role Management")
-    public RestResult<Void, ?> remove(@RequestParam Long id) {
+    public RestResult.Ok<Void> remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();
     }

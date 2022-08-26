@@ -7,7 +7,7 @@ import org.navistack.admin.modules.common.entity.Privilege;
 import org.navistack.admin.modules.mgmt.service.PrivilegeService;
 import org.navistack.admin.modules.mgmt.service.dto.PrivilegeDto;
 import org.navistack.admin.modules.mgmt.service.dto.PrivilegeQueryParams;
-import org.navistack.framework.core.problem.DomainProblems;
+import org.navistack.framework.core.error.EntityDuplicationException;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +46,7 @@ public class PrivilegeServiceImpl
         );
 
         if (existing) {
-            throw DomainProblems.entityDuplicated("Privilege existed");
+            throw new EntityDuplicationException("Privilege existed");
         }
     }
 
@@ -61,7 +61,7 @@ public class PrivilegeServiceImpl
         );
 
         if (existing) {
-            throw DomainProblems.entityDuplicated("Privilege existed");
+            throw new EntityDuplicationException("Privilege existed");
         }
     }
 

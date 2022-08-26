@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.system.web.rest.vm.PasswordLoginVm;
 import org.navistack.admin.modules.system.web.rest.vo.JwtTokenVo;
 import org.navistack.framework.captcha.CaptchaTest;
-import org.navistack.framework.security.jwt.JwtTokenService;
+import org.navistack.framework.security.TokenService;
 import org.navistack.framework.web.rest.RestResult;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,12 +18,12 @@ import javax.validation.Valid;
 @RestController
 @Tag(name = "System")
 public class AuthController {
-    private final JwtTokenService jwtTOkenService;
+    private final TokenService tokenService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public AuthController(JwtTokenService jwtTOkenService,
+    public AuthController(TokenService tokenService,
                           AuthenticationManagerBuilder authenticationManagerBuilder) {
-        this.jwtTOkenService = jwtTOkenService;
+        this.tokenService = tokenService;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
@@ -31,13 +31,13 @@ public class AuthController {
     @Operation(summary = "Login by password")
     @Tag(name = "System")
     @CaptchaTest
-    public RestResult<JwtTokenVo, ?> login(@Valid PasswordLoginVm vm) {
+    public RestResult.Ok<JwtTokenVo> login(@Valid PasswordLoginVm vm) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 vm.getLoginName(),
                 vm.getPassword()
         );
         authentication = authenticationManagerBuilder.getObject().authenticate(authentication);
-        String token = jwtTOkenService.issue(authentication);
+        String token = tokenService.issue(authentication);
         return RestResult.ok(JwtTokenVo.of(token));
     }
 }

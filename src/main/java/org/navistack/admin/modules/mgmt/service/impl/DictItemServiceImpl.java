@@ -7,7 +7,7 @@ import org.navistack.admin.modules.common.entity.DictItem;
 import org.navistack.admin.modules.mgmt.service.DictItemService;
 import org.navistack.admin.modules.mgmt.service.dto.DictItemDto;
 import org.navistack.admin.modules.mgmt.service.dto.DictItemQueryParams;
-import org.navistack.framework.core.problem.DomainProblems;
+import org.navistack.framework.core.error.EntityDuplicationException;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +46,7 @@ public class DictItemServiceImpl
         );
 
         if (existing) {
-            throw DomainProblems.entityDuplicated("Item existed");
+            throw new EntityDuplicationException("Item existed");
         }
     }
 
@@ -61,7 +61,7 @@ public class DictItemServiceImpl
         );
 
         if (existing) {
-            throw DomainProblems.entityDuplicated("Item existed");
+            throw new EntityDuplicationException("Item existed");
         }
     }
 }

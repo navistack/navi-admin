@@ -28,7 +28,7 @@ public class SysRegionController {
     @GetMapping
     @Operation(summary = "Get regions and their sub-regions recursively")
     @Tag(name = "System")
-    public RestResult<Collection<RegionVm>, ?> get() {
+    public RestResult.Ok<Collection<RegionVm>> get() {
         List<Region> regions = regionDao.selectList(Wrappers.emptyWrapper());
         Collection<RegionVm> vms = TreeUtils.treeize(regions, RegionVm::of);
         return RestResult.ok(vms);

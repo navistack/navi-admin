@@ -6,10 +6,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.mgmt.service.DictItemService;
 import org.navistack.admin.modules.mgmt.service.dto.DictItemDto;
 import org.navistack.admin.modules.mgmt.service.dto.DictItemQueryParams;
-import org.navistack.framework.mybatisplusplus.validation.groups.Create;
-import org.navistack.framework.mybatisplusplus.validation.groups.Modify;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
+import org.navistack.framework.mybatisplusplus.validation.groups.Create;
+import org.navistack.framework.mybatisplusplus.validation.groups.Modify;
 import org.navistack.framework.web.rest.RestResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +34,7 @@ public class DictItemController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Dictionary Item Management")
-    public RestResult<Page<DictItemDto>, ?> paginate(DictItemQueryParams params, PageRequest pageRequest) {
+    public RestResult.Ok<Page<DictItemDto>> paginate(DictItemQueryParams params, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(params, pageRequest));
     }
 
@@ -45,7 +45,7 @@ public class DictItemController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Dictionary Item Management")
-    public RestResult<Void, ?> create(@Validated({Default.class, Create.class}) DictItemDto dto) {
+    public RestResult.Ok<Void> create(@Validated({Default.class, Create.class}) DictItemDto dto) {
         service.create(dto);
         return RestResult.ok();
     }
@@ -57,7 +57,7 @@ public class DictItemController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Dictionary Item Management")
-    public RestResult<Void, ?> modify(@Validated({Default.class, Modify.class}) DictItemDto dto) {
+    public RestResult.Ok<Void> modify(@Validated({Default.class, Modify.class}) DictItemDto dto) {
         service.modify(dto);
         return RestResult.ok();
     }
@@ -69,7 +69,7 @@ public class DictItemController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Dictionary Item Management")
-    public RestResult<Void, ?> remove(@RequestParam Long id) {
+    public RestResult.Ok<Void> remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();
     }

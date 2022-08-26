@@ -6,10 +6,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.mgmt.service.RegionService;
 import org.navistack.admin.modules.mgmt.service.dto.RegionDto;
 import org.navistack.admin.modules.mgmt.service.dto.RegionQueryParams;
-import org.navistack.framework.mybatisplusplus.validation.groups.Create;
-import org.navistack.framework.mybatisplusplus.validation.groups.Modify;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
+import org.navistack.framework.mybatisplusplus.validation.groups.Create;
+import org.navistack.framework.mybatisplusplus.validation.groups.Modify;
 import org.navistack.framework.web.rest.RestResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +34,7 @@ public class RegionController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Region Management")
-    public RestResult<Page<RegionDto>, ?> paginate(RegionQueryParams params, PageRequest pageRequest) {
+    public RestResult.Ok<Page<RegionDto>> paginate(RegionQueryParams params, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(params, pageRequest));
     }
 
@@ -45,7 +45,7 @@ public class RegionController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Region Management")
-    public RestResult<Void, ?> create(@Validated({Default.class, Create.class}) RegionDto dto) {
+    public RestResult.Ok<Void> create(@Validated({Default.class, Create.class}) RegionDto dto) {
         service.create(dto);
         return RestResult.ok();
     }
@@ -57,7 +57,7 @@ public class RegionController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Region Management")
-    public RestResult<Void, ?> modify(@Validated({Default.class, Modify.class}) RegionDto dto) {
+    public RestResult.Ok<Void> modify(@Validated({Default.class, Modify.class}) RegionDto dto) {
         service.modify(dto);
         return RestResult.ok();
     }
@@ -69,7 +69,7 @@ public class RegionController {
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Region Management")
-    public RestResult<Void, ?> remove(@RequestParam Long id) {
+    public RestResult.Ok<Void> remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();
     }

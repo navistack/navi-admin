@@ -33,7 +33,7 @@ public class SysDictController {
     @GetMapping
     @Operation(summary = "Get directories and their items")
     @Tag(name = "System")
-    public RestResult<Collection<DictVm>, ?> get() {
+    public RestResult.Ok<Collection<DictVm>> get() {
         Collection<DictVm> dictVms = dictDao.selectList(Wrappers.emptyWrapper())
                 .stream()
                 .map(dict -> DictVm.of(dict.getCode(), dict.getName()))

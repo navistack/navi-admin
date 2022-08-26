@@ -12,7 +12,7 @@ import org.navistack.admin.modules.mgmt.service.RoleService;
 import org.navistack.admin.modules.mgmt.service.dto.RoleDto;
 import org.navistack.admin.modules.mgmt.service.dto.RoleQueryParams;
 import org.navistack.admin.modules.mgmt.service.vm.RoleDetailVm;
-import org.navistack.framework.core.problem.DomainProblems;
+import org.navistack.framework.core.error.EntityDuplicationException;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
 import org.navistack.framework.utils.ModelMappers;
 import org.springframework.stereotype.Service;
@@ -78,7 +78,7 @@ public class RoleServiceImpl
         );
 
         if (existing) {
-            throw DomainProblems.entityDuplicated("Role existed");
+            throw new EntityDuplicationException("Role existed");
         }
 
         Role role = ModelMappers.map(dto, Role.class);
@@ -101,7 +101,7 @@ public class RoleServiceImpl
         );
 
         if (existing) {
-            throw DomainProblems.entityDuplicated("Role existed");
+            throw new EntityDuplicationException("Role existed");
         }
     }
 
