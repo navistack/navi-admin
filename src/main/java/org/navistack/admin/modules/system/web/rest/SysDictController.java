@@ -40,10 +40,19 @@ public class SysDictController {
     @Operation(summary = "Get directories and their items")
     @Tag(name = "System")
     public RestResult.Ok<Collection<DictVm>> get() {
-        Collection<DictVm> dictVms = dictDao.selectList(Wrappers.emptyWrapper())
-                .stream()
-                .map(dict -> DictVm.of(dict.getCode(), dict.getName()))
+        List<Dict> dicts = dictDao.selectList(Wrappers.emptyWrapper());
+        if (dicts.isEmpty()) {
+            return RestResult.ok(Collections.emptyList());
+        }
+
+        Collection<DictVm> dictVms = dicts.stream()
+                .map(d -> DictVm.of(d.getCode(), d.getName()))
                 .collect(Collectors.toList());
+
+        List<DictItem> items = dictItemDao.selectList(Wrappers.emptyWrapper());
+        if (items.isEmpty()) {
+            return RestResult.ok(dictVms);
+        }
 
         Map<String, DictVm> dictVmMap = dictVms.stream()
                 .collect(
@@ -53,7 +62,7 @@ public class SysDictController {
                         )
                 );
 
-        for (DictItem item : dictItemDao.selectList(Wrappers.emptyWrapper())) {
+        for (DictItem item : items) {
             DictItemVm itemVm = DictItemVm.of(item.getName(), item.getItKey(), item.getItValue());
 
             DictVm dictVm = dictVmMap.get(item.getDictCode());
