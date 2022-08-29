@@ -96,10 +96,10 @@ public class SysDictController {
             return RestResult.ok(dictVm);
         }
 
-        Collection<DictItemVm> dictVms = items.stream()
+        Collection<DictItemVm> dictItemVms = items.stream()
                 .map(item -> DictItemVm.of(item.getName(), item.getItKey(), item.getItValue()))
                 .collect(Collectors.toList());
-        dictVm.setItems(dictVms);
+        dictVm.setItems(dictItemVms);
 
         return RestResult.ok(dictVm);
     }
