@@ -103,4 +103,22 @@ public class SysDictController {
 
         return RestResult.ok(dictVm);
     }
+
+    @GetMapping("/{dict:[A-Za-z0-9$_]{1,48}}/items")
+    @Operation(summary = "Get items of directory")
+    @Tag(name = "System")
+    public RestResult.Ok<Collection<DictItemVm>> getItem(@PathVariable("dict") String dictCode) {
+        Wrapper<DictItem> itemWrapper = Wrappers.<DictItem>lambdaQuery()
+                .eq(Strings.hasText(dictCode), DictItem::getDictCode, dictCode);
+        List<DictItem> items = dictItemDao.selectList(itemWrapper);
+        if (items.isEmpty()) {
+            return RestResult.ok(Collections.emptyList());
+        }
+
+        Collection<DictItemVm> dictItemVms = items.stream()
+                .map(item -> DictItemVm.of(item.getName(), item.getItKey(), item.getItValue()))
+                .collect(Collectors.toList());
+
+        return RestResult.ok(dictItemVms);
+    }
 }
