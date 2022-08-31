@@ -26,6 +26,12 @@ public class SecurityConfig {
     ) throws Exception {
         // @formatter:off
         return http
+                .headers()
+                    .xssProtection()
+                    .and()
+                    .contentSecurityPolicy("script-src 'self'")
+                    .and()
+                .and()
                 .authorizeRequests()
                     .antMatchers("/login")
                         .anonymous()
