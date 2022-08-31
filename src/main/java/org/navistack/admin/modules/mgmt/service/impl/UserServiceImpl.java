@@ -11,7 +11,7 @@ import org.navistack.admin.modules.common.entity.UserRole;
 import org.navistack.admin.modules.common.enums.UserStatus;
 import org.navistack.admin.modules.mgmt.service.UserService;
 import org.navistack.admin.modules.mgmt.service.dto.UserDto;
-import org.navistack.admin.modules.mgmt.service.dto.UserQueryParams;
+import org.navistack.admin.modules.mgmt.service.dto.UserQueryDto;
 import org.navistack.admin.modules.mgmt.service.vm.UserDetailVm;
 import org.navistack.framework.core.error.EntityDuplicationException;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl
-        extends AbstractCrudService<User, Long, UserDto, UserQueryParams, UserDao>
+        extends AbstractCrudService<User, Long, UserDto, UserQueryDto, UserDao>
         implements UserService {
     private final RoleDao roleDao;
     private final UserRoleDao userRoleDao;
@@ -38,11 +38,11 @@ public class UserServiceImpl
     }
 
     @Override
-    protected Wrapper<User> buildWrapper(UserQueryParams queryParams) {
-        String loginName = queryParams.getLoginName();
-        String mobileNumber = queryParams.getMobileNumber();
-        String emailAddress = queryParams.getEmailAddress();
-        UserStatus status = queryParams.getStatus();
+    protected Wrapper<User> buildWrapper(UserQueryDto queryDto) {
+        String loginName = queryDto.getLoginName();
+        String mobileNumber = queryDto.getMobileNumber();
+        String emailAddress = queryDto.getEmailAddress();
+        UserStatus status = queryDto.getStatus();
 
         return Wrappers.<User>lambdaQuery()
                 .eq(loginName != null, User::getLoginName, loginName)

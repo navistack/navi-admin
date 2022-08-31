@@ -21,5 +21,5 @@ public class Region extends AuditingEntity<Long> {
 
     private String parentCode;
 
-    private String description;
+    private String remarks;
 }

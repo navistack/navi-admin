@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.mgmt.service.RegionService;
 import org.navistack.admin.modules.mgmt.service.dto.RegionDto;
-import org.navistack.admin.modules.mgmt.service.dto.RegionQueryParams;
+import org.navistack.admin.modules.mgmt.service.dto.RegionQueryDto;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
 import org.navistack.framework.mybatisplusplus.validation.groups.Create;
@@ -28,14 +28,14 @@ public class RegionController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('sys:region:paginate')")
+    @PreAuthorize("hasAuthority('sys:region:query')")
     @Operation(
             summary = "Query Paged list of regions",
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Region Management")
-    public RestResult.Ok<Page<RegionDto>> paginate(RegionQueryParams params, PageRequest pageRequest) {
-        return RestResult.ok(service.paginate(params, pageRequest));
+    public RestResult.Ok<Page<RegionDto>> paginate(RegionQueryDto queryDto, PageRequest pageRequest) {
+        return RestResult.ok(service.paginate(queryDto, pageRequest));
     }
 
     @PostMapping

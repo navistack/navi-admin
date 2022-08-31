@@ -6,14 +6,14 @@ import org.navistack.admin.modules.common.dao.DictItemDao;
 import org.navistack.admin.modules.common.entity.DictItem;
 import org.navistack.admin.modules.mgmt.service.DictItemService;
 import org.navistack.admin.modules.mgmt.service.dto.DictItemDto;
-import org.navistack.admin.modules.mgmt.service.dto.DictItemQueryParams;
+import org.navistack.admin.modules.mgmt.service.dto.DictItemQueryDto;
 import org.navistack.framework.core.error.EntityDuplicationException;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DictItemServiceImpl
-        extends AbstractCrudService<DictItem, Long, DictItemDto, DictItemQueryParams, DictItemDao>
+        extends AbstractCrudService<DictItem, Long, DictItemDto, DictItemQueryDto, DictItemDao>
         implements DictItemService {
 
     public DictItemServiceImpl(DictItemDao dao) {
@@ -21,11 +21,11 @@ public class DictItemServiceImpl
     }
 
     @Override
-    protected Wrapper<DictItem> buildWrapper(DictItemQueryParams queryParams) {
-        Long id = queryParams.getId();
-        String name = queryParams.getName();
-        String itKey = queryParams.getItKey();
-        String dictCode = queryParams.getDictCode();
+    protected Wrapper<DictItem> buildWrapper(DictItemQueryDto queryDto) {
+        Long id = queryDto.getId();
+        String name = queryDto.getName();
+        String itKey = queryDto.getItKey();
+        String dictCode = queryDto.getDictCode();
 
         return Wrappers.<DictItem>lambdaQuery()
                 .eq(id != null, DictItem::getId, id)

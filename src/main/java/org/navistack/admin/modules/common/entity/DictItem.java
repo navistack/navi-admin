@@ -18,7 +18,7 @@ public class DictItem extends AuditingEntity<Long> {
 
     private String itValue;
 
-    private String description;
+    private String remarks;
 
     private String dictCode;
 }

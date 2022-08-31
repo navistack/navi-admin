@@ -10,7 +10,7 @@ import org.navistack.admin.modules.common.entity.Role;
 import org.navistack.admin.modules.common.entity.RolePrivilege;
 import org.navistack.admin.modules.mgmt.service.RoleService;
 import org.navistack.admin.modules.mgmt.service.dto.RoleDto;
-import org.navistack.admin.modules.mgmt.service.dto.RoleQueryParams;
+import org.navistack.admin.modules.mgmt.service.dto.RoleQueryDto;
 import org.navistack.admin.modules.mgmt.service.vm.RoleDetailVm;
 import org.navistack.framework.core.error.EntityDuplicationException;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImpl
-        extends AbstractCrudService<Role, Long, RoleDto, RoleQueryParams, RoleDao>
+        extends AbstractCrudService<Role, Long, RoleDto, RoleQueryDto, RoleDao>
         implements RoleService {
     private final PrivilegeDao privilegeDao;
     private final RolePrivilegeDao rolePrivilegeDao;
@@ -37,10 +37,10 @@ public class RoleServiceImpl
     }
 
     @Override
-    protected Wrapper<Role> buildWrapper(RoleQueryParams queryParams) {
-        Long id = queryParams.getId();
-        String code = queryParams.getCode();
-        String name = queryParams.getName();
+    protected Wrapper<Role> buildWrapper(RoleQueryDto queryDto) {
+        Long id = queryDto.getId();
+        String code = queryDto.getCode();
+        String name = queryDto.getName();
 
         return Wrappers.<Role>lambdaQuery()
                 .eq(id != null, Role::getId, id)

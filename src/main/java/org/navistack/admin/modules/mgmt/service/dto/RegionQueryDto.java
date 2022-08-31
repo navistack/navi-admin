@@ -3,7 +3,7 @@ package org.navistack.admin.modules.mgmt.service.dto;
 import lombok.Data;
 
 @Data
-public class RegionQueryParams {
+public class RegionQueryDto {
     private Long id;
 
     private String code;

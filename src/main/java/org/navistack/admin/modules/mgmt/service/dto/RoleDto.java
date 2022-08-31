@@ -9,14 +9,11 @@ import java.util.List;
 
 @Data
 public class RoleDto {
-    protected static final String CODE_PATTERN = "^[A-Za-z0-9$_]+$";
-
     @Null(groups = Create.class)
     @NotNull(groups = Modify.class)
     private Long id;
 
-    @Size(min = 1, max = 48)
-    @Pattern(regexp = CODE_PATTERN, message = "{Pattern.Role.code}")
+    @Pattern(regexp = "^[A-Za-z0-9$_]{1,48}$", message = "{Pattern.Role.code}")
     private String code;
 
     @NotEmpty
@@ -24,7 +21,7 @@ public class RoleDto {
     private String name;
 
     @Size(max = 140)
-    private String description;
+    private String remarks;
 
     private List<Long> privilegeIds;
 }

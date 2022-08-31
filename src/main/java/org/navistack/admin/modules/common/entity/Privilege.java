@@ -18,5 +18,5 @@ public class Privilege extends AuditingEntity<Long> {
 
     private Long parentId;
 
-    private String description;
+    private String remarks;
 }

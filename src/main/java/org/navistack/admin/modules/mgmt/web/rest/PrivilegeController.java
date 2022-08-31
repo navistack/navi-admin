@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.mgmt.service.PrivilegeService;
 import org.navistack.admin.modules.mgmt.service.dto.PrivilegeDto;
-import org.navistack.admin.modules.mgmt.service.dto.PrivilegeQueryParams;
+import org.navistack.admin.modules.mgmt.service.dto.PrivilegeQueryDto;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
 import org.navistack.framework.mybatisplusplus.validation.groups.Create;
@@ -28,14 +28,14 @@ public class PrivilegeController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('sys:privilege:paginate')")
+    @PreAuthorize("hasAuthority('sys:privilege:query')")
     @Operation(
             summary = "Query Paged list of privileges",
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Privilege Management")
-    public RestResult.Ok<Page<PrivilegeDto>> paginate(PrivilegeQueryParams queryParams, PageRequest pageRequest) {
-        return RestResult.ok(service.paginate(queryParams, pageRequest));
+    public RestResult.Ok<Page<PrivilegeDto>> paginate(PrivilegeQueryDto queryDto, PageRequest pageRequest) {
+        return RestResult.ok(service.paginate(queryDto, pageRequest));
     }
 
     @PostMapping

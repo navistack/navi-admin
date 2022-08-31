@@ -6,14 +6,14 @@ import org.navistack.admin.modules.common.dao.PrivilegeDao;
 import org.navistack.admin.modules.common.entity.Privilege;
 import org.navistack.admin.modules.mgmt.service.PrivilegeService;
 import org.navistack.admin.modules.mgmt.service.dto.PrivilegeDto;
-import org.navistack.admin.modules.mgmt.service.dto.PrivilegeQueryParams;
+import org.navistack.admin.modules.mgmt.service.dto.PrivilegeQueryDto;
 import org.navistack.framework.core.error.EntityDuplicationException;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PrivilegeServiceImpl
-        extends AbstractCrudService<Privilege, Long, PrivilegeDto, PrivilegeQueryParams, PrivilegeDao>
+        extends AbstractCrudService<Privilege, Long, PrivilegeDto, PrivilegeQueryDto, PrivilegeDao>
         implements PrivilegeService {
 
     public PrivilegeServiceImpl(PrivilegeDao dao) {
@@ -21,11 +21,11 @@ public class PrivilegeServiceImpl
     }
 
     @Override
-    protected Wrapper<Privilege> buildWrapper(PrivilegeQueryParams queryParams) {
-        Long id = queryParams.getId();
-        String code = queryParams.getCode();
-        String name = queryParams.getName();
-        Long parentId = queryParams.getParentId();
+    protected Wrapper<Privilege> buildWrapper(PrivilegeQueryDto queryDto) {
+        Long id = queryDto.getId();
+        String code = queryDto.getCode();
+        String name = queryDto.getName();
+        Long parentId = queryDto.getParentId();
 
         return Wrappers.<Privilege>lambdaQuery()
                 .eq(id != null, Privilege::getId, id)

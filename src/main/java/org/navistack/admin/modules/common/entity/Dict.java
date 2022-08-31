@@ -16,5 +16,5 @@ public class Dict extends AuditingEntity<Long> {
 
     private String name;
 
-    private String description;
+    private String remarks;
 }

@@ -8,15 +8,12 @@ import javax.validation.constraints.*;
 
 @Data
 public class OrgDto {
-    protected static final String CODE_PATTERN = "^[A-Za-z0-9-]+$";
-
     @Null(groups = Create.class)
     @NotNull(groups = Modify.class)
     private Long id;
 
     @NotEmpty
-    @Size(min = 1, max = 48)
-    @Pattern(regexp = CODE_PATTERN, message = "{Pattern.Org.code}")
+    @Pattern(regexp = "^[A-Za-z0-9-]{1,48}$", message = "{Pattern.Org.code}")
     private String code;
 
     @NotEmpty
@@ -26,5 +23,5 @@ public class OrgDto {
     private Long superId;
 
     @Size(max = 140)
-    private String description;
+    private String remarks;
 }

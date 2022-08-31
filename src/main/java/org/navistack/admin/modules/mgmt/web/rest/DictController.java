@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.mgmt.service.DictService;
 import org.navistack.admin.modules.mgmt.service.dto.DictDto;
-import org.navistack.admin.modules.mgmt.service.dto.DictQueryParams;
+import org.navistack.admin.modules.mgmt.service.dto.DictQueryDto;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
 import org.navistack.framework.mybatisplusplus.validation.groups.Create;
@@ -28,14 +28,14 @@ public class DictController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('sys:dict:paginate')")
+    @PreAuthorize("hasAuthority('sys:dict:query')")
     @Operation(
             summary = "Query Paged list of dictionaries",
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Dictionary Management")
-    public RestResult.Ok<Page<DictDto>> paginate(DictQueryParams queryParams, PageRequest pageRequest) {
-        return RestResult.ok(service.paginate(queryParams, pageRequest));
+    public RestResult.Ok<Page<DictDto>> paginate(DictQueryDto queryDto, PageRequest pageRequest) {
+        return RestResult.ok(service.paginate(queryDto, pageRequest));
     }
 
     @PostMapping

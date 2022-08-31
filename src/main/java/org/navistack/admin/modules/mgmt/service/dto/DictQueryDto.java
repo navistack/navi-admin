@@ -5,12 +5,10 @@ import lombok.Data;
 import javax.validation.constraints.Pattern;
 
 @Data
-public class DictQueryParams {
-    protected static final String CODE_PATTERN = "^[A-Za-z0-9$_]+$";
-
+public class DictQueryDto {
     private Long id;
 
-    @Pattern(regexp = CODE_PATTERN, message = "{Pattern.Dict.code}")
+    @Pattern(regexp = "^[A-Za-z0-9$_]{1,48}$", message = "{Pattern.Dict.code}")
     private String code;
 
     private String name;

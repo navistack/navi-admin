@@ -12,7 +12,7 @@ public class RoleDetailVm {
 
     private String name;
 
-    private String description;
+    private String remarks;
 
     private List<Long> privilegeIds;
 }

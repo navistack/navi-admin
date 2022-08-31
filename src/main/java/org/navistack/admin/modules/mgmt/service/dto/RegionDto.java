@@ -8,7 +8,7 @@ import javax.validation.constraints.*;
 
 @Data
 public class RegionDto {
-    protected static final String CODE_PATTERN = "^[A-Za-z0-9-]+$";
+    protected static final String CODE_PATTERN = "^[A-Za-z0-9-]{1,48}$";
     protected static final String CODE_VALIDATION_MESSAGE = "{Pattern.Region.code}";
 
     @Null(groups = Create.class)
@@ -16,7 +16,6 @@ public class RegionDto {
     private Long id;
 
     @NotEmpty
-    @Size(min = 1, max = 48)
     @Pattern(regexp = CODE_PATTERN, message = CODE_VALIDATION_MESSAGE)
     private String code;
 
@@ -25,10 +24,9 @@ public class RegionDto {
     private String name;
 
     @NotEmpty
-    @Size(min = 1, max = 48)
     @Pattern(regexp = CODE_PATTERN, message = CODE_VALIDATION_MESSAGE)
     private String parentCode;
 
     @Size(max = 140)
-    private String description;
+    private String remarks;
 }

@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.mgmt.service.OrgService;
 import org.navistack.admin.modules.mgmt.service.dto.OrgDto;
-import org.navistack.admin.modules.mgmt.service.dto.OrgQueryParams;
+import org.navistack.admin.modules.mgmt.service.dto.OrgQueryDto;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
 import org.navistack.framework.mybatisplusplus.validation.groups.Create;
@@ -28,14 +28,14 @@ public class OrgController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('sys:organization:paginate')")
+    @PreAuthorize("hasAuthority('sys:organization:query')")
     @Operation(
             summary = "Query Paged list of organizations",
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "Organization Management")
-    public RestResult.Ok<Page<OrgDto>> paginate(OrgQueryParams queryParams, PageRequest pageRequest) {
-        return RestResult.ok(service.paginate(queryParams, pageRequest));
+    public RestResult.Ok<Page<OrgDto>> paginate(OrgQueryDto queryDto, PageRequest pageRequest) {
+        return RestResult.ok(service.paginate(queryDto, pageRequest));
     }
 
     @PostMapping

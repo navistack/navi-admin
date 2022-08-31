@@ -6,24 +6,24 @@ import org.navistack.admin.modules.common.dao.DictDao;
 import org.navistack.admin.modules.common.entity.Dict;
 import org.navistack.admin.modules.mgmt.service.DictService;
 import org.navistack.admin.modules.mgmt.service.dto.DictDto;
-import org.navistack.admin.modules.mgmt.service.dto.DictQueryParams;
+import org.navistack.admin.modules.mgmt.service.dto.DictQueryDto;
 import org.navistack.framework.core.error.EntityDuplicationException;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DictServiceImpl
-        extends AbstractCrudService<Dict, Long, DictDto, DictQueryParams, DictDao>
+        extends AbstractCrudService<Dict, Long, DictDto, DictQueryDto, DictDao>
         implements DictService {
     public DictServiceImpl(DictDao dao) {
         super(dao);
     }
 
     @Override
-    protected Wrapper<Dict> buildWrapper(DictQueryParams queryParams) {
-        Long id = queryParams.getId();
-        String code = queryParams.getCode();
-        String name = queryParams.getName();
+    protected Wrapper<Dict> buildWrapper(DictQueryDto queryDto) {
+        Long id = queryDto.getId();
+        String code = queryDto.getCode();
+        String name = queryDto.getName();
 
         return Wrappers.<Dict>lambdaQuery()
                 .eq(id != null, Dict::getId, id)

@@ -6,14 +6,14 @@ import org.navistack.admin.modules.common.dao.OrgDao;
 import org.navistack.admin.modules.common.entity.Org;
 import org.navistack.admin.modules.mgmt.service.OrgService;
 import org.navistack.admin.modules.mgmt.service.dto.OrgDto;
-import org.navistack.admin.modules.mgmt.service.dto.OrgQueryParams;
+import org.navistack.admin.modules.mgmt.service.dto.OrgQueryDto;
 import org.navistack.framework.core.error.EntityDuplicationException;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class OrgServiceImpl
-        extends AbstractCrudService<Org, Long, OrgDto, OrgQueryParams, OrgDao>
+        extends AbstractCrudService<Org, Long, OrgDto, OrgQueryDto, OrgDao>
         implements OrgService {
 
     public OrgServiceImpl(OrgDao dao) {
@@ -21,10 +21,10 @@ public class OrgServiceImpl
     }
 
     @Override
-    protected Wrapper<Org> buildWrapper(OrgQueryParams queryParams) {
-        String code = queryParams.getCode();
-        String name = queryParams.getName();
-        Long superId = queryParams.getSuperId();
+    protected Wrapper<Org> buildWrapper(OrgQueryDto queryDto) {
+        String code = queryDto.getCode();
+        String name = queryDto.getName();
+        Long superId = queryDto.getSuperId();
 
         return Wrappers.<Org>lambdaQuery()
                 .eq(code != null, Org::getCode, code)

@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.mgmt.service.UserService;
 import org.navistack.admin.modules.mgmt.service.dto.UserDto;
-import org.navistack.admin.modules.mgmt.service.dto.UserQueryParams;
+import org.navistack.admin.modules.mgmt.service.dto.UserQueryDto;
 import org.navistack.admin.modules.mgmt.service.vm.UserDetailVm;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
@@ -29,18 +29,18 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('sys:user:paginate')")
+    @PreAuthorize("hasAuthority('sys:user:query')")
     @Operation(
             summary = "Query Paged list of users",
             security = @SecurityRequirement(name = "bearer-key")
     )
     @Tag(name = "User Management")
-    public RestResult.Ok<Page<UserDto>> paginate(UserQueryParams queryParams, PageRequest pageRequest) {
-        return RestResult.ok(service.paginate(queryParams, pageRequest));
+    public RestResult.Ok<Page<UserDto>> paginate(UserQueryDto queryDto, PageRequest pageRequest) {
+        return RestResult.ok(service.paginate(queryDto, pageRequest));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('sys:user:detail')")
+    @PreAuthorize("hasAuthority('sys:user:querydetail')")
     @Operation(
             summary = "Query details about user",
             security = @SecurityRequirement(name = "bearer-key")

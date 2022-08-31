@@ -6,7 +6,7 @@ import org.navistack.admin.modules.common.dao.RegionDao;
 import org.navistack.admin.modules.common.entity.Region;
 import org.navistack.admin.modules.mgmt.service.RegionService;
 import org.navistack.admin.modules.mgmt.service.dto.RegionDto;
-import org.navistack.admin.modules.mgmt.service.dto.RegionQueryParams;
+import org.navistack.admin.modules.mgmt.service.dto.RegionQueryDto;
 import org.navistack.framework.core.error.EntityDuplicationException;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RegionServiceImpl
-        extends AbstractCrudService<Region, Long, RegionDto, RegionQueryParams, RegionDao>
+        extends AbstractCrudService<Region, Long, RegionDto, RegionQueryDto, RegionDao>
         implements RegionService {
 
     public RegionServiceImpl(RegionDao dao) {
@@ -22,11 +22,11 @@ public class RegionServiceImpl
     }
 
     @Override
-    protected Wrapper<Region> buildWrapper(RegionQueryParams queryParams) {
-        Long id = queryParams.getId();
-        String code = queryParams.getCode();
-        String name = queryParams.getName();
-        String parentCode = queryParams.getParentCode();
+    protected Wrapper<Region> buildWrapper(RegionQueryDto queryDto) {
+        Long id = queryDto.getId();
+        String code = queryDto.getCode();
+        String name = queryDto.getName();
+        String parentCode = queryDto.getParentCode();
 
         return Wrappers.<Region>lambdaQuery()
                 .eq(id != null, Region::getId, id)

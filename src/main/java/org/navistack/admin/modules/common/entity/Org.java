@@ -18,5 +18,5 @@ public class Org extends AuditingEntity<Long> {
 
     private Long superId;
 
-    private String description;
+    private String remarks;
 }

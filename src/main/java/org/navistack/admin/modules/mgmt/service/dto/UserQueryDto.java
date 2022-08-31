@@ -4,7 +4,7 @@ import lombok.Data;
 import org.navistack.admin.modules.common.enums.UserStatus;
 
 @Data
-public class UserQueryParams {
+public class UserQueryDto {
     private String loginName;
 
     private String mobileNumber;

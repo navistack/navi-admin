@@ -8,8 +8,6 @@ import javax.validation.constraints.*;
 
 @Data
 public class DictItemDto {
-    protected static final String CODE_PATTERN = "^[A-Za-z0-9$_]+$";
-
     @Null(groups = Create.class)
     @NotNull(groups = Modify.class)
     private Long id;
@@ -19,8 +17,7 @@ public class DictItemDto {
     private String name;
 
     @NotEmpty
-    @Size(min = 1, max = 48)
-    @Pattern(regexp = CODE_PATTERN, message = "{Pattern.DictItem.itKey}")
+    @Pattern(regexp = "^[A-Za-z0-9$_]{1,48}$", message = "{Pattern.DictItem.itKey}")
     private String itKey;
 
     @NotEmpty
@@ -28,7 +25,7 @@ public class DictItemDto {
     private String itValue;
 
     @Size(max = 140)
-    private String description;
+    private String remarks;
 
     @NotEmpty
     private String dictCode;
