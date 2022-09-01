@@ -13,7 +13,6 @@
     <entry key="Pattern.Privilege.code">can only contain letters, digits and colons</entry>
     <entry key="Pattern.Role.code">can only contain letters, digits and underscores</entry>
     <entry key="Pattern.User.loginName">can only contain letters, digits, underscores, dots and hyphens</entry>
-    <entry key="Pattern.User.mobilePrefix">Is not valid mobile prefix</entry>
     <entry key="Pattern.User.mobileNumber">Is not valid mobile number</entry>
     <entry key="Pattern.Org.code">can only contain letters, digits and hyphens</entry>
 </properties>

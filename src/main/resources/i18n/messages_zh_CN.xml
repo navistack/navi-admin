@@ -13,7 +13,6 @@
     <entry key="Pattern.Privilege.code">只能包含字符、数字和冒号</entry>
     <entry key="Pattern.Role.code">只能包含字符、数字和下划线</entry>
     <entry key="Pattern.User.loginName">只能包含字符、数字和下划线、点和横杠</entry>
-    <entry key="Pattern.User.mobilePrefix">无效的手机区号</entry>
     <entry key="Pattern.User.mobileNumber">无效的手机号码</entry>
     <entry key="Pattern.Org.code">只能包含字符、数字和横杠</entry>
 </properties>

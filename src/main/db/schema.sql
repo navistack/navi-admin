@@ -107,8 +107,7 @@ CREATE TABLE `user`
 
     `login_name`    VARCHAR(24) NOT NULL,
 
-    `mobile_prefix` CHAR(3),
-    `mobile_number` CHAR(14),
+    `mobile_number` CHAR(17),
     `email_address` VARCHAR(42),
 
     `password`      CHAR(80),
@@ -127,7 +126,7 @@ CREATE TABLE `user`
     `remarks`       VARCHAR(140),
 
     UNIQUE KEY (`login_name`),
-    UNIQUE KEY (`mobile_prefix`, `mobile_number`),
+    UNIQUE KEY (`mobile_number`),
     UNIQUE KEY (`email_address`)
 );
 

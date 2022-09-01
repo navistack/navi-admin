@@ -79,11 +79,7 @@ public class UserServiceImpl
                 Wrappers.<User>lambdaQuery()
                         .eq(User::getEmailAddress, dto.getEmailAddress())
                         .or()
-                        .and(w -> w
-                                .eq(User::getMobilePrefix, dto.getMobilePrefix())
-                                .eq(User::getMobileNumber, dto.getMobileNumber())
-                        )
-                        .or()
+                        .eq(User::getMobileNumber, dto.getMobileNumber())
                         .eq(User::getLoginName, dto.getLoginName())
         );
 
@@ -107,10 +103,7 @@ public class UserServiceImpl
                         .and(w -> w
                                 .eq(User::getEmailAddress, dto.getEmailAddress())
                                 .or()
-                                .and(ww -> ww
-                                        .eq(User::getMobilePrefix, dto.getMobilePrefix())
-                                        .eq(User::getMobileNumber, dto.getMobileNumber())
-                                )
+                                .eq(User::getMobileNumber, dto.getMobileNumber())
                                 .or()
                                 .eq(User::getLoginName, dto.getLoginName())
                         )

@@ -32,11 +32,7 @@ public class UserDto {
     private String loginName;
 
     @NotEmpty
-    @Pattern(regexp = "^\\d{1,3}$")
-    private String mobilePrefix;
-
-    @NotEmpty
-    @Pattern(regexp = "^\\d{1,14}$")
+    @Pattern(regexp = "^\\d{1,17}$")
     private String mobileNumber;
 
     @NotEmpty

@@ -21,8 +21,6 @@ public class UserDetailVm {
 
     private String loginName;
 
-    private String mobilePrefix;
-
     private String mobileNumber;
 
     private String emailAddress;

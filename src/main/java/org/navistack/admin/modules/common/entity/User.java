@@ -27,8 +27,6 @@ public class User extends IdEntity<Long> {
      * aka international mobile dial codes
      * @see <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
      */
-    private String mobilePrefix;
-
     private String mobileNumber;
 
     private String emailAddress;
