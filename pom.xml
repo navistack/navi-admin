@@ -16,8 +16,8 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
-        <knife4j.version>3.0.3</knife4j.version>
         <editorconfig.version>0.1.1</editorconfig.version>
+        <springdoc.version>1.6.11</springdoc.version>
     </properties>
 
     <dependencies>
@@ -47,9 +47,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-spring-boot-starter</artifactId>
-            <version>${knife4j.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
 
         <dependency>
