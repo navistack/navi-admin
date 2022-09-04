@@ -4,9 +4,9 @@ import org.navistack.admin.modules.common.entity.Privilege;
 import org.navistack.admin.modules.common.entity.User;
 import org.navistack.admin.modules.system.service.AuthenticationService;
 import org.navistack.admin.modules.system.service.AuthorityService;
+import org.navistack.framework.security.TokenAuthentication;
 import org.navistack.framework.security.jwt.DefaultJwtClaims;
 import org.navistack.framework.security.jwt.JwtClaims;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,7 +42,7 @@ public class JwtTokenResolver implements org.navistack.framework.security.jwt.Jw
         Optional<User> user = authenticationService.findUserByLoginName(claims.getSubject());
 
         if (!user.isPresent()) {
-            throw new RuntimeException("Invalid token");
+            throw new UserNotFoundException("No such user found");
         }
 
         List<Privilege> privileges = authorityService.listGrantedPrivilegesOf(user.get());
@@ -58,6 +58,6 @@ public class JwtTokenResolver implements org.navistack.framework.security.jwt.Jw
         principal.setPassword("NO_PASSWORD");
         principal.setAuthorities(authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, "NO_CREDENTIALS", authorities);
+        return TokenAuthentication.authenticated(principal, "NO_CREDENTIALS", authorities);
     }
 }

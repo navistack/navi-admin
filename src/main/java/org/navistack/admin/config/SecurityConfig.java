@@ -1,6 +1,5 @@
 package org.navistack.admin.config;
 
-import org.navistack.framework.security.TokenConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -20,10 +19,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            TokenConfigurer tokenConfigurer
-    ) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // @formatter:off
         return http
                 .headers()
@@ -53,8 +49,6 @@ public class SecurityConfig {
                     .disable()
                 .logout()
                     .disable()
-                .apply(tokenConfigurer)
-                .and()
                 .build();
         // @formatter:on
     }
