@@ -13,7 +13,7 @@ public class PrivilegeDto {
     private Long id;
 
     @NotEmpty
-    @Pattern(regexp = "^[A-Za-z0-9:]{1,48}$", message = "{Pattern.Privilege.code}")
+    @Pattern(regexp = "^[A-Za-z0-9:]{1,48}$", message = "{validation.constraints.Privilege.code.message}")
     private String code;
 
     @NotEmpty

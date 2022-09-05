@@ -8,7 +8,7 @@ import javax.validation.constraints.Pattern;
 public class DictQueryDto {
     private Long id;
 
-    @Pattern(regexp = "^[A-Za-z0-9$_]{1,48}$", message = "{Pattern.Dict.code}")
+    @Pattern(regexp = "^[A-Za-z0-9$_]{1,48}$", message = "{validation.constraints.Dict.code.message}")
     private String code;
 
     private String name;

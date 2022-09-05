@@ -7,12 +7,12 @@
     <entry key="javax.validation.constraints.Size.message">must be between {min} and {max} long</entry>
     <entry key="javax.validation.constraints.Pattern.message">does not match pattern</entry>
     <entry key="javax.validation.constraints.Email.message">is not a valid email address</entry>
-    <entry key="Pattern.Dict.code">can only contain letters, digits and underscores</entry>
-    <entry key="Pattern.DictItem.itKey">can only contain letters, digits and underscores</entry>
-    <entry key="Pattern.Region.code">can only contain letters, digits and hyphens</entry>
-    <entry key="Pattern.Privilege.code">can only contain letters, digits and colons</entry>
-    <entry key="Pattern.Role.code">can only contain letters, digits and underscores</entry>
-    <entry key="Pattern.User.loginName">can only contain letters, digits, underscores, dots and hyphens</entry>
-    <entry key="Pattern.User.mobileNumber">Is not valid mobile number</entry>
-    <entry key="Pattern.Org.code">can only contain letters, digits and hyphens</entry>
+    <entry key="validation.constraints.Dict.code.message">can only contain letters, digits and underscores</entry>
+    <entry key="validation.constraints.DictItem.itKey.message">can only contain letters, digits and underscores</entry>
+    <entry key="validation.constraints.Region.code.message">can only contain letters, digits and hyphens</entry>
+    <entry key="validation.constraints.Privilege.code.message">can only contain letters, digits and colons</entry>
+    <entry key="validation.constraints.Role.code.message">can only contain letters, digits and underscores</entry>
+    <entry key="validation.constraints.User.loginName.message">can only contain letters, digits, underscores, dots and hyphens</entry>
+    <entry key="validation.constraints.User.mobileNumber.message">Is not valid mobile number</entry>
+    <entry key="validation.constraints.Org.code.message">can only contain letters, digits and hyphens</entry>
 </properties>

@@ -13,7 +13,7 @@ public class RoleDto {
     @NotNull(groups = Modify.class)
     private Long id;
 
-    @Pattern(regexp = "^[A-Za-z0-9$_]{1,48}$", message = "{Pattern.Role.code}")
+    @Pattern(regexp = "^[A-Za-z0-9$_]{1,48}$", message = "{validation.constraints.Role.code.message}")
     private String code;
 
     @NotEmpty

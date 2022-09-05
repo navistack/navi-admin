@@ -17,7 +17,7 @@ public class DictItemDto {
     private String name;
 
     @NotEmpty
-    @Pattern(regexp = "^[A-Za-z0-9$_]{1,48}$", message = "{Pattern.DictItem.itKey}")
+    @Pattern(regexp = "^[A-Za-z0-9$_]{1,48}$", message = "{validation.constraints.DictItem.itKey.message}")
     private String itKey;
 
     @NotEmpty

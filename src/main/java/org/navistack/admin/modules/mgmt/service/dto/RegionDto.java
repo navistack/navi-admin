@@ -9,7 +9,7 @@ import javax.validation.constraints.*;
 @Data
 public class RegionDto {
     protected static final String CODE_PATTERN = "^[A-Za-z0-9-]{1,48}$";
-    protected static final String CODE_VALIDATION_MESSAGE = "{Pattern.Region.code}";
+    protected static final String CODE_VALIDATION_MESSAGE = "{validation.constraints.Region.code.message}";
 
     @Null(groups = Create.class)
     @NotNull(groups = Modify.class)

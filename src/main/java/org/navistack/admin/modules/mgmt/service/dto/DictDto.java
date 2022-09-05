@@ -13,7 +13,7 @@ public class DictDto {
     private Long id;
 
     @NotEmpty()
-    @Pattern(regexp = "^[A-Za-z0-9$_]{1,48}$", message = "{Pattern.Dict.code}")
+    @Pattern(regexp = "^[A-Za-z0-9$_]{1,48}$", message = "{validation.constraints.Dict.code.message}")
     private String code;
 
     @Size(max = 80)

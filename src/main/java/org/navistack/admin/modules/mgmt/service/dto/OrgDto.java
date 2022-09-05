@@ -13,7 +13,7 @@ public class OrgDto {
     private Long id;
 
     @NotEmpty
-    @Pattern(regexp = "^[A-Za-z0-9-]{1,48}$", message = "{Pattern.Org.code}")
+    @Pattern(regexp = "^[A-Za-z0-9-]{1,48}$", message = "{validation.constraints.Org.code.message}")
     private String code;
 
     @NotEmpty
