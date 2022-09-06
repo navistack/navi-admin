@@ -6,10 +6,6 @@ spring:
 #    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
 #    username: ${DB_USERNAME}
 #    password: ${DB_PASSWORD}
-  mvc:
-    pathmatch:
-      # See https://github.com/springfox/springfox/issues/3462#issuecomment-978707909
-      matching-strategy: ant_path_matcher
 
   #navi:
 #  security:
