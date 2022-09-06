@@ -7,7 +7,15 @@
         WITH RECURSIVE `t` AS (
             SELECT *
               FROM `region` `r`
-          /* WHERE */ ${ew.customSqlSegment}
+            <where>
+                <if test="ew != null
+                 and ew.expression != null
+                 and ew.expression.normal != null
+                 and ew.expression.normal.sqlSegment != null
+                 and !ew.expression.normal.sqlSegment.isEmpty()">
+                    ${ew.expression.normal.sqlSegment}
+                </if>
+            </where>
             UNION
             SELECT `r`.*
               FROM `t`
