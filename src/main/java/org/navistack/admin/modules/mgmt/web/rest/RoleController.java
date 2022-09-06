@@ -21,6 +21,7 @@ import javax.validation.groups.Default;
 @RestController
 @RequestMapping("/role")
 @Tag(name = "Role Management")
+@SecurityRequirement(name = "bearer-key")
 public class RoleController {
     private final RoleService service;
 
@@ -30,33 +31,21 @@ public class RoleController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('sys:role:query')")
-    @Operation(
-            summary = "Query Paged list of roles",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Role Management")
+    @Operation(summary = "Query Paged list of roles")
     public RestResult.Ok<Page<RoleDto>> paginate(RoleQueryDto queryDto, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(queryDto, pageRequest));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('sys:role:querydetail')")
-    @Operation(
-            summary = "Query details about role",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Role Management")
+    @Operation(summary = "Query details about role")
     public RestResult.Ok<RoleDetailVm> detail(@PathVariable Long id) {
         return RestResult.ok(service.queryDetailById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('sys:role:create')")
-    @Operation(
-            summary = "Create a role",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Role Management")
+    @Operation(summary = "Create a role")
     public RestResult.None create(@Validated({Default.class, Create.class}) RoleDto dto) {
         service.create(dto);
         return RestResult.ok();
@@ -64,11 +53,7 @@ public class RoleController {
 
     @PatchMapping
     @PreAuthorize("hasAuthority('sys:role:modify')")
-    @Operation(
-            summary = "Modify role",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Role Management")
+    @Operation(summary = "Modify role")
     public RestResult.None modify(@Validated({Default.class, Modify.class}) RoleDto dto) {
         service.modify(dto);
         return RestResult.ok();
@@ -76,11 +61,7 @@ public class RoleController {
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('sys:role:remove')")
-    @Operation(
-            summary = "Remove role",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Role Management")
+    @Operation(summary = "Remove role")
     public RestResult.None remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();

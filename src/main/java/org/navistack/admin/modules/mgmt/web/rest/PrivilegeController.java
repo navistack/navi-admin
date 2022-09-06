@@ -20,6 +20,7 @@ import javax.validation.groups.Default;
 @RestController
 @RequestMapping("/privilege")
 @Tag(name = "Privilege Management")
+@SecurityRequirement(name = "bearer-key")
 public class PrivilegeController {
     private final PrivilegeService service;
 
@@ -29,22 +30,14 @@ public class PrivilegeController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('sys:privilege:query')")
-    @Operation(
-            summary = "Query Paged list of privileges",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Privilege Management")
+    @Operation(summary = "Query Paged list of privileges")
     public RestResult.Ok<Page<PrivilegeDto>> paginate(PrivilegeQueryDto queryDto, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(queryDto, pageRequest));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('sys:privilege:create')")
-    @Operation(
-            summary = "Create a privilege",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Privilege Management")
+    @Operation(summary = "Create a privilege")
     public RestResult.None create(@Validated({Default.class, Create.class}) PrivilegeDto dto) {
         service.create(dto);
         return RestResult.ok();
@@ -52,11 +45,7 @@ public class PrivilegeController {
 
     @PatchMapping
     @PreAuthorize("hasAuthority('sys:privilege:modify')")
-    @Operation(
-            summary = "Modify privilege",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Privilege Management")
+    @Operation(summary = "Modify privilege")
     public RestResult.None modify(@Validated({Default.class, Modify.class}) PrivilegeDto dto) {
         service.modify(dto);
         return RestResult.ok();
@@ -64,11 +53,7 @@ public class PrivilegeController {
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('sys:privilege:remove')")
-    @Operation(
-            summary = "Remove privilege",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Privilege Management")
+    @Operation(summary = "Remove privilege")
     public RestResult.None remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();

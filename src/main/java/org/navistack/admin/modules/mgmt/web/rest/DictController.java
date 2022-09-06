@@ -20,6 +20,7 @@ import javax.validation.groups.Default;
 @RestController
 @RequestMapping("/dict")
 @Tag(name = "Dictionary Management")
+@SecurityRequirement(name = "bearer-key")
 public class DictController {
     private final DictService service;
 
@@ -29,22 +30,14 @@ public class DictController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('sys:dict:query')")
-    @Operation(
-            summary = "Query Paged list of dictionaries",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Dictionary Management")
+    @Operation(summary = "Query Paged list of dictionaries")
     public RestResult.Ok<Page<DictDto>> paginate(DictQueryDto queryDto, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(queryDto, pageRequest));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('sys:dict:create')")
-    @Operation(
-            summary = "Create a dictionary",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Dictionary Management")
+    @Operation(summary = "Create a dictionary")
     public RestResult.None create(@Validated({Default.class, Create.class}) DictDto dto) {
         service.create(dto);
         return RestResult.ok();
@@ -52,11 +45,7 @@ public class DictController {
 
     @PatchMapping
     @PreAuthorize("hasAuthority('sys:dict:modify')")
-    @Operation(
-            summary = "Modify dictionary",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Dictionary Management")
+    @Operation(summary = "Modify dictionary")
     public RestResult.None modify(@Validated({Default.class, Modify.class}) DictDto dto) {
         service.modify(dto);
         return RestResult.ok();
@@ -64,11 +53,7 @@ public class DictController {
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('sys:dict:remove')")
-    @Operation(
-            summary = "Remove dictionary",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Dictionary Management")
+    @Operation(summary = "Remove dictionary")
     public RestResult.None remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();

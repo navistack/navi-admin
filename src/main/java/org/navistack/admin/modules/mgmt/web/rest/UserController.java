@@ -21,6 +21,7 @@ import javax.validation.groups.Default;
 @RestController
 @RequestMapping("/user")
 @Tag(name = "User Management")
+@SecurityRequirement(name = "bearer-key")
 public class UserController {
     private final UserService service;
 
@@ -30,33 +31,21 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('sys:user:query')")
-    @Operation(
-            summary = "Query Paged list of users",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "User Management")
+    @Operation(summary = "Query Paged list of users")
     public RestResult.Ok<Page<UserDto>> paginate(UserQueryDto queryDto, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(queryDto, pageRequest));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('sys:user:querydetail')")
-    @Operation(
-            summary = "Query details about user",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "User Management")
+    @Operation(summary = "Query details about user")
     public RestResult.Ok<UserDetailVm> detail(@PathVariable Long id) {
         return RestResult.ok(service.queryDetailById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('sys:user:create')")
-    @Operation(
-            summary = "Create a user",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "User Management")
+    @Operation(summary = "Create a user")
     public RestResult.None create(@Validated({Default.class, Create.class}) UserDto dto) {
         service.create(dto);
         return RestResult.ok();
@@ -64,11 +53,7 @@ public class UserController {
 
     @PatchMapping
     @PreAuthorize("hasAuthority('sys:user:modify')")
-    @Operation(
-            summary = "Modify user",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "User Management")
+    @Operation(summary = "Modify user")
     public RestResult.None modify(@Validated({Default.class, Modify.class}) UserDto dto) {
         service.modify(dto);
         return RestResult.ok();
@@ -76,11 +61,7 @@ public class UserController {
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('sys:user:remove')")
-    @Operation(
-            summary = "Remove user",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "User Management")
+    @Operation(summary = "Remove user")
     public RestResult.None remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();

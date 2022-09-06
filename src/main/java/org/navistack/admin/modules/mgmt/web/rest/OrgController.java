@@ -20,6 +20,7 @@ import javax.validation.groups.Default;
 @RestController
 @RequestMapping("/org")
 @Tag(name = "Organization Management")
+@SecurityRequirement(name = "bearer-key")
 public class OrgController {
     private final OrgService service;
 
@@ -29,22 +30,14 @@ public class OrgController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('sys:organization:query')")
-    @Operation(
-            summary = "Query Paged list of organizations",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Organization Management")
+    @Operation(summary = "Query Paged list of organizations")
     public RestResult.Ok<Page<OrgDto>> paginate(OrgQueryDto queryDto, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(queryDto, pageRequest));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('sys:organization:create')")
-    @Operation(
-            summary = "Create an organization",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Organization Management")
+    @Operation(summary = "Create an organization")
     public RestResult.None create(@Validated({Default.class, Create.class}) OrgDto dto) {
         service.create(dto);
         return RestResult.ok();
@@ -52,11 +45,7 @@ public class OrgController {
 
     @PatchMapping
     @PreAuthorize("hasAuthority('sys:organization:modify')")
-    @Operation(
-            summary = "Modify organization",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Organization Management")
+    @Operation(summary = "Modify organization")
     public RestResult.None modify(@Validated({Default.class, Modify.class}) OrgDto dto) {
         service.modify(dto);
         return RestResult.ok();
@@ -64,11 +53,7 @@ public class OrgController {
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('sys:organization:remove')")
-    @Operation(
-            summary = "Remove organization",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Organization Management")
+    @Operation(summary = "Remove organization")
     public RestResult.None remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();

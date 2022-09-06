@@ -20,6 +20,7 @@ import javax.validation.groups.Default;
 @RestController
 @RequestMapping("/dict-item")
 @Tag(name = "Dictionary Item Management")
+@SecurityRequirement(name = "bearer-key")
 public class DictItemController {
     private final DictItemService service;
 
@@ -29,22 +30,14 @@ public class DictItemController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('sys:dict_item:query')")
-    @Operation(
-            summary = "Query Paged list of dictionary items",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Dictionary Item Management")
+    @Operation(summary = "Query Paged list of dictionary items")
     public RestResult.Ok<Page<DictItemDto>> paginate(DictItemQueryDto queryDto, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(queryDto, pageRequest));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('sys:dict_item:create')")
-    @Operation(
-            summary = "Create a dictionary item",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Dictionary Item Management")
+    @Operation(summary = "Create a dictionary item")
     public RestResult.None create(@Validated({Default.class, Create.class}) DictItemDto dto) {
         service.create(dto);
         return RestResult.ok();
@@ -52,11 +45,7 @@ public class DictItemController {
 
     @PatchMapping
     @PreAuthorize("hasAuthority('sys:dict_item:modify')")
-    @Operation(
-            summary = "Modify dictionary item",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Dictionary Item Management")
+    @Operation(summary = "Modify dictionary item")
     public RestResult.None modify(@Validated({Default.class, Modify.class}) DictItemDto dto) {
         service.modify(dto);
         return RestResult.ok();
@@ -64,11 +53,7 @@ public class DictItemController {
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('sys:dict_item:remove')")
-    @Operation(
-            summary = "Remove dictionary item",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Dictionary Item Management")
+    @Operation(summary = "Remove dictionary item")
     public RestResult.None remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();

@@ -28,7 +28,6 @@ public class SysRegionController {
 
     @GetMapping
     @Operation(summary = "Get regions and their sub-regions recursively")
-    @Tag(name = "System")
     public RestResult.Ok<Collection<RegionVm>> get() {
         List<Region> regions = regionDao.selectList(Wrappers.emptyWrapper());
         Collection<RegionVm> vms = TreeUtils.treeize(regions, RegionVm::of);
@@ -37,7 +36,6 @@ public class SysRegionController {
 
     @GetMapping("/{region}")
     @Operation(summary = "Get regions and their sub-regions recursively")
-    @Tag(name = "System")
     public RestResult.Ok<Collection<RegionVm>> get(
             @PathVariable("region") String regionCode,
             @RequestParam(defaultValue = "true") boolean recursive

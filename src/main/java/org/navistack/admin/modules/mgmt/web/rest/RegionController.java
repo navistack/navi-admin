@@ -20,6 +20,7 @@ import javax.validation.groups.Default;
 @RestController
 @RequestMapping("/region")
 @Tag(name = "Region Management")
+@SecurityRequirement(name = "bearer-key")
 public class RegionController {
     private final RegionService service;
 
@@ -29,22 +30,14 @@ public class RegionController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('sys:region:query')")
-    @Operation(
-            summary = "Query Paged list of regions",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Region Management")
+    @Operation(summary = "Query Paged list of regions")
     public RestResult.Ok<Page<RegionDto>> paginate(RegionQueryDto queryDto, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(queryDto, pageRequest));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('sys:region:create')")
-    @Operation(
-            summary = "Create a region",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Region Management")
+    @Operation(summary = "Create a region")
     public RestResult.None create(@Validated({Default.class, Create.class}) RegionDto dto) {
         service.create(dto);
         return RestResult.ok();
@@ -52,11 +45,7 @@ public class RegionController {
 
     @PatchMapping
     @PreAuthorize("hasAuthority('sys:region:modify')")
-    @Operation(
-            summary = "Modify region",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Region Management")
+    @Operation(summary = "Modify region")
     public RestResult.None modify(@Validated({Default.class, Modify.class}) RegionDto dto) {
         service.modify(dto);
         return RestResult.ok();
@@ -64,11 +53,7 @@ public class RegionController {
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('sys:region:remove')")
-    @Operation(
-            summary = "Remove region",
-            security = @SecurityRequirement(name = "bearer-key")
-    )
-    @Tag(name = "Region Management")
+    @Operation(summary = "Remove region")
     public RestResult.None remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();

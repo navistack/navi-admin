@@ -38,7 +38,6 @@ public class SysDictController {
 
     @GetMapping
     @Operation(summary = "Get directories and their items")
-    @Tag(name = "System")
     public RestResult.Ok<Collection<DictVm>> get() {
         List<Dict> dicts = dictDao.selectList(Wrappers.emptyWrapper());
         if (dicts.isEmpty()) {
@@ -77,7 +76,6 @@ public class SysDictController {
 
     @GetMapping("/{dict:[A-Za-z0-9$_]{1,48}}")
     @Operation(summary = "Get directory and its items")
-    @Tag(name = "System")
     public RestResult.Ok<DictVm> get(@PathVariable("dict") String dictCode) {
         Wrapper<Dict> dictWrapper = Wrappers.<Dict>lambdaQuery()
                 .eq(Strings.hasText(dictCode), Dict::getCode, dictCode);
@@ -106,7 +104,6 @@ public class SysDictController {
 
     @GetMapping("/{dict:[A-Za-z0-9$_]{1,48}}/items")
     @Operation(summary = "Get items of directory")
-    @Tag(name = "System")
     public RestResult.Ok<Collection<DictItemVm>> getItem(@PathVariable("dict") String dictCode) {
         Wrapper<DictItem> itemWrapper = Wrappers.<DictItem>lambdaQuery()
                 .eq(Strings.hasText(dictCode), DictItem::getDictCode, dictCode);
