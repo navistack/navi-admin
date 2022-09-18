@@ -1,7 +1,6 @@
 package org.navistack.admin.modules.mgmt.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.navistack.admin.modules.common.dao.PrivilegeDao;
 import org.navistack.admin.modules.common.dao.RoleDao;
 import org.navistack.admin.modules.common.dao.RolePrivilegeDao;
@@ -14,6 +13,7 @@ import org.navistack.admin.modules.mgmt.service.dto.RoleQueryDto;
 import org.navistack.admin.modules.mgmt.service.vm.RoleDetailVm;
 import org.navistack.framework.core.error.EntityDuplicationException;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
+import org.navistack.framework.mybatisplusplus.utils.Wrappers;
 import org.navistack.framework.utils.ModelMappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

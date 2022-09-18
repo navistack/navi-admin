@@ -1,9 +1,9 @@
 package org.navistack.admin.modules.system.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.navistack.admin.modules.common.dao.UserDao;
 import org.navistack.admin.modules.common.entity.User;
 import org.navistack.admin.modules.system.service.AuthenticationService;
+import org.navistack.framework.mybatisplusplus.utils.Wrappers;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

@@ -1,7 +1,6 @@
 package org.navistack.admin.modules.mgmt.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.navistack.admin.modules.common.dao.DictDao;
 import org.navistack.admin.modules.common.entity.Dict;
 import org.navistack.admin.modules.mgmt.service.DictService;
@@ -9,6 +8,7 @@ import org.navistack.admin.modules.mgmt.service.dto.DictDto;
 import org.navistack.admin.modules.mgmt.service.dto.DictQueryDto;
 import org.navistack.framework.core.error.EntityDuplicationException;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
+import org.navistack.framework.mybatisplusplus.utils.Wrappers;
 import org.springframework.stereotype.Service;
 
 @Service

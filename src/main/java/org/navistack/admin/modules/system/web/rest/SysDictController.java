@@ -1,7 +1,6 @@
 package org.navistack.admin.modules.system.web.rest;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.common.dao.DictDao;
@@ -10,6 +9,7 @@ import org.navistack.admin.modules.common.entity.Dict;
 import org.navistack.admin.modules.common.entity.DictItem;
 import org.navistack.admin.modules.system.web.rest.vm.DictItemVm;
 import org.navistack.admin.modules.system.web.rest.vm.DictVm;
+import org.navistack.framework.mybatisplusplus.utils.Wrappers;
 import org.navistack.framework.utils.Strings;
 import org.navistack.framework.web.rest.RestResult;
 import org.springframework.web.bind.annotation.GetMapping;

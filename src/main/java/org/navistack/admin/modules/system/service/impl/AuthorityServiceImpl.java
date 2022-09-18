@@ -1,14 +1,14 @@
 package org.navistack.admin.modules.system.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import org.navistack.admin.modules.common.dao.PrivilegeDao;
+import org.navistack.admin.modules.common.dao.RolePrivilegeDao;
+import org.navistack.admin.modules.common.dao.UserRoleDao;
 import org.navistack.admin.modules.common.entity.Privilege;
 import org.navistack.admin.modules.common.entity.RolePrivilege;
 import org.navistack.admin.modules.common.entity.User;
 import org.navistack.admin.modules.common.entity.UserRole;
-import org.navistack.admin.modules.common.dao.PrivilegeDao;
-import org.navistack.admin.modules.common.dao.RolePrivilegeDao;
-import org.navistack.admin.modules.common.dao.UserRoleDao;
 import org.navistack.admin.modules.system.service.AuthorityService;
+import org.navistack.framework.mybatisplusplus.utils.Wrappers;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;

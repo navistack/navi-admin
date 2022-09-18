@@ -1,7 +1,6 @@
 package org.navistack.admin.modules.mgmt.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.navistack.admin.modules.common.dao.RegionDao;
 import org.navistack.admin.modules.common.entity.Region;
 import org.navistack.admin.modules.mgmt.service.RegionService;
@@ -9,6 +8,7 @@ import org.navistack.admin.modules.mgmt.service.dto.RegionDto;
 import org.navistack.admin.modules.mgmt.service.dto.RegionQueryDto;
 import org.navistack.framework.core.error.EntityDuplicationException;
 import org.navistack.framework.mybatisplusplus.AbstractCrudService;
+import org.navistack.framework.mybatisplusplus.utils.Wrappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
