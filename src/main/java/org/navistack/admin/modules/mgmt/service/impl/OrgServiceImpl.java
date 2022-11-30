@@ -69,6 +69,6 @@ public class OrgServiceImpl implements OrgService {
             return;
         }
 
-        throw new EntityDuplicationException("Organization has existed");
+        throw new EntityDuplicationException("Organization already exists");
     }
 }

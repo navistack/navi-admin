@@ -106,7 +106,7 @@ public class RoleServiceImpl implements RoleService {
             return;
         }
 
-        throw new EntityDuplicationException("Role has existed");
+        throw new EntityDuplicationException("Role already exists");
     }
 
     protected void replacePrivilegesOf(Long roleId, List<Long> privilegeIds) {

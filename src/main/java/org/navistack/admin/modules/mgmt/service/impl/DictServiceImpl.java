@@ -68,6 +68,6 @@ public class DictServiceImpl implements DictService {
             return;
         }
 
-        throw new EntityDuplicationException("Dict has existed");
+        throw new EntityDuplicationException("Dict already exists");
     }
 }

@@ -69,6 +69,6 @@ public class PrivilegeServiceImpl implements PrivilegeService {
             return;
         }
 
-        throw new EntityDuplicationException("Privilege has existed");
+        throw new EntityDuplicationException("Privilege already exists");
     }
 }

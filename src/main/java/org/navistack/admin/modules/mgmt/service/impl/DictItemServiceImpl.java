@@ -69,6 +69,6 @@ public class DictItemServiceImpl implements DictItemService {
             return;
         }
 
-        throw new EntityDuplicationException("Dict item has existed");
+        throw new EntityDuplicationException("Dict item already exists");
     }
 }

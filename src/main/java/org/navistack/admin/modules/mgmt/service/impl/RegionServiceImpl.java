@@ -69,6 +69,6 @@ public class RegionServiceImpl implements RegionService {
             return;
         }
 
-        throw new EntityDuplicationException("Region has existed");
+        throw new EntityDuplicationException("Region already exists");
     }
 }

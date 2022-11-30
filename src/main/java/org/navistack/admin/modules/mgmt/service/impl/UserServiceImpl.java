@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
             return;
         }
 
-        throw new EntityDuplicationException("User has existed");
+        throw new EntityDuplicationException("User already exists");
     }
 
     protected void replaceRolesOf(Long userId, List<Long> roleIds) {

@@ -2,17 +2,17 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <entry key="javax.validation.constraints.Null.message">not allowed here</entry>
-    <entry key="javax.validation.constraints.NotNull.message">can not be empty</entry>
-    <entry key="javax.validation.constraints.NotEmpty.message">can not be empty</entry>
+    <entry key="javax.validation.constraints.NotNull.message">must not be empty</entry>
+    <entry key="javax.validation.constraints.NotEmpty.message">must not be empty</entry>
     <entry key="javax.validation.constraints.Size.message">must be between {min} and {max} long</entry>
     <entry key="javax.validation.constraints.Pattern.message">does not match pattern</entry>
     <entry key="javax.validation.constraints.Email.message">is not a valid email address</entry>
-    <entry key="validation.constraints.Dict.code.message">can only contain letters, digits and underscores</entry>
-    <entry key="validation.constraints.DictItem.itKey.message">can only contain letters, digits and underscores</entry>
-    <entry key="validation.constraints.Region.code.message">can only contain letters, digits and hyphens</entry>
-    <entry key="validation.constraints.Privilege.code.message">can only contain letters, digits and colons</entry>
-    <entry key="validation.constraints.Role.code.message">can only contain letters, digits and underscores</entry>
-    <entry key="validation.constraints.User.loginName.message">can only contain letters, digits, underscores, dots and hyphens</entry>
-    <entry key="validation.constraints.User.mobileNumber.message">Is not valid mobile number</entry>
-    <entry key="validation.constraints.Org.code.message">can only contain letters, digits and hyphens</entry>
+    <entry key="validation.constraints.Dict.code.message">must contain letters, digits or underscores</entry>
+    <entry key="validation.constraints.DictItem.itKey.message">must contain letters, digits or underscores</entry>
+    <entry key="validation.constraints.Region.code.message">must contain letters, digits or hyphens</entry>
+    <entry key="validation.constraints.Privilege.code.message">must contain letters, digits or colons</entry>
+    <entry key="validation.constraints.Role.code.message">must contain letters, digits or underscores</entry>
+    <entry key="validation.constraints.User.loginName.message">must contain letters, digits, underscores, dots or hyphens</entry>
+    <entry key="validation.constraints.User.mobileNumber.message">is not valid mobile number</entry>
+    <entry key="validation.constraints.Org.code.message">must contain only letters, digits or hyphens</entry>
 </properties>
