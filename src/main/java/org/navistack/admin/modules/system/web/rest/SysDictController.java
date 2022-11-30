@@ -1,16 +1,15 @@
 package org.navistack.admin.modules.system.web.rest;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.common.dao.DictDao;
 import org.navistack.admin.modules.common.dao.DictItemDao;
 import org.navistack.admin.modules.common.entity.Dict;
 import org.navistack.admin.modules.common.entity.DictItem;
+import org.navistack.admin.modules.common.query.DictItemQuery;
+import org.navistack.admin.modules.common.query.DictQuery;
 import org.navistack.admin.modules.system.web.rest.vm.DictItemVm;
 import org.navistack.admin.modules.system.web.rest.vm.DictVm;
-import org.navistack.framework.mybatisplusplus.utils.Wrappers;
-import org.navistack.framework.utils.Strings;
 import org.navistack.framework.web.rest.RestResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +38,7 @@ public class SysDictController {
     @GetMapping
     @Operation(summary = "Get directories and their items")
     public RestResult.Ok<Collection<DictVm>> get() {
-        List<Dict> dicts = dictDao.selectList(Wrappers.emptyWrapper());
+        List<Dict> dicts = dictDao.selectAll();
         if (dicts.isEmpty()) {
             return RestResult.ok(Collections.emptyList());
         }
@@ -48,7 +47,7 @@ public class SysDictController {
                 .map(d -> DictVm.of(d.getCode(), d.getName()))
                 .collect(Collectors.toList());
 
-        List<DictItem> items = dictItemDao.selectList(Wrappers.emptyWrapper());
+        List<DictItem> items = dictItemDao.selectAll();
         if (items.isEmpty()) {
             return RestResult.ok(dictVms);
         }
@@ -77,19 +76,21 @@ public class SysDictController {
     @GetMapping("/{dict:[A-Za-z0-9$_]{1,48}}")
     @Operation(summary = "Get directory and its items")
     public RestResult.Ok<DictVm> get(@PathVariable("dict") String dictCode) {
-        Wrapper<Dict> dictWrapper = Wrappers.<Dict>lambdaQuery()
-                .eq(Strings.hasText(dictCode), Dict::getCode, dictCode);
+        DictQuery dictQuery = DictQuery.builder()
+                .code(dictCode)
+                .build();
 
-        Dict dict = dictDao.selectOne(dictWrapper);
+        Dict dict = dictDao.selectOne(dictQuery);
         if (dict == null) {
             return RestResult.ok(null);
         }
 
         DictVm dictVm = DictVm.of(dict.getCode(), dict.getName());
 
-        Wrapper<DictItem> itemWrapper = Wrappers.<DictItem>lambdaQuery()
-                .eq(Strings.hasText(dictCode), DictItem::getDictCode, dictCode);
-        List<DictItem> items = dictItemDao.selectList(itemWrapper);
+        DictItemQuery itemQuery = DictItemQuery.builder()
+                .dictCode(dictCode)
+                .build();
+        List<DictItem> items = dictItemDao.select(itemQuery);
         if (items.isEmpty()) {
             return RestResult.ok(dictVm);
         }
@@ -105,9 +106,10 @@ public class SysDictController {
     @GetMapping("/{dict:[A-Za-z0-9$_]{1,48}}/items")
     @Operation(summary = "Get items of directory")
     public RestResult.Ok<Collection<DictItemVm>> getItem(@PathVariable("dict") String dictCode) {
-        Wrapper<DictItem> itemWrapper = Wrappers.<DictItem>lambdaQuery()
-                .eq(Strings.hasText(dictCode), DictItem::getDictCode, dictCode);
-        List<DictItem> items = dictItemDao.selectList(itemWrapper);
+        DictItemQuery dictItemQuery = DictItemQuery.builder()
+                .dictCode(dictCode)
+                .build();
+        List<DictItem> items = dictItemDao.select(dictItemQuery);
         if (items.isEmpty()) {
             return RestResult.ok(Collections.emptyList());
         }

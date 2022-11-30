@@ -1,66 +1,60 @@
 package org.navistack.admin.modules.mgmt.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import org.navistack.admin.modules.common.dao.RoleDao;
 import org.navistack.admin.modules.common.dao.UserDao;
 import org.navistack.admin.modules.common.dao.UserRoleDao;
-import org.navistack.admin.modules.common.entity.Role;
 import org.navistack.admin.modules.common.entity.User;
 import org.navistack.admin.modules.common.entity.UserRole;
-import org.navistack.admin.modules.common.enums.UserStatus;
+import org.navistack.admin.modules.common.query.RoleQuery;
+import org.navistack.admin.modules.common.query.UserLoginNameQuery;
+import org.navistack.admin.modules.common.query.UserQuery;
+import org.navistack.admin.modules.common.query.UserRoleQuery;
 import org.navistack.admin.modules.mgmt.service.UserService;
+import org.navistack.admin.modules.mgmt.service.convert.UserConverter;
 import org.navistack.admin.modules.mgmt.service.dto.UserDto;
-import org.navistack.admin.modules.mgmt.service.dto.UserQueryDto;
 import org.navistack.admin.modules.mgmt.service.vm.UserDetailVm;
+import org.navistack.admin.support.mybatis.AuditingEntitySupport;
 import org.navistack.framework.core.error.EntityDuplicationException;
-import org.navistack.framework.mybatisplusplus.AbstractCrudService;
-import org.navistack.framework.mybatisplusplus.utils.Wrappers;
+import org.navistack.framework.data.Page;
+import org.navistack.framework.data.PageImpl;
+import org.navistack.framework.data.Pageable;
 import org.navistack.framework.utils.ModelMappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl
-        extends AbstractCrudService<User, Long, UserDto, UserQueryDto, UserDao>
-        implements UserService {
+public class UserServiceImpl implements UserService {
+    private final UserDao dao;
     private final RoleDao roleDao;
     private final UserRoleDao userRoleDao;
 
     public UserServiceImpl(UserDao userDao, RoleDao roleDao, UserRoleDao userRoleDao) {
-        super(userDao);
+        this.dao = userDao;
         this.roleDao = roleDao;
         this.userRoleDao = userRoleDao;
     }
 
     @Override
-    protected Wrapper<User> buildWrapper(UserQueryDto queryDto) {
-        String loginName = queryDto.getLoginName();
-        String mobileNumber = queryDto.getMobileNumber();
-        String emailAddress = queryDto.getEmailAddress();
-        UserStatus status = queryDto.getStatus();
-
-        return Wrappers.<User>lambdaQuery()
-                .eq(loginName != null, User::getLoginName, loginName)
-                .eq(mobileNumber != null, User::getMobileNumber, mobileNumber)
-                .eq(emailAddress != null, User::getEmailAddress, emailAddress)
-                .eq(status != null, User::getStatus, status);
+    public Page<UserDto> paginate(UserQuery query, Pageable pageable) {
+        long totalRecords = dao.count(query);
+        List<User> entities = dao.selectWithPageable(query, pageable);
+        Collection<UserDto> dtos = UserConverter.INSTANCE.entitiesToDtos(entities);
+        return new PageImpl<>(dtos, pageable, totalRecords);
     }
 
     @Override
-    public UserDetailVm queryDetailById(Long userId) {
-        User user = dao.selectById(userId);
+    public UserDetailVm queryDetailById(Long id) {
+        User user = dao.selectOneById(id);
 
         UserDetailVm vm = ModelMappers.map(user, UserDetailVm.class);
 
-        List<Long> roleIds = userRoleDao.selectList(
-                        Wrappers.<UserRole>lambdaQuery()
-                                .eq(UserRole::getUserId, userId)
-                )
+        UserRoleQuery urq = new UserRoleQuery();
+        urq.setUserId(id);
+        List<Long> roleIds = userRoleDao.select(urq)
                 .stream()
                 .map(UserRole::getRoleId)
                 .collect(Collectors.toList());
@@ -73,68 +67,66 @@ public class UserServiceImpl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(UserDto dto) {
-        dto.setId(null);
+        ensureUnique(dto);
 
-        boolean existing = dao.exists(
-                Wrappers.<User>lambdaQuery()
-                        .eq(User::getEmailAddress, dto.getEmailAddress())
-                        .or()
-                        .eq(User::getMobileNumber, dto.getMobileNumber())
-                        .eq(User::getLoginName, dto.getLoginName())
-        );
-
-        if (existing) {
-            throw new EntityDuplicationException("User existed");
-        }
-
-        User user = ModelMappers.map(dto, User.class);
-        dao.insert(user);
-
-        replaceRolesOf(user.getId(), dto.getRoleIds());
-
-        ModelMappers.map(user, dto);
+        User entity = UserConverter.INSTANCE.dtoToEntity(dto);
+        AuditingEntitySupport.insertAuditingProperties(entity);
+        dao.insert(entity);
+        replaceRolesOf(entity.getId(), dto.getRoleIds());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void modify(UserDto dto) {
-        boolean existing = dao.exists(
-                Wrappers.<User>lambdaQuery()
-                        .and(w -> w
-                                .eq(User::getEmailAddress, dto.getEmailAddress())
-                                .or()
-                                .eq(User::getMobileNumber, dto.getMobileNumber())
-                                .or()
-                                .eq(User::getLoginName, dto.getLoginName())
-                        )
-                        .ne(User::getId, dto.getId())
-        );
+        ensureUnique(dto);
 
-        if (existing) {
-            throw new EntityDuplicationException("User existed");
+        User entity = UserConverter.INSTANCE.dtoToEntity(dto);
+        AuditingEntitySupport.updateAuditingProperties(entity);
+        dao.updateById(entity);
+        replaceRolesOf(entity.getId(), dto.getRoleIds());
+    }
+
+    @Override
+    public void remove(Long id) {
+        dao.deleteById(id);
+    }
+
+    protected void ensureUnique(UserDto dto) {
+        UserLoginNameQuery query = new UserLoginNameQuery();
+        query.setLoginName(dto.getLoginName());
+        query.setMobileNumber(dto.getMobileNumber());
+        query.setEmailAddress(dto.getEmailAddress());
+        User existedOne = dao.selectOneByLoginName(query);
+
+        if (existedOne == null) {
+            return;
         }
 
-        User user = ModelMappers.map(dto, User.class);
+        if (!existedOne.getId().equals(dto.getId())) {
+            return;
+        }
 
-        dao.updateById(user);
-        replaceRolesOf(user.getId(), dto.getRoleIds());
+        throw new EntityDuplicationException("User has existed");
     }
 
     protected void replaceRolesOf(Long userId, List<Long> roleIds) {
-        userRoleDao.delete(
-                Wrappers.<UserRole>lambdaQuery()
-                        .eq(UserRole::getUserId, userId)
-        );
+        UserRoleQuery urq = UserRoleQuery.builder()
+                .userId(userId)
+                .build();
+        userRoleDao.delete(urq);
 
-        Optional.ofNullable(roleIds)
-                .orElse(Collections.emptyList())
-                .stream()
-                .filter(roleId -> roleDao.selectCount(
-                                Wrappers.<Role>lambdaQuery()
-                                        .eq(Role::getId, roleId)
-                        ) > 0
-                )
-                .map(roleId -> UserRole.of(userId, roleId))
-                .forEach(userRoleDao::insert);
+        if (roleIds == null || roleIds.isEmpty()) {
+            return;
+        }
+
+        for (Long roleId : roleIds) {
+            RoleQuery rq = RoleQuery.builder()
+                    .id(roleId)
+                    .build();
+            if (roleDao.count(rq) > 0) {
+                UserRole entity = UserRole.of(userId, roleId);
+                userRoleDao.insert(entity);
+            }
+        }
     }
 }

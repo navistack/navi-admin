@@ -1,67 +1,74 @@
 package org.navistack.admin.modules.mgmt.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import org.navistack.admin.modules.common.dao.DictItemDao;
 import org.navistack.admin.modules.common.entity.DictItem;
+import org.navistack.admin.modules.common.query.DictItemQuery;
 import org.navistack.admin.modules.mgmt.service.DictItemService;
+import org.navistack.admin.modules.mgmt.service.convert.DictItemConverter;
 import org.navistack.admin.modules.mgmt.service.dto.DictItemDto;
-import org.navistack.admin.modules.mgmt.service.dto.DictItemQueryDto;
+import org.navistack.admin.support.mybatis.AuditingEntitySupport;
 import org.navistack.framework.core.error.EntityDuplicationException;
-import org.navistack.framework.mybatisplusplus.AbstractCrudService;
-import org.navistack.framework.mybatisplusplus.utils.Wrappers;
+import org.navistack.framework.data.Page;
+import org.navistack.framework.data.PageImpl;
+import org.navistack.framework.data.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+
 @Service
-public class DictItemServiceImpl
-        extends AbstractCrudService<DictItem, Long, DictItemDto, DictItemQueryDto, DictItemDao>
-        implements DictItemService {
+public class DictItemServiceImpl implements DictItemService {
+    private final DictItemDao dao;
 
     public DictItemServiceImpl(DictItemDao dao) {
-        super(dao);
+        this.dao = dao;
     }
 
     @Override
-    protected Wrapper<DictItem> buildWrapper(DictItemQueryDto queryDto) {
-        Long id = queryDto.getId();
-        String name = queryDto.getName();
-        String itKey = queryDto.getItKey();
-        String dictCode = queryDto.getDictCode();
-
-        return Wrappers.<DictItem>lambdaQuery()
-                .eq(id != null, DictItem::getId, id)
-                .like(name != null, DictItem::getName, name)
-                .eq(itKey != null, DictItem::getItKey, itKey)
-                .eq(dictCode != null, DictItem::getDictCode, dictCode);
+    public Page<DictItemDto> paginate(DictItemQuery query, Pageable pageable) {
+        long totalRecords = dao.count(query);
+        List<DictItem> entities = dao.selectWithPageable(query, pageable);
+        Collection<DictItemDto> dtos = DictItemConverter.INSTANCE.entitiesToDtos(entities);
+        return new PageImpl<>(dtos, pageable, totalRecords);
     }
 
     @Override
-    protected void preCreate(DictItemDto dto) {
-        super.preCreate(dto);
+    public void create(DictItemDto dto) {
+        ensureUnique(dto);
 
-        dto.setId(null);
+        DictItem entity = DictItemConverter.INSTANCE.dtoToEntity(dto);
+        AuditingEntitySupport.insertAuditingProperties(entity);
+        dao.insert(entity);
+    }
 
-        boolean existing = dao.exists(
-                Wrappers.<DictItem>lambdaQuery()
-                        .eq(DictItem::getDictCode, dto.getDictCode())
-        );
+    @Override
+    public void modify(DictItemDto dto) {
+        ensureUnique(dto);
 
-        if (existing) {
-            throw new EntityDuplicationException("Item existed");
+        DictItem entity = DictItemConverter.INSTANCE.dtoToEntity(dto);
+        AuditingEntitySupport.updateAuditingProperties(entity);
+        dao.updateById(entity);
+    }
+
+    @Override
+    public void remove(Long id) {
+        dao.deleteById(id);
+    }
+
+    protected void ensureUnique(DictItemDto dto) {
+        DictItemQuery query = DictItemQuery.builder()
+                .itKey(dto.getItKey())
+                .build();
+        DictItem existedOne = dao.selectOne(query);
+
+        if (existedOne == null) {
+            return;
         }
-    }
 
-    @Override
-    protected void preModify(DictItemDto dto) {
-        super.preModify(dto);
-
-        boolean existing = dao.exists(
-                Wrappers.<DictItem>lambdaQuery()
-                        .eq(DictItem::getDictCode, dto.getDictCode())
-                        .ne(DictItem::getId, dto.getId())
-        );
-
-        if (existing) {
-            throw new EntityDuplicationException("Item existed");
+        if (!existedOne.getId().equals(dto.getId())) {
+            return;
         }
+
+        throw new EntityDuplicationException("Dict item has existed");
     }
 }

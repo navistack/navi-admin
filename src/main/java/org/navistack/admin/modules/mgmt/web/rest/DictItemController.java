@@ -3,13 +3,13 @@ package org.navistack.admin.modules.mgmt.web.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.navistack.admin.modules.common.query.DictItemQuery;
 import org.navistack.admin.modules.mgmt.service.DictItemService;
 import org.navistack.admin.modules.mgmt.service.dto.DictItemDto;
-import org.navistack.admin.modules.mgmt.service.dto.DictItemQueryDto;
+import org.navistack.admin.support.validation.groups.Create;
+import org.navistack.admin.support.validation.groups.Modify;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
-import org.navistack.framework.mybatisplusplus.validation.groups.Create;
-import org.navistack.framework.mybatisplusplus.validation.groups.Modify;
 import org.navistack.framework.web.rest.RestResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -31,8 +31,8 @@ public class DictItemController {
     @GetMapping
     @PreAuthorize("hasAuthority('sys:dict_item:query')")
     @Operation(summary = "Query Paged list of dictionary items")
-    public RestResult.Ok<Page<DictItemDto>> paginate(DictItemQueryDto queryDto, PageRequest pageRequest) {
-        return RestResult.ok(service.paginate(queryDto, pageRequest));
+    public RestResult.Ok<Page<DictItemDto>> paginate(DictItemQuery query, PageRequest pageRequest) {
+        return RestResult.ok(service.paginate(query, pageRequest));
     }
 
     @PostMapping

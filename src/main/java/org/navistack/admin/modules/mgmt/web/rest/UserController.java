@@ -3,14 +3,14 @@ package org.navistack.admin.modules.mgmt.web.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.navistack.admin.modules.common.query.UserQuery;
 import org.navistack.admin.modules.mgmt.service.UserService;
 import org.navistack.admin.modules.mgmt.service.dto.UserDto;
-import org.navistack.admin.modules.mgmt.service.dto.UserQueryDto;
 import org.navistack.admin.modules.mgmt.service.vm.UserDetailVm;
+import org.navistack.admin.support.validation.groups.Create;
+import org.navistack.admin.support.validation.groups.Modify;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
-import org.navistack.framework.mybatisplusplus.validation.groups.Create;
-import org.navistack.framework.mybatisplusplus.validation.groups.Modify;
 import org.navistack.framework.web.rest.RestResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -32,8 +32,8 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasAuthority('sys:user:query')")
     @Operation(summary = "Query Paged list of users")
-    public RestResult.Ok<Page<UserDto>> paginate(UserQueryDto queryDto, PageRequest pageRequest) {
-        return RestResult.ok(service.paginate(queryDto, pageRequest));
+    public RestResult.Ok<Page<UserDto>> paginate(UserQuery query, PageRequest pageRequest) {
+        return RestResult.ok(service.paginate(query, pageRequest));
     }
 
     @GetMapping("/{id}")

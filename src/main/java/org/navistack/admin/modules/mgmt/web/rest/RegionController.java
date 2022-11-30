@@ -3,13 +3,13 @@ package org.navistack.admin.modules.mgmt.web.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.navistack.admin.modules.common.query.RegionQuery;
 import org.navistack.admin.modules.mgmt.service.RegionService;
 import org.navistack.admin.modules.mgmt.service.dto.RegionDto;
-import org.navistack.admin.modules.mgmt.service.dto.RegionQueryDto;
+import org.navistack.admin.support.validation.groups.Create;
+import org.navistack.admin.support.validation.groups.Modify;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
-import org.navistack.framework.mybatisplusplus.validation.groups.Create;
-import org.navistack.framework.mybatisplusplus.validation.groups.Modify;
 import org.navistack.framework.web.rest.RestResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -31,8 +31,8 @@ public class RegionController {
     @GetMapping
     @PreAuthorize("hasAuthority('sys:region:query')")
     @Operation(summary = "Query Paged list of regions")
-    public RestResult.Ok<Page<RegionDto>> paginate(RegionQueryDto queryDto, PageRequest pageRequest) {
-        return RestResult.ok(service.paginate(queryDto, pageRequest));
+    public RestResult.Ok<Page<RegionDto>> paginate(RegionQuery query, PageRequest pageRequest) {
+        return RestResult.ok(service.paginate(query, pageRequest));
     }
 
     @PostMapping

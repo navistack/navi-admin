@@ -1,14 +1,12 @@
 package org.navistack.admin.modules.system.web.rest;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.common.dao.RegionDao;
 import org.navistack.admin.modules.common.entity.Region;
+import org.navistack.admin.modules.common.query.RegionQuery;
 import org.navistack.admin.modules.system.web.rest.vm.RegionVm;
 import org.navistack.framework.data.TreeUtils;
-import org.navistack.framework.mybatisplusplus.utils.Wrappers;
-import org.navistack.framework.utils.Strings;
 import org.navistack.framework.web.rest.RestResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +27,7 @@ public class SysRegionController {
     @GetMapping
     @Operation(summary = "Get regions and their sub-regions recursively")
     public RestResult.Ok<Collection<RegionVm>> get() {
-        List<Region> regions = regionDao.selectList(Wrappers.emptyWrapper());
+        List<Region> regions = regionDao.selectAll();
         Collection<RegionVm> vms = TreeUtils.treeize(regions, RegionVm::of);
         return RestResult.ok(vms);
     }
@@ -40,15 +38,17 @@ public class SysRegionController {
             @PathVariable("region") String regionCode,
             @RequestParam(defaultValue = "true") boolean recursive
     ) {
-        List<Region> regions = null;
+        List<Region> regions;
         if (recursive) {
-            Wrapper<Region> wrapper = Wrappers.<Region>lambdaQuery()
-                    .eq(Strings.hasText(regionCode), Region::getCode, regionCode);
-            regions = regionDao.selectListRecursively(wrapper);
+            RegionQuery regionQuery = RegionQuery.builder()
+                    .code(regionCode)
+                    .build();
+            regions = regionDao.selectRecursively(regionQuery);
         } else {
-            Wrapper<Region> wrapper = Wrappers.<Region>lambdaQuery()
-                    .eq(Strings.hasText(regionCode), Region::getParentCode, regionCode);
-            regions = regionDao.selectList(wrapper);
+            RegionQuery regionQuery = RegionQuery.builder()
+                    .parentCode(regionCode)
+                    .build();
+            regions = regionDao.select(regionQuery);
         }
 
         if (regions.isEmpty()) {

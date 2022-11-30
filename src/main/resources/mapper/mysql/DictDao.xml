@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.navistack.admin.modules.common.dao.DictDao">
+    <select id="selectAll" resultType="org.navistack.admin.modules.common.entity.Dict">
+        SELECT *
+          FROM dict
+    </select>
+
+    <select id="select" resultType="org.navistack.admin.modules.common.entity.Dict">
+        SELECT *
+          FROM dict
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
+            <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
+        </where>
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM dict
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
+            <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
+        </where>
+    </select>
+
+    <select id="selectWithPageable" resultType="org.navistack.admin.modules.common.entity.Dict">
+        SELECT *
+          FROM dict
+        <where>
+            <if test="query.id != null">AND id = #{query.id}</if>
+            <if test="query.code != null and !query.code.isEmpty()">AND code = #{query.code}</if>
+            <if test="query.name != null and !query.name.isEmpty()">AND name LIKE #{query.name} '%'</if>
+        </where>
+        <trim prefix="ORDER BY" suffixOverrides=",">
+            <if test="pageable != null and pageable.sort != null and pageable.sort.orders != null and !pageable.sort.orders.isEmpty()">
+                <foreach item="order" collection="pageable.sort.orders" separator=",">
+                    <choose>
+                        <when test="order.property == 'id'">id</when>
+                        <when test="order.property == 'code'">code</when>
+                        <otherwise>id</otherwise>
+                    </choose>
+                    <choose>
+                        <when test="order.ascending">ASC</when>
+                        <otherwise>DESC</otherwise>
+                    </choose>
+                </foreach>
+            </if>
+        </trim>
+         LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
+    </select>
+
+    <select id="selectOne" resultType="org.navistack.admin.modules.common.entity.Dict">
+        SELECT *
+        FROM dict
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
+            <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
+        </where>
+    </select>
+
+    <select id="selectOneById" resultType="org.navistack.admin.modules.common.entity.Dict">
+        SELECT *
+          FROM dict
+         WHERE id = #{id}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO dict
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="code != null and !code.isEmpty()">code,</if>
+            <if test="name != null and !name.isEmpty()">name,</if>
+            <if test="remarks != null and !remarks.isEmpty()">remarks,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="createdBy != null">created_by,</if>
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="code != null and !code.isEmpty()">#{code},</if>
+            <if test="name != null and !name.isEmpty()">#{name},</if>
+            <if test="remarks != null and !remarks.isEmpty()">#{remarks},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById">
+        UPDATE dict
+        <set>
+            <if test="code != null and !code.isEmpty()">code = #{code},</if>
+            <if test="name != null and !name.isEmpty()">name = #{name},</if>
+            <if test="remarks != null and !remarks.isEmpty()">remarks = #{remarks},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <delete id="deleteById">
+        DELETE
+          FROM dict
+         WHERE id = #{id}
+    </delete>
+</mapper>

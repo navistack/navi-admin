@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.system.web.rest.vm.PasswordLoginVm;
 import org.navistack.admin.modules.system.web.rest.vo.JwtTokenVo;
-import org.navistack.framework.captcha.CaptchaTest;
 import org.navistack.framework.security.TokenService;
 import org.navistack.framework.web.rest.RestResult;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,7 +28,6 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "Login by password")
-    @CaptchaTest
     public RestResult.Ok<JwtTokenVo> login(@Valid PasswordLoginVm vm) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 vm.getLoginName(),

@@ -2,8 +2,32 @@ package org.navistack.admin.modules.common.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.navistack.admin.modules.common.entity.RolePrivilege;
-import org.navistack.framework.mybatisplusplus.CrudMapper;
+import org.navistack.admin.modules.common.query.RolePrivilegeQuery;
+import org.navistack.framework.data.Pageable;
+
+import java.util.Collection;
+import java.util.List;
 
 @Mapper
-public interface RolePrivilegeDao extends CrudMapper<RolePrivilege> {
+public interface RolePrivilegeDao {
+
+    List<RolePrivilege> select(RolePrivilegeQuery query);
+
+    List<RolePrivilege> selectByRoleIdIn(Collection<Long> roleIds);
+
+    long count(RolePrivilegeQuery query);
+
+    List<RolePrivilege> selectWithPageable(RolePrivilegeQuery query, Pageable pageable);
+
+    RolePrivilege selectOne(RolePrivilegeQuery query);
+
+    RolePrivilege selectOneById(Long id);
+
+    int insert(RolePrivilege entity);
+
+    int updateById(RolePrivilege entity);
+
+    int deleteById(Long id);
+
+    int delete(RolePrivilegeQuery query);
 }

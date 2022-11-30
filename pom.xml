@@ -31,21 +31,39 @@
         </dependency>
         <dependency>
             <groupId>org.navistack.boot</groupId>
-            <artifactId>navi-boot-starter-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.navistack.boot</groupId>
-            <artifactId>navi-boot-starter-mybatisplusplus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.navistack.boot</groupId>
             <artifactId>navi-boot-starter-captcha</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.navistack.boot</groupId>
+            <artifactId>navi-boot-starter-batis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.navistack.boot</groupId>
+            <artifactId>navi-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
@@ -97,6 +115,29 @@
                 <groupId>org.ec4j.maven</groupId>
                 <artifactId>editorconfig-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>${lombok-mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -106,6 +147,13 @@
             <id>dev</id>
             <properties>
                 <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <!-- Unit Test -->
+            <id>ut</id>
+            <properties>
+                <spring.profiles.active>ut</spring.profiles.active>
             </properties>
         </profile>
         <profile>

@@ -1,63 +1,73 @@
 package org.navistack.admin.modules.mgmt.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import org.navistack.admin.modules.common.dao.DictDao;
 import org.navistack.admin.modules.common.entity.Dict;
+import org.navistack.admin.modules.common.query.DictQuery;
 import org.navistack.admin.modules.mgmt.service.DictService;
+import org.navistack.admin.modules.mgmt.service.convert.DictConverter;
 import org.navistack.admin.modules.mgmt.service.dto.DictDto;
-import org.navistack.admin.modules.mgmt.service.dto.DictQueryDto;
+import org.navistack.admin.support.mybatis.AuditingEntitySupport;
 import org.navistack.framework.core.error.EntityDuplicationException;
-import org.navistack.framework.mybatisplusplus.AbstractCrudService;
-import org.navistack.framework.mybatisplusplus.utils.Wrappers;
+import org.navistack.framework.data.Page;
+import org.navistack.framework.data.PageImpl;
+import org.navistack.framework.data.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+
 @Service
-public class DictServiceImpl
-        extends AbstractCrudService<Dict, Long, DictDto, DictQueryDto, DictDao>
-        implements DictService {
+public class DictServiceImpl implements DictService {
+    private final DictDao dao;
+
     public DictServiceImpl(DictDao dao) {
-        super(dao);
+        this.dao = dao;
     }
 
     @Override
-    protected Wrapper<Dict> buildWrapper(DictQueryDto queryDto) {
-        Long id = queryDto.getId();
-        String code = queryDto.getCode();
-        String name = queryDto.getName();
-
-        return Wrappers.<Dict>lambdaQuery()
-                .eq(id != null, Dict::getId, id)
-                .eq(code != null, Dict::getCode, code)
-                .like(name != null, Dict::getName, name);
+    public Page<DictDto> paginate(DictQuery query, Pageable pageable) {
+        long totalRecords = dao.count(query);
+        List<Dict> entities = dao.selectWithPageable(query, pageable);
+        Collection<DictDto> dtos = DictConverter.INSTANCE.entitiesToDtos(entities);
+        return new PageImpl<>(dtos, pageable, totalRecords);
     }
 
     @Override
-    protected void preCreate(DictDto dto) {
-        super.preCreate(dto);
+    public void create(DictDto dto) {
+        ensureUnique(dto);
 
-        dto.setId(null);
-        boolean existing = dao.exists(
-                Wrappers.<Dict>lambdaQuery()
-                        .eq(Dict::getCode, dto.getCode())
-        );
+        Dict entity = DictConverter.INSTANCE.dtoToEntity(dto);
+        AuditingEntitySupport.insertAuditingProperties(entity);
+        dao.insert(entity);
+    }
 
-        if (existing) {
-            throw new EntityDuplicationException("Dict existed");
+    @Override
+    public void modify(DictDto dto) {
+        ensureUnique(dto);
+
+        Dict entity = DictConverter.INSTANCE.dtoToEntity(dto);
+        AuditingEntitySupport.updateAuditingProperties(entity);
+        dao.updateById(entity);
+    }
+
+    @Override
+    public void remove(Long id) {
+        dao.deleteById(id);
+    }
+
+    protected void ensureUnique(DictDto dto) {
+        DictQuery queryDto = new DictQuery();
+        queryDto.setCode(dto.getCode());
+        Dict existedOne = dao.selectOne(queryDto);
+
+        if (existedOne == null) {
+            return;
         }
-    }
 
-    @Override
-    protected void preModify(DictDto dto) {
-        super.preModify(dto);
-
-        boolean existing = dao.exists(
-                Wrappers.<Dict>lambdaQuery()
-                        .eq(Dict::getCode, dto.getCode())
-                        .ne(Dict::getId, dto.getId())
-        );
-
-        if (existing) {
-            throw new EntityDuplicationException("Dict existed");
+        if (!existedOne.getId().equals(dto.getId())) {
+            return;
         }
+
+        throw new EntityDuplicationException("Dict has existed");
     }
 }

@@ -3,12 +3,9 @@ spring:
     active: @spring.profiles.active@
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
-#    username: ${DB_USERNAME}
-#    password: ${DB_PASSWORD}
 
-  #navi:
-#  security:
-#    jwt:
-#      validity: ${TOKEN_VALIDITY_IN_MILLISECONDS}
-#      secret: ${BASE64_ENCODED_SECRET}
+mybatis:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    map-underscore-to-camel-case: true

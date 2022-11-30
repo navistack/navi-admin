@@ -1,69 +1,74 @@
 package org.navistack.admin.modules.mgmt.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import org.navistack.admin.modules.common.dao.RegionDao;
 import org.navistack.admin.modules.common.entity.Region;
+import org.navistack.admin.modules.common.query.RegionQuery;
 import org.navistack.admin.modules.mgmt.service.RegionService;
+import org.navistack.admin.modules.mgmt.service.convert.RegionConverter;
 import org.navistack.admin.modules.mgmt.service.dto.RegionDto;
-import org.navistack.admin.modules.mgmt.service.dto.RegionQueryDto;
+import org.navistack.admin.support.mybatis.AuditingEntitySupport;
 import org.navistack.framework.core.error.EntityDuplicationException;
-import org.navistack.framework.mybatisplusplus.AbstractCrudService;
-import org.navistack.framework.mybatisplusplus.utils.Wrappers;
+import org.navistack.framework.data.Page;
+import org.navistack.framework.data.PageImpl;
+import org.navistack.framework.data.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.List;
 
 @Service
-public class RegionServiceImpl
-        extends AbstractCrudService<Region, Long, RegionDto, RegionQueryDto, RegionDao>
-        implements RegionService {
+public class RegionServiceImpl implements RegionService {
+    private final RegionDao dao;
 
     public RegionServiceImpl(RegionDao dao) {
-        super(dao);
+        this.dao = dao;
     }
 
     @Override
-    protected Wrapper<Region> buildWrapper(RegionQueryDto queryDto) {
-        Long id = queryDto.getId();
-        String code = queryDto.getCode();
-        String name = queryDto.getName();
-        String parentCode = queryDto.getParentCode();
-
-        return Wrappers.<Region>lambdaQuery()
-                .eq(id != null, Region::getId, id)
-                .eq(code != null, Region::getCode, code)
-                .like(name != null, Region::getName, name)
-                .eq(parentCode != null, Region::getParentCode, parentCode);
+    public Page<RegionDto> paginate(RegionQuery query, Pageable pageable) {
+        long totalRecords = dao.count(query);
+        List<Region> entities = dao.selectWithPageable(query, pageable);
+        Collection<RegionDto> dtos = RegionConverter.INSTANCE.entitiesToDtos(entities);
+        return new PageImpl<>(dtos, pageable, totalRecords);
     }
 
     @Override
-    protected void preCreate(RegionDto dto) {
-        super.preCreate(dto);
+    public void create(RegionDto dto) {
+        ensureUnique(dto);
 
-        dto.setId(null);
+        Region entity = RegionConverter.INSTANCE.dtoToEntity(dto);
+        AuditingEntitySupport.insertAuditingProperties(entity);
+        dao.insert(entity);
+    }
 
-        boolean existing = dao.exists(
-                Wrappers.<Region>lambdaQuery()
-                        .eq(Region::getCode, dto.getCode())
-        );
+    @Override
+    public void modify(RegionDto dto) {
+        ensureUnique(dto);
 
-        if (existing) {
-            throw new EntityDuplicationException("Item existed");
+        Region entity = RegionConverter.INSTANCE.dtoToEntity(dto);
+        AuditingEntitySupport.updateAuditingProperties(entity);
+        dao.updateById(entity);
+    }
+
+    @Override
+    public void remove(Long id) {
+        dao.deleteById(id);
+    }
+
+    protected void ensureUnique(RegionDto dto) {
+        RegionQuery queryDto = RegionQuery.builder()
+                .code(dto.getCode())
+                .build();
+        Region existedOne = dao.selectOne(queryDto);
+
+        if (existedOne == null) {
+            return;
         }
-    }
 
-    @Override
-    @Transactional
-    protected void preModify(RegionDto dto) {
-        super.preModify(dto);
-
-        boolean existing = dao.exists(
-                Wrappers.<Region>lambdaQuery()
-                        .eq(Region::getCode, dto.getCode())
-                        .ne(Region::getId, dto.getId())
-        );
-
-        if (existing) {
-            throw new EntityDuplicationException("Item existed");
+        if (!existedOne.getId().equals(dto.getId())) {
+            return;
         }
+
+        throw new EntityDuplicationException("Region has existed");
     }
 }

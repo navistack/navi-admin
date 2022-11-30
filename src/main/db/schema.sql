@@ -97,7 +97,7 @@ CREATE TABLE `org`
 
 CREATE TABLE `user`
 (
-    `id`            BIGINT      NOT NULL PRIMARY KEY,
+    `id`            BIGINT      NOT NULL PRIMARY KEY AUTO_INCREMENT,
 
     `nick_name`     VARCHAR(12),
     `avatar_url`    VARCHAR(240),

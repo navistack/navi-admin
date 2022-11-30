@@ -2,8 +2,8 @@ package org.navistack.admin.modules.system.service.impl;
 
 import org.navistack.admin.modules.common.dao.UserDao;
 import org.navistack.admin.modules.common.entity.User;
+import org.navistack.admin.modules.common.query.UserLoginNameQuery;
 import org.navistack.admin.modules.system.service.AuthenticationService;
-import org.navistack.framework.mybatisplusplus.utils.Wrappers;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,12 +19,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public Optional<User> findUserByLoginName(String loginName) {
         return Optional.ofNullable(
-                userDao.selectOne(
-                        Wrappers.<User>lambdaQuery()
-                                .nested(w -> w.eq(User::getLoginName, loginName)
-                                        .or().eq(User::getEmailAddress, loginName)
-                                        .or().eq(User::getMobileNumber, loginName)
-                                )
+                userDao.selectOneByLoginName(
+                        UserLoginNameQuery.builder()
+                                .loginName(loginName)
+                                .emailAddress(loginName)
+                                .mobileNumber(loginName)
+                                .build()
                 )
         );
     }

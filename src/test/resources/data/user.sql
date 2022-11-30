@@ -1,0 +1,13 @@
+INSERT INTO
+  user (id, nick_name     , avatar_url                                            , gender  , birthday    , login_name  , mobile_number , email_address                 , password                                                      , status    )
+VALUES (1 , 'Test User 01', 'avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg', 'FEMALE', '1975-02-15', 'testuser01', '813-862-8139', 'reilly.durgan49@yahoo.com'   , '$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy', 'FORBIDDEN')
+     , (2 , 'Test User 02', 'avatar:/79/b3d491b73cdbe93d07225ceede61cb/avatar.jpg', 'MALE'  , '1980-12-23', 'testuser02', '214-597-4799', 'brisa20@hotmail.com'         , '$2a$10$leOewqDhGCBqh71AlThF0.YJb2daj8pI1lanu.DWb7TKv8MN24OZq', 'FORBIDDEN')
+     , (3 , 'Test User 03', 'avatar:/29/b1042935743e4a3f8e3973648fc8d3/avatar.jpg', 'MALE'  , '1993-10-02', 'testuser03', '916-373-2856', 'madeline.jacobson@gmail.com' , '$2a$10$bnduJbuA6sRf2wZDYZqXb.bGcudXG3uASiMCd5B7wKq8kJ6Tqi0UG', 'NORMAL'   )
+     , (4 , 'Test User 04', 'avatar:/84/5c584daef6a822c34a03a2e33d1836/avatar.jpg', 'FEMALE', '1994-09-04', 'testuser04', '510-492-4356', 'era32@hotmail.com'           , '$2a$10$9/vCLxlRFicNIjqmvboWS.ln3sdgVL7UfiiO7wlReFqUkj2iEZ9wy', 'NORMAL'   )
+     , (5 , 'Test User 05', 'avatar:/0e/dbba2992da4aba7c3ec8836ee9f140/avatar.jpg', 'MALE'  , '1996-08-23', 'testuser05', '360-523-0071', 'mariane29@hotmail.com'       , '$2a$10$v.xQu/wxajge5SW0eH.fuedSmsj7G1XkyNiIz84wEXUlqJZkSalxG', 'FORBIDDEN')
+     , (6 , 'Test User 06', 'avatar:/1b/23a4eacf6463571edc6d1b28209db6/avatar.jpg', 'FEMALE', '1998-05-24', 'testuser06', '212-403-5257', 'maye6@gmail.com'             , '$2a$10$MKDPkDwWzgDluid0KHAGBuxCPHxyjiM4jf.yg7sxfbH2gLtyx.IB6', 'NORMAL'   )
+     , (7 , 'Test User 07', 'avatar:/d7/0be96ca3a480e1166ddae4e6cc66bc/avatar.jpg', 'FEMALE', '2006-01-12', 'testuser07', '585-548-8890', 'lina.hauck90@yahoo.com'      , '$2a$10$9SeFrv7eVWCDSJro2b4HLOlld8FkhptLqypWLeB87p4EKBVpUdxbu', 'FORBIDDEN')
+     , (8 , 'Test User 08', 'avatar:/1d/bf08938bec80385904a95d14e7d8b0/avatar.jpg', 'MALE'  , '2007-01-15', 'testuser08', '347-750-3852', 'bertrand68@hotmail.com'      , '$2a$10$4RFYvL7ASgToD.Cl73/N3eBv7RiA3EPn1FOb7C3teP4E6EtD8bIi2', 'FORBIDDEN')
+     , (9 , 'Test User 09', 'avatar:/fc/7a13533dcb0cc3273254cc26c3fbf8/avatar.jpg', 'MALE'  , '2008-03-03', 'testuser09', '810-937-0914', 'kellen69@hotmail.com'        , '$2a$10$SAGMXvD/ilDG6tVvygh2P.Sjvvk6V2SfRF9UPxKjbmXB4SNi7lnqS', 'NORMAL'   )
+     , (10, 'Test User 10', 'avatar:/cb/07487428c4d3e5b29bbd539759e3b4/avatar.jpg', 'FEMALE', '2018-03-05', 'testuser10', '304-367-6149', 'kris.schamberger@hotmail.com', '$2a$10$/1dRAuRiC7Hspwgx2QwqyO93xVWp4ewir1gREsKTH8Rl.nyFWwlpG', 'NORMAL'   )
+     ;

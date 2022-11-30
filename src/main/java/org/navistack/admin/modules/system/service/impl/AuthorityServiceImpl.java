@@ -7,8 +7,8 @@ import org.navistack.admin.modules.common.entity.Privilege;
 import org.navistack.admin.modules.common.entity.RolePrivilege;
 import org.navistack.admin.modules.common.entity.User;
 import org.navistack.admin.modules.common.entity.UserRole;
+import org.navistack.admin.modules.common.query.UserRoleQuery;
 import org.navistack.admin.modules.system.service.AuthorityService;
-import org.navistack.framework.mybatisplusplus.utils.Wrappers;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -31,9 +31,10 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     public List<Privilege> listGrantedPrivilegesOf(User user) {
-        List<UserRole> userRoles = userRoleDao.selectList(
-                Wrappers.<UserRole>lambdaQuery()
-                        .eq(UserRole::getUserId, user.getId())
+        List<UserRole> userRoles = userRoleDao.select(
+                UserRoleQuery.builder()
+                        .userId(user.getId())
+                        .build()
         );
 
         List<Long> userRoleIds = userRoles.stream()
@@ -42,18 +43,15 @@ public class AuthorityServiceImpl implements AuthorityService {
 
         List<RolePrivilege> rolePrivileges = userRoles.isEmpty()
                 ? Collections.emptyList()
-                : rolePrivilegeDao.selectList(
-                Wrappers.<RolePrivilege>lambdaQuery()
-                        .in(RolePrivilege::getRoleId, userRoleIds)
-        );
+                : rolePrivilegeDao.selectByRoleIdIn(userRoleIds);
 
-        List<Long> rolePrivilegeIds = rolePrivileges.stream()
+        List<Long> privilegeIds = rolePrivileges.stream()
                 .map(RolePrivilege::getPrivilegeId)
                 .collect(Collectors.toList());
 
-        return rolePrivilegeIds.isEmpty()
+        return privilegeIds.isEmpty()
                 ? Collections.emptyList()
-                : privilegeDao.selectBatchIds(rolePrivilegeIds)
+                : privilegeDao.selectByIds(privilegeIds)
                 ;
     }
 }

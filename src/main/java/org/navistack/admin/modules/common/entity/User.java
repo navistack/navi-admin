@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.navistack.admin.modules.common.enums.Gender;
 import org.navistack.admin.modules.common.enums.UserStatus;
-import org.navistack.framework.mybatisplusplus.entity.IdEntity;
+import org.navistack.framework.batis.entity.IdEntity;
 
 import java.time.LocalDate;
 
@@ -25,6 +25,7 @@ public class User extends IdEntity<Long> {
 
     /**
      * aka international mobile dial codes
+     *
      * @see <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
      */
     private String mobileNumber;

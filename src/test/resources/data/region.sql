@@ -1,0 +1,13 @@
+INSERT INTO
+  region (id, code          , name            , parent_code     )
+VALUES (1 , 'REGION_CODE_01', 'REGION NAME 01', null            )
+     , (2 , 'REGION_CODE_02', 'REGION NAME 02', 'REGION_CODE_01')
+     , (3 , 'REGION_CODE_03', 'REGION NAME 03', 'REGION_CODE_01')
+     , (4 , 'REGION_CODE_04', 'REGION NAME 04', 'REGION_CODE_01')
+     , (5 , 'REGION_CODE_05', 'REGION NAME 05', 'REGION_CODE_01')
+     , (6 , 'REGION_CODE_06', 'REGION NAME 06', 'REGION_CODE_05')
+     , (7 , 'REGION_CODE_07', 'REGION NAME 07', 'REGION_CODE_05')
+     , (8 , 'REGION_CODE_08', 'REGION NAME 08', 'REGION_CODE_06')
+     , (9 , 'REGION_CODE_09', 'REGION NAME 09', 'REGION_CODE_06')
+     , (10, 'REGION_CODE_10', 'REGION NAME 10', 'REGION_CODE_08')
+     ;

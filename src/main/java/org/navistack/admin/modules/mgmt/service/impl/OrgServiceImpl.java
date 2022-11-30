@@ -1,65 +1,74 @@
 package org.navistack.admin.modules.mgmt.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import org.navistack.admin.modules.common.dao.OrgDao;
 import org.navistack.admin.modules.common.entity.Org;
+import org.navistack.admin.modules.common.query.OrgQuery;
 import org.navistack.admin.modules.mgmt.service.OrgService;
+import org.navistack.admin.modules.mgmt.service.convert.OrgConverter;
 import org.navistack.admin.modules.mgmt.service.dto.OrgDto;
-import org.navistack.admin.modules.mgmt.service.dto.OrgQueryDto;
+import org.navistack.admin.support.mybatis.AuditingEntitySupport;
 import org.navistack.framework.core.error.EntityDuplicationException;
-import org.navistack.framework.mybatisplusplus.AbstractCrudService;
-import org.navistack.framework.mybatisplusplus.utils.Wrappers;
+import org.navistack.framework.data.Page;
+import org.navistack.framework.data.PageImpl;
+import org.navistack.framework.data.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+
 @Service
-public class OrgServiceImpl
-        extends AbstractCrudService<Org, Long, OrgDto, OrgQueryDto, OrgDao>
-        implements OrgService {
+public class OrgServiceImpl implements OrgService {
+    private final OrgDao dao;
 
     public OrgServiceImpl(OrgDao dao) {
-        super(dao);
+        this.dao = dao;
     }
 
     @Override
-    protected Wrapper<Org> buildWrapper(OrgQueryDto queryDto) {
-        String code = queryDto.getCode();
-        String name = queryDto.getName();
-        Long superId = queryDto.getSuperId();
-
-        return Wrappers.<Org>lambdaQuery()
-                .eq(code != null, Org::getCode, code)
-                .eq(name != null, Org::getName, name)
-                .eq(superId != null, Org::getSuperId, superId);
+    public Page<OrgDto> paginate(OrgQuery query, Pageable pageable) {
+        long totalRecords = dao.count(query);
+        List<Org> entities = dao.selectWithPageable(query, pageable);
+        Collection<OrgDto> dtos = OrgConverter.INSTANCE.entitiesToDtos(entities);
+        return new PageImpl<>(dtos, pageable, totalRecords);
     }
 
     @Override
-    protected void preCreate(OrgDto dto) {
-        super.preCreate(dto);
+    public void create(OrgDto dto) {
+        ensureUnique(dto);
 
-        dto.setId(null);
+        Org entity = OrgConverter.INSTANCE.dtoToEntity(dto);
+        AuditingEntitySupport.insertAuditingProperties(entity);
+        dao.insert(entity);
+    }
 
-        boolean existing = dao.exists(
-                Wrappers.<Org>lambdaQuery()
-                        .eq(Org::getCode, dto.getCode())
-        );
+    @Override
+    public void modify(OrgDto dto) {
+        ensureUnique(dto);
 
-        if (existing) {
-            throw new EntityDuplicationException("Organization existed");
+        Org entity = OrgConverter.INSTANCE.dtoToEntity(dto);
+        AuditingEntitySupport.updateAuditingProperties(entity);
+        dao.updateById(entity);
+    }
+
+    @Override
+    public void remove(Long id) {
+        dao.deleteById(id);
+    }
+
+    protected void ensureUnique(OrgDto dto) {
+        OrgQuery query = OrgQuery.builder()
+                .code(dto.getCode())
+                .build();
+        Org existedOne = dao.selectOne(query);
+
+        if (existedOne == null) {
+            return;
         }
-    }
 
-    @Override
-    protected void preModify(OrgDto dto) {
-        super.preModify(dto);
-
-        boolean existing = dao.exists(
-                Wrappers.<Org>lambdaQuery()
-                        .eq(Org::getCode, dto.getCode())
-                        .ne(Org::getId, dto.getId())
-        );
-
-        if (existing) {
-            throw new EntityDuplicationException("Organization existed");
+        if (!existedOne.getId().equals(dto.getId())) {
+            return;
         }
+
+        throw new EntityDuplicationException("Organization has existed");
     }
 }
