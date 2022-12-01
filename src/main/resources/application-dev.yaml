@@ -1,0 +1,8 @@
+navi:
+  web:
+    exception-handling:
+      include-stack-trace: true
+
+logging:
+  level:
+    org.navistack.admin: debug
