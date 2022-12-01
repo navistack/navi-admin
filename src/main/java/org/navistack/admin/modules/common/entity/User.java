@@ -38,6 +38,4 @@ public class User extends IdEntity<Long> {
     private String password;
 
     private UserStatus status;
-
-    private Long orgId;
 }

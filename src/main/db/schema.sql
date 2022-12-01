@@ -114,8 +114,6 @@ CREATE TABLE `user`
 
     `status`        CHAR(48),
 
-    `org_id`        BIGINT,
-
     `created_at`    DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_by`    BIGINT,
     `updated_at`    DATETIME ON UPDATE CURRENT_TIMESTAMP,
@@ -151,6 +149,29 @@ CREATE TABLE `user_role`
     `remarks`    VARCHAR(140),
 
     UNIQUE KEY (`user_id`, `role_id`)
+);
+
+# ########################################
+# Organizations of user
+# ########################################
+
+CREATE TABLE `user_org`
+(
+    `id`         BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
+
+    `user_id`    BIGINT,
+    `org_id`    BIGINT,
+
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_by` BIGINT,
+    `updated_at` DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    `updated_by` BIGINT,
+    `deleted`    BOOLEAN           DEFAULT FALSE,
+    `deleted_at` DATETIME,
+    `deleted_by` BIGINT,
+    `remarks`    VARCHAR(140),
+
+    UNIQUE KEY (`user_id`, `org_id`)
 );
 
 # ########################################

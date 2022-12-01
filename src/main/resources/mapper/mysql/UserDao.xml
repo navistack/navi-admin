@@ -98,7 +98,6 @@
             <if test="emailAddress != null">email_address,</if>
             <if test="password != null">password,</if>
             <if test="status != null">status,</if>
-            <if test="orgId != null">org_id,</if>
             <if test="createdAt != null">created_at,</if>
             <if test="createdBy != null">created_by,</if>
         </trim>
@@ -113,7 +112,6 @@
             <if test="emailAddress != null">#{emailAddress},</if>
             <if test="password != null">#{password},</if>
             <if test="status != null">#{status},</if>
-            <if test="orgId != null">#{orgId},</if>
             <if test="createdAt != null">#{createdAt},</if>
             <if test="createdBy != null">#{createdBy},</if>
         </trim>
@@ -131,7 +129,6 @@
             <if test="emailAddress != null">email_address = #{emailAddress},</if>
             <if test="password != null">password = #{password},</if>
             <if test="status != null">status = #{status},</if>
-            <if test="orgId != null">org_id = #{orgId},</if>
             <if test="updatedAt != null">#{updatedAt},</if>
             <if test="updatedBy != null">#{updatedBy},</if>
         </set>
