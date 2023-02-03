@@ -6,7 +6,7 @@ import org.navistack.admin.modules.common.dao.RegionDao;
 import org.navistack.admin.modules.common.entity.Region;
 import org.navistack.admin.modules.common.query.RegionQuery;
 import org.navistack.admin.modules.system.web.rest.vm.RegionVm;
-import org.navistack.framework.data.TreeUtils;
+import org.navistack.framework.data.TreeBuilder;
 import org.navistack.framework.web.rest.RestResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,9 @@ public class SysRegionController {
     @Operation(summary = "Get regions and their sub-regions recursively")
     public RestResult.Ok<Collection<RegionVm>> get() {
         List<Region> regions = regionDao.selectAll();
-        Collection<RegionVm> vms = TreeUtils.treeize(regions, RegionVm::of);
+        Collection<RegionVm> vms = regions.stream()
+                .map(RegionVm::of)
+                .collect(TreeBuilder.collector());
         return RestResult.ok(vms);
     }
 
@@ -55,7 +57,9 @@ public class SysRegionController {
             return RestResult.ok(Collections.emptyList());
         }
 
-        Collection<RegionVm> vms = TreeUtils.treeize(regions, regionCode, RegionVm::of);
+        Collection<RegionVm> vms = regions.stream()
+                .map(RegionVm::of)
+                .collect(TreeBuilder.<RegionVm>of().orphanAsRoot(true).toCollector());
         return RestResult.ok(vms);
     }
 }
