@@ -2,6 +2,7 @@ package org.navistack.admin.modules.system.web.rest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.navistack.admin.modules.system.web.rest.vm.PasswordLoginVm;
 import org.navistack.admin.modules.system.web.rest.vo.JwtTokenVo;
 import org.navistack.framework.security.TokenService;
@@ -11,8 +12,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 @RestController
 @Tag(name = "System")

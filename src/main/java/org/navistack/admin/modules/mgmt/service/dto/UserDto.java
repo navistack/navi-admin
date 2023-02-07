@@ -1,12 +1,12 @@
 package org.navistack.admin.modules.mgmt.service.dto;
 
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.navistack.admin.modules.common.enums.Gender;
 import org.navistack.admin.modules.common.enums.UserStatus;
 import org.navistack.admin.support.validation.groups.Create;
 import org.navistack.admin.support.validation.groups.Modify;
 
-import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 

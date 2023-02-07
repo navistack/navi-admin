@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-    <entry key="javax.validation.constraints.Null.message">not allowed here</entry>
-    <entry key="javax.validation.constraints.NotNull.message">must not be empty</entry>
-    <entry key="javax.validation.constraints.NotEmpty.message">must not be empty</entry>
-    <entry key="javax.validation.constraints.Size.message">must be between {min} and {max} long</entry>
-    <entry key="javax.validation.constraints.Pattern.message">does not match pattern</entry>
-    <entry key="javax.validation.constraints.Email.message">is not a valid email address</entry>
+    <entry key="jakarta.validation.constraints.Null.message">not allowed here</entry>
+    <entry key="jakarta.validation.constraints.NotNull.message">must not be empty</entry>
+    <entry key="jakarta.validation.constraints.NotEmpty.message">must not be empty</entry>
+    <entry key="jakarta.validation.constraints.Size.message">must be between {min} and {max} long</entry>
+    <entry key="jakarta.validation.constraints.Pattern.message">does not match pattern</entry>
+    <entry key="jakarta.validation.constraints.Email.message">is not a valid email address</entry>
     <entry key="validation.constraints.Dict.code.message">must contain letters, digits or underscores</entry>
     <entry key="validation.constraints.DictItem.itKey.message">must contain letters, digits or underscores</entry>
     <entry key="validation.constraints.Region.code.message">must contain letters, digits or hyphens</entry>

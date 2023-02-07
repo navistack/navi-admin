@@ -3,6 +3,7 @@ package org.navistack.admin.modules.mgmt.web.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.groups.Default;
 import org.navistack.admin.modules.common.query.UserQuery;
 import org.navistack.admin.modules.mgmt.service.UserService;
 import org.navistack.admin.modules.mgmt.service.dto.UserDto;
@@ -15,8 +16,6 @@ import org.navistack.framework.web.rest.RestResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.groups.Default;
 
 @RestController
 @RequestMapping("/user")

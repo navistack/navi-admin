@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-    <entry key="javax.validation.constraints.Null.message">无效的参数</entry>
-    <entry key="javax.validation.constraints.NotNull.message">不能为空</entry>
-    <entry key="javax.validation.constraints.NotEmpty.message">不能为空</entry>
-    <entry key="javax.validation.constraints.Size.message">须不短于 {min} 且不长于 {max}</entry>
-    <entry key="javax.validation.constraints.Pattern.message">不符合规则</entry>
-    <entry key="javax.validation.constraints.Email.message">不是有效的邮箱地址</entry>
+    <entry key="jakarta.validation.constraints.Null.message">无效的参数</entry>
+    <entry key="jakarta.validation.constraints.NotNull.message">不能为空</entry>
+    <entry key="jakarta.validation.constraints.NotEmpty.message">不能为空</entry>
+    <entry key="jakarta.validation.constraints.Size.message">须不短于 {min} 且不长于 {max}</entry>
+    <entry key="jakarta.validation.constraints.Pattern.message">不符合规则</entry>
+    <entry key="jakarta.validation.constraints.Email.message">不是有效的邮箱地址</entry>
     <entry key="validation.constraints.Dict.code.message">只能包含字符、数字和下划线</entry>
     <entry key="validation.constraints.DictItem.itKey.message">只能包含字符、数字和下划线</entry>
     <entry key="validation.constraints.Region.code.message">只能包含字符、数字和横杠</entry>

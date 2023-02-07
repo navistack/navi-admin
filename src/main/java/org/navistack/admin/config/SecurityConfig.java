@@ -2,7 +2,7 @@ package org.navistack.admin.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
@@ -29,11 +29,11 @@ public class SecurityConfig {
                     .and()
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/login")
+                    .requestMatchers("/login")
                         .anonymous()
-                    .antMatchers("/swagger-ui/**", "/v3/api-docs/**")
+                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**")
                         .anonymous()
-                    .antMatchers("/sys/simple-captcha/**")
+                    .requestMatchers("/sys/simple-captcha/**")
                         .anonymous()
                     .anyRequest()
                         .authenticated()
