@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @MybatisTest
 @Testcontainers(disabledWithoutDocker = true)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Sql(scripts = "classpath:data/user_role.sql")
+@Sql(scripts = "classpath:data/user_org.sql")
 class UserOrgDaoTest {
     @Container
     static MysqlContainer mysql = new MysqlContainer();
