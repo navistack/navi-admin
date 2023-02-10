@@ -40,22 +40,27 @@
             <if test="query.emailAddress != null and !query.emailAddress.isEmpty()">AND email_address = #{query.emailAddress}</if>
             <if test="query.status != null">AND status = #{query.status}</if>
         </where>
-        <trim prefix="ORDER BY" suffixOverrides=",">
-            <if test="pageable != null and pageable.sort != null and pageable.sort.orders != null and !pageable.sort.orders.isEmpty()">
-                <foreach item="order" collection="pageable.sort.orders" separator=",">
-                    <choose>
-                        <when test="order.property == 'id'">id</when>
-                        <when test="order.property == 'code'">code</when>
-                        <otherwise>id</otherwise>
-                    </choose>
-                    <choose>
-                        <when test="order.ascending">ASC</when>
-                        <otherwise>DESC</otherwise>
-                    </choose>
-                </foreach>
-            </if>
-        </trim>
-         LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
+        <if test="pageable != null">
+            <trim prefix="ORDER BY" suffixOverrides=",">
+                <if test="pageable.sort != null and pageable.sort.orders != null and !pageable.sort.orders.isEmpty()">
+                    <foreach item="order" collection="pageable.sort.orders" separator=",">
+                        <choose>
+                            <otherwise>id</otherwise>
+                        </choose>
+                        <choose>
+                            <when test="order.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </foreach>
+                </if>
+            </trim>
+            <trim prefix="LIMIT">
+                #{pageable.pageSize}
+            </trim>
+            <trim prefix="OFFSET">
+                #{pageable.offset}
+            </trim>
+        </if>
     </select>
 
     <select id="selectOne" resultType="org.navistack.admin.modules.common.entity.User">
