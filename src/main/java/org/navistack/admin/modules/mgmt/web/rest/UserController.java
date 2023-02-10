@@ -31,21 +31,21 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasAuthority('sys:user:query')")
     @Operation(summary = "Query Paged list of users")
-    public RestResult.Ok<Page<UserDto>> paginate(UserQuery query, PageRequest pageRequest) {
+    public RestResult<Page<UserDto>, ?> paginate(UserQuery query, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(query, pageRequest));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('sys:user:querydetail')")
     @Operation(summary = "Query details about user")
-    public RestResult.Ok<UserDetailVm> detail(@PathVariable Long id) {
+    public RestResult<UserDetailVm, ?> detail(@PathVariable Long id) {
         return RestResult.ok(service.queryDetailById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('sys:user:create')")
     @Operation(summary = "Create a user")
-    public RestResult.None create(@Validated({Default.class, Create.class}) UserDto dto) {
+    public RestResult<Void, ?> create(@Validated({Default.class, Create.class}) UserDto dto) {
         service.create(dto);
         return RestResult.ok();
     }
@@ -53,7 +53,7 @@ public class UserController {
     @PatchMapping
     @PreAuthorize("hasAuthority('sys:user:modify')")
     @Operation(summary = "Modify user")
-    public RestResult.None modify(@Validated({Default.class, Modify.class}) UserDto dto) {
+    public RestResult<Void, ?> modify(@Validated({Default.class, Modify.class}) UserDto dto) {
         service.modify(dto);
         return RestResult.ok();
     }
@@ -61,7 +61,7 @@ public class UserController {
     @DeleteMapping
     @PreAuthorize("hasAuthority('sys:user:remove')")
     @Operation(summary = "Remove user")
-    public RestResult.None remove(@RequestParam Long id) {
+    public RestResult<Void, ?> remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();
     }

@@ -27,7 +27,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "Login by password")
-    public RestResult.Ok<JwtTokenVo> login(@Valid PasswordLoginVm vm) {
+    public RestResult<JwtTokenVo, ?> login(@Valid PasswordLoginVm vm) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 vm.getLoginName(),
                 vm.getPassword()

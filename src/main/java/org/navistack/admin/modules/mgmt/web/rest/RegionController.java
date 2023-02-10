@@ -30,14 +30,14 @@ public class RegionController {
     @GetMapping
     @PreAuthorize("hasAuthority('sys:region:query')")
     @Operation(summary = "Query Paged list of regions")
-    public RestResult.Ok<Page<RegionDto>> paginate(RegionQuery query, PageRequest pageRequest) {
+    public RestResult<Page<RegionDto>, ?> paginate(RegionQuery query, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(query, pageRequest));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('sys:region:create')")
     @Operation(summary = "Create a region")
-    public RestResult.None create(@Validated({Default.class, Create.class}) RegionDto dto) {
+    public RestResult<Void, ?> create(@Validated({Default.class, Create.class}) RegionDto dto) {
         service.create(dto);
         return RestResult.ok();
     }
@@ -45,7 +45,7 @@ public class RegionController {
     @PatchMapping
     @PreAuthorize("hasAuthority('sys:region:modify')")
     @Operation(summary = "Modify region")
-    public RestResult.None modify(@Validated({Default.class, Modify.class}) RegionDto dto) {
+    public RestResult<Void, ?> modify(@Validated({Default.class, Modify.class}) RegionDto dto) {
         service.modify(dto);
         return RestResult.ok();
     }
@@ -53,7 +53,7 @@ public class RegionController {
     @DeleteMapping
     @PreAuthorize("hasAuthority('sys:region:remove')")
     @Operation(summary = "Remove region")
-    public RestResult.None remove(@RequestParam Long id) {
+    public RestResult<Void, ?> remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();
     }

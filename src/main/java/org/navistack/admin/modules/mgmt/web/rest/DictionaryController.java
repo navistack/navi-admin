@@ -32,14 +32,14 @@ public class DictionaryController {
     @GetMapping
     @PreAuthorize("hasAuthority('sys:dictionary:query')")
     @Operation(summary = "Query Paged list of dictionaries")
-    public RestResult.Ok<Page<DictionaryDto>> paginate(DictionaryQuery query, PageRequest pageRequest) {
+    public RestResult<Page<DictionaryDto>, ?> paginate(DictionaryQuery query, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(query, pageRequest));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('sys:dictionary:create')")
     @Operation(summary = "Create dictionary")
-    public RestResult.None create(@Validated({Default.class, Create.class}) DictionaryDto dto) {
+    public RestResult<Void, ?> create(@Validated({Default.class, Create.class}) DictionaryDto dto) {
         service.create(dto);
         return RestResult.ok();
     }
@@ -47,7 +47,7 @@ public class DictionaryController {
     @PatchMapping
     @PreAuthorize("hasAuthority('sys:dictionary:modify')")
     @Operation(summary = "Modify dictionary")
-    public RestResult.None modify(@Validated({Default.class, Modify.class}) DictionaryDto dto) {
+    public RestResult<Void, ?> modify(@Validated({Default.class, Modify.class}) DictionaryDto dto) {
         service.modify(dto);
         return RestResult.ok();
     }
@@ -55,7 +55,7 @@ public class DictionaryController {
     @DeleteMapping
     @PreAuthorize("hasAuthority('sys:dictionary:remove')")
     @Operation(summary = "Remove dictionary")
-    public RestResult.None remove(@RequestParam Long id) {
+    public RestResult<Void, ?> remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();
     }
@@ -63,14 +63,14 @@ public class DictionaryController {
     @GetMapping("/item")
     @PreAuthorize("hasAuthority('sys:dictionary:queryitem')")
     @Operation(summary = "Query Paged list of dictionary items")
-    public RestResult.Ok<Page<DictionaryItemDto>> paginateItem(DictionaryItemQuery query, PageRequest pageRequest) {
+    public RestResult<Page<DictionaryItemDto>, ?> paginateItem(DictionaryItemQuery query, PageRequest pageRequest) {
         return RestResult.ok(service.paginateItem(query, pageRequest));
     }
 
     @PostMapping("/item")
     @PreAuthorize("hasAuthority('sys:dictionary:createitem')")
     @Operation(summary = "Create dictionary item")
-    public RestResult.None createItem(@Validated({Default.class, Create.class}) DictionaryItemDto dto) {
+    public RestResult<Void, ?> createItem(@Validated({Default.class, Create.class}) DictionaryItemDto dto) {
         service.createItem(dto);
         return RestResult.ok();
     }
@@ -78,7 +78,7 @@ public class DictionaryController {
     @PatchMapping("/item")
     @PreAuthorize("hasAuthority('sys:dictionary:modifyitem')")
     @Operation(summary = "Modify dictionary item")
-    public RestResult.None modifyItem(@Validated({Default.class, Modify.class}) DictionaryItemDto dto) {
+    public RestResult<Void, ?> modifyItem(@Validated({Default.class, Modify.class}) DictionaryItemDto dto) {
         service.modifyItem(dto);
         return RestResult.ok();
     }
@@ -86,7 +86,7 @@ public class DictionaryController {
     @DeleteMapping("/item")
     @PreAuthorize("hasAuthority('sys:dictionary:removeitem')")
     @Operation(summary = "Remove dictionary item")
-    public RestResult.None removeItem(@RequestParam Long id) {
+    public RestResult<Void, ?> removeItem(@RequestParam Long id) {
         service.removeItem(id);
         return RestResult.ok();
     }

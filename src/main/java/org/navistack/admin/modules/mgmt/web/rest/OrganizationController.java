@@ -30,14 +30,14 @@ public class OrganizationController {
     @GetMapping
     @PreAuthorize("hasAuthority('sys:organization:query')")
     @Operation(summary = "Query Paged list of organizations")
-    public RestResult.Ok<Page<OrganizationDto>> paginate(OrganizationQuery query, PageRequest pageRequest) {
+    public RestResult<Page<OrganizationDto>, ?> paginate(OrganizationQuery query, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(query, pageRequest));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('sys:organization:create')")
     @Operation(summary = "Create organization")
-    public RestResult.None create(@Validated({Default.class, Create.class}) OrganizationDto dto) {
+    public RestResult<Void, ?> create(@Validated({Default.class, Create.class}) OrganizationDto dto) {
         service.create(dto);
         return RestResult.ok();
     }
@@ -45,7 +45,7 @@ public class OrganizationController {
     @PatchMapping
     @PreAuthorize("hasAuthority('sys:organization:modify')")
     @Operation(summary = "Modify organization")
-    public RestResult.None modify(@Validated({Default.class, Modify.class}) OrganizationDto dto) {
+    public RestResult<Void, ?> modify(@Validated({Default.class, Modify.class}) OrganizationDto dto) {
         service.modify(dto);
         return RestResult.ok();
     }
@@ -53,7 +53,7 @@ public class OrganizationController {
     @DeleteMapping
     @PreAuthorize("hasAuthority('sys:organization:remove')")
     @Operation(summary = "Remove organization")
-    public RestResult.None remove(@RequestParam Long id) {
+    public RestResult<Void, ?> remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();
     }

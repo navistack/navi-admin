@@ -37,7 +37,7 @@ public class SysDictionaryController {
 
     @GetMapping
     @Operation(summary = "Get directories and their items")
-    public RestResult.Ok<Collection<DictionaryVm>> get() {
+    public RestResult<Collection<DictionaryVm>, ?> get() {
         List<Dictionary> dictionaries = dictionaryDao.selectAll();
         if (dictionaries.isEmpty()) {
             return RestResult.ok(Collections.emptyList());
@@ -75,7 +75,7 @@ public class SysDictionaryController {
 
     @GetMapping("/{dictionary:[A-Za-z0-9$_]{1,48}}")
     @Operation(summary = "Get directory and its items")
-    public RestResult.Ok<DictionaryVm> get(@PathVariable("dictionary") String dictionaryCode) {
+    public RestResult<DictionaryVm, ?> get(@PathVariable("dictionary") String dictionaryCode) {
         DictionaryQuery dictionaryQuery = DictionaryQuery.builder()
                 .code(dictionaryCode)
                 .build();
@@ -105,7 +105,7 @@ public class SysDictionaryController {
 
     @GetMapping("/{dictionary:[A-Za-z0-9$_]{1,48}}/items")
     @Operation(summary = "Get items of directory")
-    public RestResult.Ok<Collection<DictionaryItemVm>> getItem(@PathVariable("dictionary") String dictionaryCode) {
+    public RestResult<Collection<DictionaryItemVm>, ?> getItem(@PathVariable("dictionary") String dictionaryCode) {
         DictionaryItemQuery dictionaryItemQuery = DictionaryItemQuery.builder()
                 .dictionaryCode(dictionaryCode)
                 .build();

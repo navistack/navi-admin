@@ -30,14 +30,14 @@ public class PrivilegeController {
     @GetMapping
     @PreAuthorize("hasAuthority('sys:privilege:query')")
     @Operation(summary = "Query Paged list of privileges")
-    public RestResult.Ok<Page<PrivilegeDto>> paginate(PrivilegeQuery query, PageRequest pageRequest) {
+    public RestResult<Page<PrivilegeDto>, ?> paginate(PrivilegeQuery query, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(query, pageRequest));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('sys:privilege:create')")
     @Operation(summary = "Create a privilege")
-    public RestResult.None create(@Validated({Default.class, Create.class}) PrivilegeDto dto) {
+    public RestResult<Void, ?> create(@Validated({Default.class, Create.class}) PrivilegeDto dto) {
         service.create(dto);
         return RestResult.ok();
     }
@@ -45,7 +45,7 @@ public class PrivilegeController {
     @PatchMapping
     @PreAuthorize("hasAuthority('sys:privilege:modify')")
     @Operation(summary = "Modify privilege")
-    public RestResult.None modify(@Validated({Default.class, Modify.class}) PrivilegeDto dto) {
+    public RestResult<Void, ?> modify(@Validated({Default.class, Modify.class}) PrivilegeDto dto) {
         service.modify(dto);
         return RestResult.ok();
     }
@@ -53,7 +53,7 @@ public class PrivilegeController {
     @DeleteMapping
     @PreAuthorize("hasAuthority('sys:privilege:remove')")
     @Operation(summary = "Remove privilege")
-    public RestResult.None remove(@RequestParam Long id) {
+    public RestResult<Void, ?> remove(@RequestParam Long id) {
         service.remove(id);
         return RestResult.ok();
     }

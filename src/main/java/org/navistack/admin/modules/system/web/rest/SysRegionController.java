@@ -26,7 +26,7 @@ public class SysRegionController {
 
     @GetMapping
     @Operation(summary = "Get regions and their sub-regions recursively")
-    public RestResult.Ok<Collection<RegionVm>> get() {
+    public RestResult<Collection<RegionVm>, ?> get() {
         List<Region> regions = regionDao.selectAll();
         Collection<RegionVm> vms = regions.stream()
                 .map(RegionVm::of)
@@ -36,7 +36,7 @@ public class SysRegionController {
 
     @GetMapping("/{region}")
     @Operation(summary = "Get regions and their sub-regions recursively")
-    public RestResult.Ok<Collection<RegionVm>> get(
+    public RestResult<Collection<RegionVm>, ?> get(
             @PathVariable("region") String regionCode,
             @RequestParam(defaultValue = "true") boolean recursive
     ) {
