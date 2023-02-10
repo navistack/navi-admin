@@ -12,14 +12,14 @@ import java.util.LinkedList;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class DictVm {
+public class DictionaryVm {
     private String code;
 
     private String name;
 
-    private Collection<DictItemVm> items;
+    private Collection<DictionaryItemVm> items;
 
-    public static DictVm of(String code, String name) {
-        return new DictVm(code, name, new LinkedList<>());
+    public static DictionaryVm of(String code, String name) {
+        return new DictionaryVm(code, name, new LinkedList<>());
     }
 }

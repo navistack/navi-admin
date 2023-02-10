@@ -2,14 +2,14 @@
 # Privilege, aka function
 # ########################################
 INSERT INTO `privilege` (`id`, `code`, `name`, `remarks`, `parent_id`)
-VALUES (1, 'sys:dict:query', 'sys:dict:query', 'Query Paged list of dictionaries', NULL),
-       (2, 'sys:dict:create', 'sys:dict:create', 'Create a dictionary', NULL),
-       (3, 'sys:dict:modify', 'sys:dict:modify', 'Modify dictionary', NULL),
-       (4, 'sys:dict:remove', 'sys:dict:remove', 'Remove dictionary', NULL),
-       (5, 'sys:dict:queryitem', 'sys:dict:queryitem', 'Query Paged list of dictionary items', NULL),
-       (6, 'sys:dict:createitem', 'sys:dict:createitem', 'Create a dictionary item', NULL),
-       (7, 'sys:dict:modifyitem', 'sys:dict:modifyitem', 'Modify dictionary item', NULL),
-       (8, 'sys:dict:removeitem', 'sys:dict:removeitem', 'Remove dictionary item', NULL),
+VALUES (1, 'sys:dictionary:query', 'sys:dictionary:query', 'Query Paged list of dictionaries', NULL),
+       (2, 'sys:dictionary:create', 'sys:dictionary:create', 'Create a dictionary', NULL),
+       (3, 'sys:dictionary:modify', 'sys:dictionary:modify', 'Modify dictionary', NULL),
+       (4, 'sys:dictionary:remove', 'sys:dictionary:remove', 'Remove dictionary', NULL),
+       (5, 'sys:dictionary:queryitem', 'sys:dictionary:queryitem', 'Query Paged list of dictionary items', NULL),
+       (6, 'sys:dictionary:createitem', 'sys:dictionary:createitem', 'Create a dictionary item', NULL),
+       (7, 'sys:dictionary:modifyitem', 'sys:dictionary:modifyitem', 'Modify dictionary item', NULL),
+       (8, 'sys:dictionary:removeitem', 'sys:dictionary:removeitem', 'Remove dictionary item', NULL),
        (9, 'sys:region:query', 'sys:region:query', 'Query Paged list of regions', NULL),
        (10, 'sys:region:create', 'sys:region:create', 'Create a region', NULL),
        (11, 'sys:region:modify', 'sys:region:modify', 'Modify region', NULL),

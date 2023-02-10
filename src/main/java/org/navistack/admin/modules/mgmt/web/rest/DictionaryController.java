@@ -4,11 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.groups.Default;
-import org.navistack.admin.modules.common.query.DictItemQuery;
-import org.navistack.admin.modules.common.query.DictQuery;
-import org.navistack.admin.modules.mgmt.service.DictService;
-import org.navistack.admin.modules.mgmt.service.dto.DictDto;
-import org.navistack.admin.modules.mgmt.service.dto.DictItemDto;
+import org.navistack.admin.modules.common.query.DictionaryItemQuery;
+import org.navistack.admin.modules.common.query.DictionaryQuery;
+import org.navistack.admin.modules.mgmt.service.DictionaryService;
+import org.navistack.admin.modules.mgmt.service.dto.DictionaryDto;
+import org.navistack.admin.modules.mgmt.service.dto.DictionaryItemDto;
 import org.navistack.admin.support.validation.groups.Create;
 import org.navistack.admin.support.validation.groups.Modify;
 import org.navistack.framework.data.Page;
@@ -19,41 +19,41 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/dict")
+@RequestMapping("/dictionary")
 @Tag(name = "Dictionary Management")
 @SecurityRequirement(name = "bearer-key")
-public class DictController {
-    private final DictService service;
+public class DictionaryController {
+    private final DictionaryService service;
 
-    public DictController(DictService service) {
+    public DictionaryController(DictionaryService service) {
         this.service = service;
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('sys:dict:query')")
+    @PreAuthorize("hasAuthority('sys:dictionary:query')")
     @Operation(summary = "Query Paged list of dictionaries")
-    public RestResult.Ok<Page<DictDto>> paginate(DictQuery query, PageRequest pageRequest) {
+    public RestResult.Ok<Page<DictionaryDto>> paginate(DictionaryQuery query, PageRequest pageRequest) {
         return RestResult.ok(service.paginate(query, pageRequest));
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('sys:dict:create')")
-    @Operation(summary = "Create a dictionary")
-    public RestResult.None create(@Validated({Default.class, Create.class}) DictDto dto) {
+    @PreAuthorize("hasAuthority('sys:dictionary:create')")
+    @Operation(summary = "Create dictionary")
+    public RestResult.None create(@Validated({Default.class, Create.class}) DictionaryDto dto) {
         service.create(dto);
         return RestResult.ok();
     }
 
     @PatchMapping
-    @PreAuthorize("hasAuthority('sys:dict:modify')")
+    @PreAuthorize("hasAuthority('sys:dictionary:modify')")
     @Operation(summary = "Modify dictionary")
-    public RestResult.None modify(@Validated({Default.class, Modify.class}) DictDto dto) {
+    public RestResult.None modify(@Validated({Default.class, Modify.class}) DictionaryDto dto) {
         service.modify(dto);
         return RestResult.ok();
     }
 
     @DeleteMapping
-    @PreAuthorize("hasAuthority('sys:dict:remove')")
+    @PreAuthorize("hasAuthority('sys:dictionary:remove')")
     @Operation(summary = "Remove dictionary")
     public RestResult.None remove(@RequestParam Long id) {
         service.remove(id);
@@ -61,30 +61,30 @@ public class DictController {
     }
 
     @GetMapping("/item")
-    @PreAuthorize("hasAuthority('sys:dict:queryitem')")
+    @PreAuthorize("hasAuthority('sys:dictionary:queryitem')")
     @Operation(summary = "Query Paged list of dictionary items")
-    public RestResult.Ok<Page<DictItemDto>> paginateItem(DictItemQuery query, PageRequest pageRequest) {
+    public RestResult.Ok<Page<DictionaryItemDto>> paginateItem(DictionaryItemQuery query, PageRequest pageRequest) {
         return RestResult.ok(service.paginateItem(query, pageRequest));
     }
 
     @PostMapping("/item")
-    @PreAuthorize("hasAuthority('sys:dict:createitem')")
-    @Operation(summary = "Create a dictionary item")
-    public RestResult.None createItem(@Validated({Default.class, Create.class}) DictItemDto dto) {
+    @PreAuthorize("hasAuthority('sys:dictionary:createitem')")
+    @Operation(summary = "Create dictionary item")
+    public RestResult.None createItem(@Validated({Default.class, Create.class}) DictionaryItemDto dto) {
         service.createItem(dto);
         return RestResult.ok();
     }
 
     @PatchMapping("/item")
-    @PreAuthorize("hasAuthority('sys:dict:modifyitem')")
+    @PreAuthorize("hasAuthority('sys:dictionary:modifyitem')")
     @Operation(summary = "Modify dictionary item")
-    public RestResult.None modifyItem(@Validated({Default.class, Modify.class}) DictItemDto dto) {
+    public RestResult.None modifyItem(@Validated({Default.class, Modify.class}) DictionaryItemDto dto) {
         service.modifyItem(dto);
         return RestResult.ok();
     }
 
     @DeleteMapping("/item")
-    @PreAuthorize("hasAuthority('sys:dict:removeitem')")
+    @PreAuthorize("hasAuthority('sys:dictionary:removeitem')")
     @Operation(summary = "Remove dictionary item")
     public RestResult.None removeItem(@RequestParam Long id) {
         service.removeItem(id);

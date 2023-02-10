@@ -7,8 +7,8 @@
     <entry key="jakarta.validation.constraints.Size.message">must be between {min} and {max} long</entry>
     <entry key="jakarta.validation.constraints.Pattern.message">does not match pattern</entry>
     <entry key="jakarta.validation.constraints.Email.message">is not a valid email address</entry>
-    <entry key="validation.constraints.Dict.code.message">must contain letters, digits or underscores</entry>
-    <entry key="validation.constraints.DictItem.itKey.message">must contain letters, digits or underscores</entry>
+    <entry key="validation.constraints.Dictionary.code.message">must contain letters, digits or underscores</entry>
+    <entry key="validation.constraints.DictionaryItem.code.message">must contain letters, digits or underscores</entry>
     <entry key="validation.constraints.Region.code.message">must contain letters, digits or hyphens</entry>
     <entry key="validation.constraints.Privilege.code.message">must contain letters, digits or colons</entry>
     <entry key="validation.constraints.Role.code.message">must contain letters, digits or underscores</entry>

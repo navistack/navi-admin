@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DictQuery {
+public class DictionaryItemQuery {
     private Long id;
 
     private String code;
 
     private String name;
+
+    private String dictionaryCode;
 }

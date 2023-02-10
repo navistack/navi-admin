@@ -6,12 +6,14 @@ import org.navistack.framework.batis.entity.AuditingEntity;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class Dict extends AuditingEntity<Long> {
+public class DictionaryItem extends AuditingEntity<Long> {
     private Long id;
 
     private String code;
 
     private String name;
+
+    private String dictionaryCode;
 
     private String remarks;
 }
