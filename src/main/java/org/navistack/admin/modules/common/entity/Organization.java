@@ -6,7 +6,7 @@ import org.navistack.framework.batis.entity.AuditingEntity;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class Org extends AuditingEntity<Long> {
+public class Organization extends AuditingEntity<Long> {
     private Long id;
 
     private String code;

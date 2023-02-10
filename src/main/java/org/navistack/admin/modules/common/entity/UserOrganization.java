@@ -10,19 +10,19 @@ import org.navistack.framework.batis.entity.AuditingEntity;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserOrg extends AuditingEntity<Long> {
+public class UserOrganization extends AuditingEntity<Long> {
     private Long id;
 
     private Long userId;
 
-    private Long orgId;
+    private Long organizationId;
 
-    public UserOrg(Long userId, Long orgId) {
+    public UserOrganization(Long userId, Long organizationId) {
         this.userId = userId;
-        this.orgId = orgId;
+        this.organizationId = organizationId;
     }
 
-    public static UserOrg of(Long userId, Long orgId) {
-        return new UserOrg(userId, orgId);
+    public static UserOrganization of(Long userId, Long organizationId) {
+        return new UserOrganization(userId, organizationId);
     }
 }

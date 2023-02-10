@@ -73,7 +73,7 @@ CREATE TABLE `role_privilege`
 # Organization
 # ########################################
 
-CREATE TABLE `org`
+CREATE TABLE `organization`
 (
     `id`         BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
 
@@ -155,23 +155,21 @@ CREATE TABLE `user_role`
 # Organizations of user
 # ########################################
 
-CREATE TABLE `user_org`
+CREATE TABLE `user_organization`
 (
-    `id`         BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `id`              BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
 
-    `user_id`    BIGINT,
-    `org_id`    BIGINT,
+    `user_id`         BIGINT,
+    `organization_id` BIGINT,
 
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `created_by` BIGINT,
-    `updated_at` DATETIME ON UPDATE CURRENT_TIMESTAMP,
-    `updated_by` BIGINT,
-    `deleted`    BOOLEAN           DEFAULT FALSE,
-    `deleted_at` DATETIME,
-    `deleted_by` BIGINT,
-    `remarks`    VARCHAR(140),
-
-    UNIQUE KEY (`user_id`, `org_id`)
+    `created_at`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_by`      BIGINT,
+    `updated_at`      DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    `updated_by`      BIGINT,
+    `deleted`         BOOLEAN           DEFAULT FALSE,
+    `deleted_at`      DATETIME,
+    `deleted_by`      BIGINT,
+    `remarks`         VARCHAR(140)
 );
 
 # ########################################

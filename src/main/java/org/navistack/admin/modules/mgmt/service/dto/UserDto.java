@@ -43,7 +43,5 @@ public class UserDto {
 
     private UserStatus status;
 
-    private Long orgId;
-
     private List<Long> roleIds;
 }

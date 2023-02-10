@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrgQuery {
+public class UserOrganizationQuery {
     private Long id;
 
-    private String code;
+    private Long userId;
 
-    private String name;
-
-    private Long superId;
+    private Long organizationId;
 }

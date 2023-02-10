@@ -44,7 +44,7 @@ CREATE TABLE `role_privilege`
     `remarks`      VARCHAR(140)
 );
 
-CREATE TABLE `org`
+CREATE TABLE `organization`
 (
     `id`         BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `code`       CHAR(48) NOT NULL,
@@ -98,21 +98,19 @@ CREATE TABLE `user_role`
     `remarks`    VARCHAR(140)
 );
 
-CREATE TABLE `user_org`
+CREATE TABLE `user_organization`
 (
-    `id`         BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
-
-    `user_id`    BIGINT,
-    `org_id`    BIGINT,
-
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `created_by` BIGINT,
-    `updated_at` DATETIME ON UPDATE CURRENT_TIMESTAMP,
-    `updated_by` BIGINT,
-    `deleted`    BOOLEAN           DEFAULT FALSE,
-    `deleted_at` DATETIME,
-    `deleted_by` BIGINT,
-    `remarks`    VARCHAR(140)
+    `id`              BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `user_id`         BIGINT,
+    `organization_id` BIGINT,
+    `created_at`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_by`      BIGINT,
+    `updated_at`      DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    `updated_by`      BIGINT,
+    `deleted`         BOOLEAN           DEFAULT FALSE,
+    `deleted_at`      DATETIME,
+    `deleted_by`      BIGINT,
+    `remarks`         VARCHAR(140)
 );
 
 CREATE TABLE `dict`

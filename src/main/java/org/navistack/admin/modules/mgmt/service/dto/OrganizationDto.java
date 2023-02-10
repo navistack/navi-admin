@@ -6,13 +6,13 @@ import org.navistack.admin.support.validation.groups.Create;
 import org.navistack.admin.support.validation.groups.Modify;
 
 @Data
-public class OrgDto {
+public class OrganizationDto {
     @Null(groups = Create.class)
     @NotNull(groups = Modify.class)
     private Long id;
 
     @NotEmpty
-    @Pattern(regexp = "^[A-Za-z0-9-]{1,48}$", message = "{validation.constraints.Org.code.message}")
+    @Pattern(regexp = "^[A-Za-z0-9-]{1,48}$", message = "{validation.constraints.Organization.code.message}")
     private String code;
 
     @NotEmpty
