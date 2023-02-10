@@ -108,7 +108,11 @@ public class DictionaryServiceImpl implements DictionaryService {
             return;
         }
 
-        if (!existedOne.getId().equals(dto.getId())) {
+        if (!existedOne.getCode().equals(dto.getCode())) {
+            return;
+        }
+
+        if (existedOne.getId().equals(dto.getId())) {
             return;
         }
 
@@ -126,7 +130,11 @@ public class DictionaryServiceImpl implements DictionaryService {
             return;
         }
 
-        if (!existedOne.getId().equals(dto.getId())) {
+        if (!existedOne.getCode().equals(dto.getCode())) {
+            return;
+        }
+
+        if (existedOne.getId().equals(dto.getId())) {
             return;
         }
 
