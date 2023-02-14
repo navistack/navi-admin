@@ -7,10 +7,13 @@ import org.navistack.admin.modules.mgmt.service.OrganizationService;
 import org.navistack.admin.modules.mgmt.service.convert.OrganizationConverter;
 import org.navistack.admin.modules.mgmt.service.dto.OrganizationDto;
 import org.navistack.admin.support.mybatis.AuditingEntitySupport;
-import org.navistack.framework.core.error.EntityDuplicationException;
+import org.navistack.framework.core.error.ConstraintViolationException;
+import org.navistack.framework.core.error.DomainValidationException;
+import org.navistack.framework.core.error.NoSuchEntityException;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageImpl;
 import org.navistack.framework.data.Pageable;
+import org.navistack.framework.utils.Asserts;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -34,7 +37,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void create(OrganizationDto dto) {
-        ensureUnique(dto);
+        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Organization code has been taken already"));
+        Asserts.state(dto.getSuperId(), this::validateExistenceById, () -> new NoSuchEntityException("Superior does not exist"));
 
         Organization entity = OrganizationConverter.INSTANCE.dtoToEntity(dto);
         AuditingEntitySupport.insertAuditingProperties(entity);
@@ -43,7 +47,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void modify(OrganizationDto dto) {
-        ensureUnique(dto);
+        Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Organization does not exist"));
+        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Organization code has been taken already"));
+        Asserts.state(dto.getSuperId(), this::validateExistenceById, () -> new NoSuchEntityException("Superior does not exist"));
 
         Organization entity = OrganizationConverter.INSTANCE.dtoToEntity(dto);
         AuditingEntitySupport.updateAuditingProperties(entity);
@@ -52,23 +58,44 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void remove(Long id) {
+        Asserts.state(id, this::validateExistenceById, () -> new NoSuchEntityException("Organization does not exist"));
+        Asserts.state(id, this::validateAbsenceOfSubordinate, () -> new ConstraintViolationException("Organization can not be removed as sub-organization(s) exist(s)"));
         dao.deleteById(id);
     }
 
-    protected void ensureUnique(OrganizationDto dto) {
-        OrganizationQuery query = OrganizationQuery.builder()
-                .code(dto.getCode())
-                .build();
-        Organization existedOne = dao.selectOne(query);
+    // region Validation methods
 
-        if (existedOne == null) {
-            return;
-        }
-
-        if (!existedOne.getId().equals(dto.getId())) {
-            return;
-        }
-
-        throw new EntityDuplicationException("Organization already exists");
+    protected boolean validateExistenceById(Long id) {
+        return id != null && dao.selectOneById(id) != null;
     }
+
+    protected boolean validateAvailabilityOfCode(String code, Long modifiedId) {
+        OrganizationQuery query = OrganizationQuery.builder()
+                .code(code)
+                .build();
+        Organization existingOne = dao.selectOne(query);
+
+        if (existingOne == null) {
+            return true;
+        }
+
+        if (!existingOne.getCode().equals(code)) {
+            return true;
+        }
+
+        if (existingOne.getId().equals(modifiedId)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected boolean validateAbsenceOfSubordinate(Long superId) {
+        OrganizationQuery query = OrganizationQuery.builder()
+                .superId(superId)
+                .build();
+        return dao.count(query) <= 0;
+    }
+
+    // endregion
 }
