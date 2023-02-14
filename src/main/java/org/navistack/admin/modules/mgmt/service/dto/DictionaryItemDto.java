@@ -18,9 +18,8 @@ public class DictionaryItemDto {
     @Size(max = 80)
     private String name;
 
-    @NotEmpty
-    @Pattern(regexp = "^[A-Za-z0-9$_]{1,48}$", message = "{validation.constraints.Dictionary.code.message}")
-    private String dictionaryCode;
+    @NotNull
+    private Long dictionaryId;
 
     @Size(max = 140)
     private String remarks;

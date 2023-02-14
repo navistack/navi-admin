@@ -16,5 +16,5 @@ public class DictionaryItemQuery {
 
     private String name;
 
-    private String dictionaryCode;
+    private Long dictionaryId;
 }

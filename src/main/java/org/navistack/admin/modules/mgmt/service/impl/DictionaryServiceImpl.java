@@ -12,10 +12,13 @@ import org.navistack.admin.modules.mgmt.service.convert.DictionaryItemConverter;
 import org.navistack.admin.modules.mgmt.service.dto.DictionaryDto;
 import org.navistack.admin.modules.mgmt.service.dto.DictionaryItemDto;
 import org.navistack.admin.support.mybatis.AuditingEntitySupport;
-import org.navistack.framework.core.error.EntityDuplicationException;
+import org.navistack.framework.core.error.ConstraintViolationException;
+import org.navistack.framework.core.error.DomainValidationException;
+import org.navistack.framework.core.error.NoSuchEntityException;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageImpl;
 import org.navistack.framework.data.Pageable;
+import org.navistack.framework.utils.Asserts;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -27,10 +30,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     private final DictionaryItemDao itemDao;
 
-    public DictionaryServiceImpl(
-            DictionaryDao dao,
-            DictionaryItemDao itemDao
-    ) {
+    public DictionaryServiceImpl(DictionaryDao dao, DictionaryItemDao itemDao) {
         this.dao = dao;
         this.itemDao = itemDao;
     }
@@ -45,7 +45,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public void create(DictionaryDto dto) {
-        ensureUnique(dto);
+        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Dictionary code has been taken already"));
 
         Dictionary entity = DictionaryConverter.INSTANCE.dtoToEntity(dto);
         AuditingEntitySupport.insertAuditingProperties(entity);
@@ -54,7 +54,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public void modify(DictionaryDto dto) {
-        ensureUnique(dto);
+        Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
+        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Dictionary code has been taken already"));
 
         Dictionary entity = DictionaryConverter.INSTANCE.dtoToEntity(dto);
         AuditingEntitySupport.updateAuditingProperties(entity);
@@ -63,10 +64,10 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public void remove(Long id) {
+        Asserts.state(id, this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
+        Asserts.state(id, this::validateAbsenceOfItem, () -> new ConstraintViolationException("Dictionary can not be removed as item(s) exist(s)"));
         dao.deleteById(id);
     }
-
-
 
     @Override
     public Page<DictionaryItemDto> paginateItem(DictionaryItemQuery query, Pageable pageable) {
@@ -78,7 +79,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public void createItem(DictionaryItemDto dto) {
-        ensureItemUnique(dto);
+        Asserts.state(dto.getDictionaryId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
+        Asserts.state(this.validateItemAvailabilityOfCode(dto.getCode(), dto.getDictionaryId(), dto.getId()), () -> new DomainValidationException("Dictionary item code has been taken already"));
 
         DictionaryItem entity = DictionaryItemConverter.INSTANCE.dtoToEntity(dto);
         AuditingEntitySupport.insertAuditingProperties(entity);
@@ -87,7 +89,9 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public void modifyItem(DictionaryItemDto dto) {
-        ensureItemUnique(dto);
+        Asserts.state(dto.getId(), this::validateItemExistenceById, () -> new NoSuchEntityException("Dictionary item does not exist"));
+        Asserts.state(dto.getDictionaryId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
+        Asserts.state(this.validateItemAvailabilityOfCode(dto.getCode(), dto.getDictionaryId(), dto.getId()), () -> new DomainValidationException("Dictionary item code has been taken already"));
 
         DictionaryItem entity = DictionaryItemConverter.INSTANCE.dtoToEntity(dto);
         AuditingEntitySupport.updateAuditingProperties(entity);
@@ -96,48 +100,63 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public void removeItem(Long id) {
+        Asserts.state(id, this::validateItemExistenceById, () -> new NoSuchEntityException("Dictionary item does not exist"));
         itemDao.deleteById(id);
     }
 
-    protected void ensureUnique(DictionaryDto dto) {
-        DictionaryQuery queryDto = new DictionaryQuery();
-        queryDto.setCode(dto.getCode());
-        Dictionary existedOne = dao.selectOne(queryDto);
 
-        if (existedOne == null) {
-            return;
-        }
+    // region Validation methods
 
-        if (!existedOne.getCode().equals(dto.getCode())) {
-            return;
-        }
-
-        if (existedOne.getId().equals(dto.getId())) {
-            return;
-        }
-
-        throw new EntityDuplicationException("Dictionary already exists");
+    protected boolean validateExistenceById(Long id) {
+        return id != null && dao.selectOneById(id) != null;
     }
 
-    protected void ensureItemUnique(DictionaryItemDto dto) {
-        DictionaryItemQuery query = DictionaryItemQuery.builder()
-                .code(dto.getCode())
-                .dictionaryCode(dto.getDictionaryCode())
-                .build();
-        DictionaryItem existedOne = itemDao.selectOne(query);
+    protected boolean validateAvailabilityOfCode(String code, Long modifiedId) {
+        DictionaryQuery query = DictionaryQuery.builder().code(code).build();
+        Dictionary existingOne = dao.selectOne(query);
 
-        if (existedOne == null) {
-            return;
+        if (existingOne == null) {
+            return true;
         }
 
-        if (!existedOne.getCode().equals(dto.getCode())) {
-            return;
+        if (!existingOne.getCode().equals(code)) {
+            return true;
         }
 
-        if (existedOne.getId().equals(dto.getId())) {
-            return;
+        if (existingOne.getId().equals(modifiedId)) {
+            return true;
         }
 
-        throw new EntityDuplicationException("Dictionary item already exists");
+        return false;
     }
+
+    protected boolean validateItemExistenceById(Long id) {
+        return id != null && itemDao.selectOneById(id) != null;
+    }
+
+    protected boolean validateItemAvailabilityOfCode(String itemCode, Long dictionaryId, Long modifiedId) {
+        DictionaryItemQuery query = DictionaryItemQuery.builder().code(itemCode).dictionaryId(dictionaryId).build();
+        DictionaryItem existingOne = itemDao.selectOne(query);
+
+        if (existingOne == null) {
+            return true;
+        }
+
+        if (!existingOne.getCode().equals(itemCode)) {
+            return true;
+        }
+
+        if (existingOne.getId().equals(modifiedId)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected boolean validateAbsenceOfItem(Long dictionaryId) {
+        DictionaryItemQuery query = DictionaryItemQuery.builder().dictionaryId(dictionaryId).build();
+        return itemDao.count(query) <= 0;
+    }
+
+    // endregion
 }

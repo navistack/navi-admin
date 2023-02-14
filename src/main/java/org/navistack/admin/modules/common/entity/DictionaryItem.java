@@ -13,7 +13,7 @@ public class DictionaryItem extends AuditingEntity<Long> {
 
     private String name;
 
-    private String dictionaryCode;
+    private Long dictionaryId;
 
     private String remarks;
 }

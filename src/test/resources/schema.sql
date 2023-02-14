@@ -130,18 +130,18 @@ CREATE TABLE `dictionary`
 
 CREATE TABLE `dictionary_item`
 (
-    `id`              BIGINT      NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `code`            CHAR(48)    NOT NULL,
-    `name`            VARCHAR(80) NOT NULL,
-    `dictionary_code` CHAR(48)    NOT NULL,
-    `created_at`      DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `created_by`      BIGINT,
-    `updated_at`      DATETIME ON UPDATE CURRENT_TIMESTAMP,
-    `updated_by`      BIGINT,
-    `deleted`         BOOLEAN              DEFAULT FALSE,
-    `deleted_at`      DATETIME,
-    `deleted_by`      BIGINT,
-    `remarks`         VARCHAR(140)
+    `id`            BIGINT      NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `code`          CHAR(48)    NOT NULL,
+    `name`          VARCHAR(80) NOT NULL,
+    `dictionary_id` BIGINT      NOT NULL,
+    `created_at`    DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_by`    BIGINT,
+    `updated_at`    DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    `updated_by`    BIGINT,
+    `deleted`       BOOLEAN              DEFAULT FALSE,
+    `deleted_at`    DATETIME,
+    `deleted_by`    BIGINT,
+    `remarks`       VARCHAR(140)
 );
 
 CREATE TABLE `region`

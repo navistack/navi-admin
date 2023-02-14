@@ -15,7 +15,7 @@
             <if test="id != null">AND id = #{id}</if>
             <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
             <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
-            <if test="dictionaryCode != null and !dictionaryCode.isEmpty()">AND dictionary_code = #{dictionaryCode}</if>
+            <if test="dictionaryId != null">AND dictionary_id = #{dictionaryId}</if>
         </where>
     </select>
 
@@ -26,7 +26,7 @@
             <if test="id != null">AND id = #{id}</if>
             <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
             <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
-            <if test="dictionaryCode != null and !dictionaryCode.isEmpty()">AND dictionary_code = #{dictionaryCode}</if>
+            <if test="dictionaryId != null">AND dictionary_id = #{dictionaryId}</if>
         </where>
     </select>
 
@@ -37,7 +37,7 @@
             <if test="query.id != null">AND id = #{query.id}</if>
             <if test="query.code != null and !query.code.isEmpty()">AND it_key = #{code}</if>
             <if test="query.name != null and !query.name.isEmpty()">AND name LIKE #{query.name} '%'</if>
-            <if test="query.dictionaryCode != null and !query.dictionaryCode.isEmpty()">AND dictionary_code = #{query.dictionaryCode}</if>
+            <if test="query.dictionaryId != null">AND dictionary_id = #{query.dictionaryId}</if>
         </where>
         <if test="pageable != null">
             <trim prefix="ORDER BY" suffixOverrides=",">
@@ -45,7 +45,7 @@
                     <foreach item="order" collection="pageable.sort.orders" separator=",">
                         <choose>
                             <when test="order.property == 'code'">code</when>
-                            <when test="order.property == 'dictionaryCode'">dictionaryCode</when>
+                            <when test="order.property == 'dictionaryId'">dictionaryId</when>
                             <otherwise>id</otherwise>
                         </choose>
                         <choose>
@@ -71,7 +71,7 @@
             <if test="id != null">AND id = #{id}</if>
             <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
             <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
-            <if test="dictionaryCode != null and !dictionaryCode.isEmpty()">AND dictionary_code = #{dictionaryCode}</if>
+            <if test="dictionaryId != null">AND dictionary_id = #{dictionaryId}</if>
         </where>
     </select>
 
@@ -87,7 +87,7 @@
             <if test="id != null">id,</if>
             <if test="code != null and !code.isEmpty()">code,</if>
             <if test="name != null and !name.isEmpty()">name,</if>
-            <if test="dictionaryCode != null and !dictionaryCode.isEmpty()">dictionary_code,</if>
+            <if test="dictionaryId != null">dictionary_id,</if>
             <if test="createdAt != null">created_at,</if>
             <if test="createdBy != null">created_by,</if>
             <if test="remarks != null and !remarks.isEmpty()">remarks,</if>
@@ -96,7 +96,7 @@
             <if test="id != null">#{id},</if>
             <if test="code != null and !code.isEmpty()">#{code},</if>
             <if test="name != null and !name.isEmpty()">#{name},</if>
-            <if test="dictionaryCode != null and !dictionaryCode.isEmpty()">#{dictionaryCode},</if>
+            <if test="dictionaryId != null">#{dictionaryId},</if>
             <if test="createdAt != null">#{createdAt},</if>
             <if test="createdBy != null">#{createdBy},</if>
             <if test="remarks != null and !remarks.isEmpty()">#{remarks},</if>
@@ -108,7 +108,7 @@
         <set>
             <if test="code != null and !code.isEmpty()">code = #{code},</if>
             <if test="name != null and !name.isEmpty()">name = #{name},</if>
-            <if test="dictionaryCode != null and !dictionaryCode.isEmpty()">dictionary_code = #{dictionaryCode},</if>
+            <if test="dictionaryId != null">dictionary_id = #{dictionaryId},</if>
             <if test="updatedAt != null">#{updatedAt},</if>
             <if test="updatedBy != null">#{updatedBy},</if>
             <if test="remarks != null and !remarks.isEmpty()">remarks = #{remarks},</if>

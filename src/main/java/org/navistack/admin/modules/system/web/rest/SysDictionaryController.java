@@ -16,11 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -43,27 +39,25 @@ public class SysDictionaryController {
             return RestResult.ok(Collections.emptyList());
         }
 
-        Collection<DictionaryVm> dictionaryVms = dictionaries.stream()
-                .map(d -> DictionaryVm.of(d.getCode(), d.getName()))
-                .collect(Collectors.toList());
-
         List<DictionaryItem> items = dictionaryItemDao.selectAll();
         if (items.isEmpty()) {
+            Collection<DictionaryVm> dictionaryVms = dictionaries.stream()
+                    .map(d -> DictionaryVm.of(d.getCode(), d.getName()))
+                    .collect(Collectors.toList());
             return RestResult.ok(dictionaryVms);
         }
 
-        Map<String, DictionaryVm> dictVmMap = dictionaryVms.stream()
-                .collect(
-                        Collectors.toMap(
-                                DictionaryVm::getCode,
-                                Function.identity()
-                        )
-                );
+        Collection<DictionaryVm> dictionaryVms = new ArrayList<>(dictionaries.size());
+        Map<Long, DictionaryVm> dictVmMap = new HashMap<>(dictionaries.size());
+        for (Dictionary dict : dictionaries) {
+            DictionaryVm vm = DictionaryVm.of(dict.getCode(), dict.getName());
+            dictVmMap.put(dict.getId(), vm);
+        }
 
         for (DictionaryItem item : items) {
             DictionaryItemVm itemVm = DictionaryItemVm.of(item.getCode(), item.getName());
 
-            DictionaryVm dictionaryVm = dictVmMap.get(item.getDictionaryCode());
+            DictionaryVm dictionaryVm = dictVmMap.get(item.getDictionaryId());
 
             if (dictionaryVm != null) {
                 dictionaryVm.getItems().add(itemVm);
@@ -88,7 +82,7 @@ public class SysDictionaryController {
         DictionaryVm dictionaryVm = DictionaryVm.of(dictionary.getCode(), dictionary.getName());
 
         DictionaryItemQuery itemQuery = DictionaryItemQuery.builder()
-                .dictionaryCode(dictionaryCode)
+                .dictionaryId(dictionary.getId())
                 .build();
         List<DictionaryItem> items = dictionaryItemDao.select(itemQuery);
         if (items.isEmpty()) {
@@ -106,8 +100,16 @@ public class SysDictionaryController {
     @GetMapping("/{dictionary:[A-Za-z0-9$_]{1,48}}/items")
     @Operation(summary = "Get items of directory")
     public RestResult<Collection<DictionaryItemVm>, ?> getItem(@PathVariable("dictionary") String dictionaryCode) {
+        DictionaryQuery dictionaryQuery = DictionaryQuery.builder()
+                .code(dictionaryCode)
+                .build();
+        Dictionary dictionary = dictionaryDao.selectOne(dictionaryQuery);
+        if (dictionary == null) {
+            return RestResult.ok(Collections.emptyList());
+        }
+
         DictionaryItemQuery dictionaryItemQuery = DictionaryItemQuery.builder()
-                .dictionaryCode(dictionaryCode)
+                .dictionaryId(dictionary.getId())
                 .build();
         List<DictionaryItem> items = dictionaryItemDao.select(dictionaryItemQuery);
         if (items.isEmpty()) {
