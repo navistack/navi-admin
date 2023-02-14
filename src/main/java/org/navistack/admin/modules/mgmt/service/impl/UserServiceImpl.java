@@ -6,7 +6,6 @@ import org.navistack.admin.modules.common.dao.UserRoleDao;
 import org.navistack.admin.modules.common.entity.User;
 import org.navistack.admin.modules.common.entity.UserRole;
 import org.navistack.admin.modules.common.query.RoleQuery;
-import org.navistack.admin.modules.common.query.UserLoginNameQuery;
 import org.navistack.admin.modules.common.query.UserQuery;
 import org.navistack.admin.modules.common.query.UserRoleQuery;
 import org.navistack.admin.modules.mgmt.service.UserService;
@@ -14,10 +13,12 @@ import org.navistack.admin.modules.mgmt.service.convert.UserConverter;
 import org.navistack.admin.modules.mgmt.service.dto.UserDto;
 import org.navistack.admin.modules.mgmt.service.vm.UserDetailVm;
 import org.navistack.admin.support.mybatis.AuditingEntitySupport;
-import org.navistack.framework.core.error.EntityDuplicationException;
+import org.navistack.framework.core.error.DomainValidationException;
+import org.navistack.framework.core.error.NoSuchEntityException;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageImpl;
 import org.navistack.framework.data.Pageable;
+import org.navistack.framework.utils.Asserts;
 import org.navistack.framework.utils.ModelMappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +68,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(UserDto dto) {
-        ensureUnique(dto);
+        Asserts.state(dto.getLoginName(), dto.getId(), this::validateAvailabilityOfLoginName, () -> new DomainValidationException("Login name has been taken already"));
+        Asserts.state(dto.getMobileNumber(), dto.getId(), this::validateAvailabilityOfMobileNumber, () -> new DomainValidationException("Mobile number has been taken already"));
+        Asserts.state(dto.getEmailAddress(), dto.getId(), this::validateAvailabilityOfEmailAddress, () -> new DomainValidationException("Email address has been taken already"));
 
         User entity = UserConverter.INSTANCE.dtoToEntity(dto);
         AuditingEntitySupport.insertAuditingProperties(entity);
@@ -78,7 +81,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void modify(UserDto dto) {
-        ensureUnique(dto);
+        Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("User does not exist"));
+        Asserts.state(dto.getLoginName(), dto.getId(), this::validateAvailabilityOfLoginName, () -> new DomainValidationException("Login name has been taken already"));
+        Asserts.state(dto.getMobileNumber(), dto.getId(), this::validateAvailabilityOfMobileNumber, () -> new DomainValidationException("Mobile number has been taken already"));
+        Asserts.state(dto.getEmailAddress(), dto.getId(), this::validateAvailabilityOfEmailAddress, () -> new DomainValidationException("Email address has been taken already"));
+
 
         User entity = UserConverter.INSTANCE.dtoToEntity(dto);
         AuditingEntitySupport.updateAuditingProperties(entity);
@@ -88,25 +95,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void remove(Long id) {
+        Asserts.state(id, this::validateExistenceById, () -> new NoSuchEntityException("User does not exist"));
+
         dao.deleteById(id);
-    }
 
-    protected void ensureUnique(UserDto dto) {
-        UserLoginNameQuery query = new UserLoginNameQuery();
-        query.setLoginName(dto.getLoginName());
-        query.setMobileNumber(dto.getMobileNumber());
-        query.setEmailAddress(dto.getEmailAddress());
-        User existedOne = dao.selectOneByLoginName(query);
-
-        if (existedOne == null) {
-            return;
-        }
-
-        if (!existedOne.getId().equals(dto.getId())) {
-            return;
-        }
-
-        throw new EntityDuplicationException("User already exists");
+        UserRoleQuery urq = UserRoleQuery.builder()
+                .userId(id)
+                .build();
+        userRoleDao.delete(urq);
     }
 
     protected void replaceRolesOf(Long userId, List<Long> roleIds) {
@@ -129,4 +125,63 @@ public class UserServiceImpl implements UserService {
             }
         }
     }
+
+    // region Validation methods
+
+    protected boolean validateExistenceById(Long id) {
+        return id != null && dao.selectOneById(id) != null;
+    }
+
+    protected boolean validateAvailabilityOfLoginName(String loginName, Long modifiedId) {
+        UserQuery query = UserQuery.builder()
+                .loginName(loginName)
+                .build();
+        User existingOne = dao.selectOne(query);
+
+        if (existingOne == null) {
+            return true;
+        }
+
+        if (existingOne.getId().equals(modifiedId)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected boolean validateAvailabilityOfMobileNumber(String mobileNumber, Long modifiedId) {
+        UserQuery query = UserQuery.builder()
+                .mobileNumber(mobileNumber)
+                .build();
+        User existingOne = dao.selectOne(query);
+
+        if (existingOne == null) {
+            return true;
+        }
+
+        if (existingOne.getId().equals(modifiedId)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected boolean validateAvailabilityOfEmailAddress(String emailAddress, Long modifiedId) {
+        UserQuery query = UserQuery.builder()
+                .emailAddress(emailAddress)
+                .build();
+        User existingOne = dao.selectOne(query);
+
+        if (existingOne == null) {
+            return true;
+        }
+
+        if (existingOne.getId().equals(modifiedId)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // endregion
 }
