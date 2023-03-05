@@ -1,6 +1,6 @@
-# ########################################
-# Privilege, aka function
-# ########################################
+-- ----------------------------------------
+-- Privilege, aka function
+-- ----------------------------------------
 INSERT INTO `privilege` (`id`, `code`, `name`, `remarks`, `parent_id`)
 VALUES (1, 'sys:dictionary:query', 'sys:dictionary:query', 'Query Paged list of dictionaries', NULL),
        (2, 'sys:dictionary:create', 'sys:dictionary:create', 'Create a dictionary', NULL),
@@ -34,16 +34,16 @@ VALUES (1, 'sys:dictionary:query', 'sys:dictionary:query', 'Query Paged list of 
        (29, 'sys:organization:modify', 'sys:organization:modify', 'Modify organization', NULL),
        (30, 'sys:organization:remove', 'sys:organization:remove', 'Remove organization', NULL);
 
-# ########################################
-# Role
-# ########################################
+-- ----------------------------------------
+-- Role
+-- ----------------------------------------
 
 INSERT INTO `role` (`id`, `code`, `name`, `remarks`)
 VALUES (1, 'Admin', 'Administrator', 'Administrator User');
 
-# ########################################
-# Role's privileges, aka permissions
-# ########################################
+-- ----------------------------------------
+-- Role's privileges, aka permissions
+-- ----------------------------------------
 
 INSERT INTO `role_privilege` (`role_id`, `privilege_id`)
 VALUES (1, 1),
@@ -77,16 +77,16 @@ VALUES (1, 1),
        (1, 29),
        (1, 30);
 
-# ########################################
-# User
-# ########################################
+-- ----------------------------------------
+-- User
+-- ----------------------------------------
 
 INSERT INTO `user` (`id`, `nick_name`, `login_name`, `password`)
 VALUES (1, 'Admin', 'admin', '$2a$10$F0lnYRi2KUd9Nsyu.TF6Mu3jwUrN3sYZHFFyPIp1VNrJAYucBqT/m');
 
-# ########################################
-# Roles of user
-# ########################################
+-- ----------------------------------------
+-- Roles of user
+-- ----------------------------------------
 
 INSERT INTO `user_role` (`user_id`, `role_id`)
 VALUES (1, 1);
