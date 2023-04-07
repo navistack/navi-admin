@@ -18,12 +18,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class JwtTokenResolver implements org.navistack.framework.security.jwt.JwtTokenResolver {
+public class JwtPayloadResolver implements org.navistack.framework.security.jwt.JwtPayloadResolver {
     private static final String USER_UID_KEY = "uid";
     private final AuthenticationService authenticationService;
     private final AuthorityService authorityService;
 
-    public JwtTokenResolver(AuthenticationService authenticationService, AuthorityService authorityService) {
+    public JwtPayloadResolver(AuthenticationService authenticationService, AuthorityService authorityService) {
         this.authenticationService = authenticationService;
         this.authorityService = authorityService;
     }
