@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import org.navistack.admin.modules.system.web.rest.vm.PasswordLoginVm;
 import org.navistack.admin.modules.system.web.rest.vo.JwtTokenVo;
 import org.navistack.framework.security.TokenService;
-import org.navistack.framework.web.rest.RestResult;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -27,13 +26,13 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "Login by password")
-    public RestResult<JwtTokenVo, ?> login(@Valid PasswordLoginVm vm) {
+    public JwtTokenVo login(@Valid PasswordLoginVm vm) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 vm.getLoginName(),
                 vm.getPassword()
         );
         authentication = authenticationManagerBuilder.getObject().authenticate(authentication);
         String token = tokenService.issue(authentication);
-        return RestResult.ok(JwtTokenVo.of(token));
+        return JwtTokenVo.of(token);
     }
 }

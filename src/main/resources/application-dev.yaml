@@ -1,6 +1,6 @@
 navi:
   web:
-    exception-handling:
+    rest-result:
       include-stack-trace: true
 
 logging:

@@ -7,7 +7,6 @@ import org.navistack.admin.modules.common.entity.Region;
 import org.navistack.admin.modules.common.query.RegionQuery;
 import org.navistack.admin.modules.system.web.rest.vm.RegionVm;
 import org.navistack.framework.data.TreeBuilder;
-import org.navistack.framework.web.rest.RestResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -26,17 +25,17 @@ public class SysRegionController {
 
     @GetMapping
     @Operation(summary = "Get regions and their sub-regions recursively")
-    public RestResult<Collection<RegionVm>, ?> get() {
+    public Collection<RegionVm> get() {
         List<Region> regions = regionDao.selectAll();
         Collection<RegionVm> vms = regions.stream()
                 .map(RegionVm::of)
                 .collect(TreeBuilder.collector());
-        return RestResult.ok(vms);
+        return vms;
     }
 
     @GetMapping("/{region}")
     @Operation(summary = "Get regions and their sub-regions recursively")
-    public RestResult<Collection<RegionVm>, ?> get(
+    public Collection<RegionVm> get(
             @PathVariable("region") String regionCode,
             @RequestParam(defaultValue = "true") boolean recursive
     ) {
@@ -54,12 +53,12 @@ public class SysRegionController {
         }
 
         if (regions.isEmpty()) {
-            return RestResult.ok(Collections.emptyList());
+            return Collections.emptyList();
         }
 
         Collection<RegionVm> vms = regions.stream()
                 .map(RegionVm::of)
                 .collect(TreeBuilder.<RegionVm>of().orphanAsRoot(true).toCollector());
-        return RestResult.ok(vms);
+        return vms;
     }
 }
