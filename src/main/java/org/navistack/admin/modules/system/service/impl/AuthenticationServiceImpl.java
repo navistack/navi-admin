@@ -1,8 +1,8 @@
 package org.navistack.admin.modules.system.service.impl;
 
-import org.navistack.admin.modules.common.dao.UserDao;
-import org.navistack.admin.modules.common.entity.User;
-import org.navistack.admin.modules.common.query.UserLoginNameQuery;
+import org.navistack.admin.modules.identity.dao.UserDao;
+import org.navistack.admin.modules.identity.entity.User;
+import org.navistack.admin.modules.identity.query.UserLoginNameQuery;
 import org.navistack.admin.modules.system.service.AuthenticationService;
 import org.springframework.stereotype.Service;
 

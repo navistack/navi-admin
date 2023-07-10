@@ -1,13 +1,13 @@
 package org.navistack.admin.modules.system.service.impl;
 
-import org.navistack.admin.modules.common.dao.PrivilegeDao;
-import org.navistack.admin.modules.common.dao.RolePrivilegeDao;
-import org.navistack.admin.modules.common.dao.UserRoleDao;
-import org.navistack.admin.modules.common.entity.Privilege;
-import org.navistack.admin.modules.common.entity.RolePrivilege;
-import org.navistack.admin.modules.common.entity.User;
-import org.navistack.admin.modules.common.entity.UserRole;
-import org.navistack.admin.modules.common.query.UserRoleQuery;
+import org.navistack.admin.modules.identity.dao.PrivilegeDao;
+import org.navistack.admin.modules.identity.dao.RolePrivilegeDao;
+import org.navistack.admin.modules.identity.dao.UserRoleDao;
+import org.navistack.admin.modules.identity.entity.Privilege;
+import org.navistack.admin.modules.identity.entity.RolePrivilege;
+import org.navistack.admin.modules.identity.entity.User;
+import org.navistack.admin.modules.identity.entity.UserRole;
+import org.navistack.admin.modules.identity.query.UserRoleQuery;
 import org.navistack.admin.modules.system.service.AuthorityService;
 import org.springframework.stereotype.Service;
 

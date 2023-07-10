@@ -1,7 +1,7 @@
 package org.navistack.admin.support.security;
 
-import org.navistack.admin.modules.common.entity.Privilege;
-import org.navistack.admin.modules.common.entity.User;
+import org.navistack.admin.modules.identity.entity.Privilege;
+import org.navistack.admin.modules.identity.entity.User;
 import org.navistack.admin.modules.system.service.AuthenticationService;
 import org.navistack.admin.modules.system.service.AuthorityService;
 import org.springframework.security.core.GrantedAuthority;

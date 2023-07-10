@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @MybatisTest
 @Testcontainers(disabledWithoutDocker = true)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Sql(scripts = "classpath:data/dictionary_item.sql")
+@Sql(scripts = "classpath:data/common/dictionary_item.sql")
 class DictionaryItemDaoTest {
     @Container
     static MysqlContainer mysql = new MysqlContainer();
