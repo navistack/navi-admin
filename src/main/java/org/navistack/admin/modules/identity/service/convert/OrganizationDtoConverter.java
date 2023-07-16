@@ -8,10 +8,10 @@ import org.navistack.admin.modules.identity.service.dto.OrganizationDto;
 import java.util.Collection;
 
 @Mapper
-public interface OrganizationConverter {
-    OrganizationConverter INSTANCE = Mappers.getMapper(OrganizationConverter.class);
+public interface OrganizationDtoConverter {
+    OrganizationDtoConverter INSTANCE = Mappers.getMapper(OrganizationDtoConverter.class);
 
-    OrganizationDto toDto(Organization entity);
+    Organization toEntity(OrganizationDto dto);
 
-    Collection<OrganizationDto> toDtos(Collection<Organization> entities);
+    Collection<Organization> toEntities(Collection<OrganizationDto> dtos);
 }

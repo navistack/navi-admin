@@ -8,10 +8,10 @@ import org.navistack.admin.modules.identity.service.dto.RoleDto;
 import java.util.Collection;
 
 @Mapper
-public interface RoleConverter {
-    RoleConverter INSTANCE = Mappers.getMapper(RoleConverter.class);
+public interface RoleDtoConverter {
+    RoleDtoConverter INSTANCE = Mappers.getMapper(RoleDtoConverter.class);
 
-    RoleDto toDto(Role entity);
+    Role toEntity(RoleDto dto);
 
-    Collection<RoleDto> toDtos(Collection<Role> entities);
+    Collection<Role> toEntities(Collection<RoleDto> dtos);
 }

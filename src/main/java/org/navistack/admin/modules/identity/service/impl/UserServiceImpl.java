@@ -10,6 +10,7 @@ import org.navistack.admin.modules.identity.query.UserQuery;
 import org.navistack.admin.modules.identity.query.UserRoleQuery;
 import org.navistack.admin.modules.identity.service.UserService;
 import org.navistack.admin.modules.identity.service.convert.UserConverter;
+import org.navistack.admin.modules.identity.service.convert.UserDtoConverter;
 import org.navistack.admin.modules.identity.service.dto.UserDto;
 import org.navistack.admin.modules.identity.service.vm.UserDetailVm;
 import org.navistack.admin.support.mybatis.AuditingEntitySupport;
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
     public Page<UserDto> paginate(UserQuery query, Pageable pageable) {
         long totalRecords = dao.count(query);
         List<User> entities = dao.selectWithPageable(query, pageable);
-        Collection<UserDto> dtos = UserConverter.INSTANCE.entitiesToDtos(entities);
+        Collection<UserDto> dtos = UserConverter.INSTANCE.toDtos(entities);
         return new PageImpl<>(dtos, pageable, totalRecords);
     }
 
@@ -72,7 +73,7 @@ public class UserServiceImpl implements UserService {
         Asserts.state(dto.getMobileNumber(), dto.getId(), this::validateAvailabilityOfMobileNumber, () -> new DomainValidationException("Mobile number has been taken already"));
         Asserts.state(dto.getEmailAddress(), dto.getId(), this::validateAvailabilityOfEmailAddress, () -> new DomainValidationException("Email address has been taken already"));
 
-        User entity = UserConverter.INSTANCE.dtoToEntity(dto);
+        User entity = UserDtoConverter.INSTANCE.toEntity(dto);
         AuditingEntitySupport.insertAuditingProperties(entity);
         dao.insert(entity);
         replaceRolesOf(entity.getId(), dto.getRoleIds());
@@ -87,7 +88,7 @@ public class UserServiceImpl implements UserService {
         Asserts.state(dto.getEmailAddress(), dto.getId(), this::validateAvailabilityOfEmailAddress, () -> new DomainValidationException("Email address has been taken already"));
 
 
-        User entity = UserConverter.INSTANCE.dtoToEntity(dto);
+        User entity = UserDtoConverter.INSTANCE.toEntity(dto);
         AuditingEntitySupport.updateAuditingProperties(entity);
         dao.updateById(entity);
         replaceRolesOf(entity.getId(), dto.getRoleIds());

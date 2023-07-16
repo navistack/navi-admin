@@ -12,6 +12,7 @@ import org.navistack.admin.modules.identity.query.RoleQuery;
 import org.navistack.admin.modules.identity.query.UserRoleQuery;
 import org.navistack.admin.modules.identity.service.RoleService;
 import org.navistack.admin.modules.identity.service.convert.RoleConverter;
+import org.navistack.admin.modules.identity.service.convert.RoleDtoConverter;
 import org.navistack.admin.modules.identity.service.dto.RoleDto;
 import org.navistack.admin.modules.identity.service.vm.RoleDetailVm;
 import org.navistack.admin.support.mybatis.AuditingEntitySupport;
@@ -52,7 +53,7 @@ public class RoleServiceImpl implements RoleService {
     public Page<RoleDto> paginate(RoleQuery query, Pageable pageable) {
         long totalRecords = dao.count(query);
         List<Role> entities = dao.selectWithPageable(query, pageable);
-        Collection<RoleDto> dtos = RoleConverter.INSTANCE.entitiesToDtos(entities);
+        Collection<RoleDto> dtos = RoleConverter.INSTANCE.toDtos(entities);
         return new PageImpl<>(dtos, pageable, totalRecords);
     }
 
@@ -79,7 +80,7 @@ public class RoleServiceImpl implements RoleService {
     public void create(RoleDto dto) {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Role code has been taken already"));
 
-        Role entity = RoleConverter.INSTANCE.dtoToEntity(dto);
+        Role entity = RoleDtoConverter.INSTANCE.toEntity(dto);
         AuditingEntitySupport.insertAuditingProperties(entity);
         dao.insert(entity);
         replacePrivilegesOf(entity.getId(), dto.getPrivilegeIds());
@@ -91,7 +92,7 @@ public class RoleServiceImpl implements RoleService {
         Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Role does not exist"));
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Role code has been taken already"));
 
-        Role entity = RoleConverter.INSTANCE.dtoToEntity(dto);
+        Role entity = RoleDtoConverter.INSTANCE.toEntity(dto);
         AuditingEntitySupport.updateAuditingProperties(entity);
         dao.updateById(entity);
         replacePrivilegesOf(entity.getId(), dto.getPrivilegeIds());

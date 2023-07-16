@@ -5,6 +5,7 @@ import org.navistack.admin.modules.identity.entity.Organization;
 import org.navistack.admin.modules.identity.query.OrganizationQuery;
 import org.navistack.admin.modules.identity.service.OrganizationService;
 import org.navistack.admin.modules.identity.service.convert.OrganizationConverter;
+import org.navistack.admin.modules.identity.service.convert.OrganizationDtoConverter;
 import org.navistack.admin.modules.identity.service.dto.OrganizationDto;
 import org.navistack.admin.support.mybatis.AuditingEntitySupport;
 import org.navistack.framework.core.error.ConstraintViolationException;
@@ -31,7 +32,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Page<OrganizationDto> paginate(OrganizationQuery query, Pageable pageable) {
         long totalRecords = dao.count(query);
         List<Organization> entities = dao.selectWithPageable(query, pageable);
-        Collection<OrganizationDto> dtos = OrganizationConverter.INSTANCE.entitiesToDtos(entities);
+        Collection<OrganizationDto> dtos = OrganizationConverter.INSTANCE.toDtos(entities);
         return new PageImpl<>(dtos, pageable, totalRecords);
     }
 
@@ -40,7 +41,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Organization code has been taken already"));
         Asserts.state(dto.getSuperId(), this::validateExistenceById, () -> new NoSuchEntityException("Superior does not exist"));
 
-        Organization entity = OrganizationConverter.INSTANCE.dtoToEntity(dto);
+        Organization entity = OrganizationDtoConverter.INSTANCE.toEntity(dto);
         AuditingEntitySupport.insertAuditingProperties(entity);
         dao.insert(entity);
     }
@@ -51,7 +52,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Organization code has been taken already"));
         Asserts.state(dto.getSuperId(), this::validateExistenceById, () -> new NoSuchEntityException("Superior does not exist"));
 
-        Organization entity = OrganizationConverter.INSTANCE.dtoToEntity(dto);
+        Organization entity = OrganizationDtoConverter.INSTANCE.toEntity(dto);
         AuditingEntitySupport.updateAuditingProperties(entity);
         dao.updateById(entity);
     }

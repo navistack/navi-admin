@@ -8,10 +8,10 @@ import org.navistack.admin.modules.identity.service.dto.PrivilegeDto;
 import java.util.Collection;
 
 @Mapper
-public interface PrivilegeConverter {
-    PrivilegeConverter INSTANCE = Mappers.getMapper(PrivilegeConverter.class);
+public interface PrivilegeDtoConverter {
+    PrivilegeDtoConverter INSTANCE = Mappers.getMapper(PrivilegeDtoConverter.class);
 
-    PrivilegeDto toDto(Privilege entity);
+    Privilege toEntity(PrivilegeDto dto);
 
-    Collection<PrivilegeDto> toDtos(Collection<Privilege> entities);
+    Collection<Privilege> toEntities(Collection<PrivilegeDto> dtos);
 }

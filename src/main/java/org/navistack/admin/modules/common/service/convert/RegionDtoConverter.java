@@ -8,10 +8,10 @@ import org.navistack.admin.modules.common.service.dto.RegionDto;
 import java.util.Collection;
 
 @Mapper
-public interface RegionConverter {
-    RegionConverter INSTANCE = Mappers.getMapper(RegionConverter.class);
+public interface RegionDtoConverter {
+    RegionDtoConverter INSTANCE = Mappers.getMapper(RegionDtoConverter.class);
 
-    RegionDto toDto(Region entity);
+    Region toEntity(RegionDto dto);
 
-    Collection<RegionDto> toDtos(Collection<Region> entities);
+    Collection<Region> toEntities(Collection<RegionDto> dtos);
 }

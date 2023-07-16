@@ -8,7 +8,9 @@ import org.navistack.admin.modules.common.query.DictionaryItemQuery;
 import org.navistack.admin.modules.common.query.DictionaryQuery;
 import org.navistack.admin.modules.common.service.DictionaryService;
 import org.navistack.admin.modules.common.service.convert.DictionaryConverter;
+import org.navistack.admin.modules.common.service.convert.DictionaryDtoConverter;
 import org.navistack.admin.modules.common.service.convert.DictionaryItemConverter;
+import org.navistack.admin.modules.common.service.convert.DictionaryItemDtoConverter;
 import org.navistack.admin.modules.common.service.dto.DictionaryDto;
 import org.navistack.admin.modules.common.service.dto.DictionaryItemDto;
 import org.navistack.admin.support.mybatis.AuditingEntitySupport;
@@ -39,7 +41,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Page<DictionaryDto> paginate(DictionaryQuery query, Pageable pageable) {
         long totalRecords = dao.count(query);
         List<Dictionary> entities = dao.selectWithPageable(query, pageable);
-        Collection<DictionaryDto> dtos = DictionaryConverter.INSTANCE.entitiesToDtos(entities);
+        Collection<DictionaryDto> dtos = DictionaryConverter.INSTANCE.toDtos(entities);
         return new PageImpl<>(dtos, pageable, totalRecords);
     }
 
@@ -47,7 +49,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     public void create(DictionaryDto dto) {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Dictionary code has been taken already"));
 
-        Dictionary entity = DictionaryConverter.INSTANCE.dtoToEntity(dto);
+        Dictionary entity = DictionaryDtoConverter.INSTANCE.toEntity(dto);
         AuditingEntitySupport.insertAuditingProperties(entity);
         dao.insert(entity);
     }
@@ -57,7 +59,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Dictionary code has been taken already"));
 
-        Dictionary entity = DictionaryConverter.INSTANCE.dtoToEntity(dto);
+        Dictionary entity = DictionaryDtoConverter.INSTANCE.toEntity(dto);
         AuditingEntitySupport.updateAuditingProperties(entity);
         dao.updateById(entity);
     }
@@ -73,7 +75,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Page<DictionaryItemDto> paginateItem(DictionaryItemQuery query, Pageable pageable) {
         long totalRecords = itemDao.count(query);
         List<DictionaryItem> entities = itemDao.selectWithPageable(query, pageable);
-        Collection<DictionaryItemDto> dtos = DictionaryItemConverter.INSTANCE.entitiesToDtos(entities);
+        Collection<DictionaryItemDto> dtos = DictionaryItemConverter.INSTANCE.toDtos(entities);
         return new PageImpl<>(dtos, pageable, totalRecords);
     }
 
@@ -82,7 +84,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         Asserts.state(dto.getDictionaryId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
         Asserts.state(this.validateItemAvailabilityOfCode(dto.getCode(), dto.getDictionaryId(), dto.getId()), () -> new DomainValidationException("Dictionary item code has been taken already"));
 
-        DictionaryItem entity = DictionaryItemConverter.INSTANCE.dtoToEntity(dto);
+        DictionaryItem entity = DictionaryItemDtoConverter.INSTANCE.toEntity(dto);
         AuditingEntitySupport.insertAuditingProperties(entity);
         itemDao.insert(entity);
     }
@@ -93,7 +95,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         Asserts.state(dto.getDictionaryId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
         Asserts.state(this.validateItemAvailabilityOfCode(dto.getCode(), dto.getDictionaryId(), dto.getId()), () -> new DomainValidationException("Dictionary item code has been taken already"));
 
-        DictionaryItem entity = DictionaryItemConverter.INSTANCE.dtoToEntity(dto);
+        DictionaryItem entity = DictionaryItemDtoConverter.INSTANCE.toEntity(dto);
         AuditingEntitySupport.updateAuditingProperties(entity);
         itemDao.updateById(entity);
     }

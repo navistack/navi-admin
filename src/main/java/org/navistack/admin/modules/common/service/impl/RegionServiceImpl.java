@@ -5,6 +5,7 @@ import org.navistack.admin.modules.common.entity.Region;
 import org.navistack.admin.modules.common.query.RegionQuery;
 import org.navistack.admin.modules.common.service.RegionService;
 import org.navistack.admin.modules.common.service.convert.RegionConverter;
+import org.navistack.admin.modules.common.service.convert.RegionDtoConverter;
 import org.navistack.admin.modules.common.service.dto.RegionDto;
 import org.navistack.admin.support.mybatis.AuditingEntitySupport;
 import org.navistack.framework.core.error.ConstraintViolationException;
@@ -31,7 +32,7 @@ public class RegionServiceImpl implements RegionService {
     public Page<RegionDto> paginate(RegionQuery query, Pageable pageable) {
         long totalRecords = dao.count(query);
         List<Region> entities = dao.selectWithPageable(query, pageable);
-        Collection<RegionDto> dtos = RegionConverter.INSTANCE.entitiesToDtos(entities);
+        Collection<RegionDto> dtos = RegionConverter.INSTANCE.toDtos(entities);
         return new PageImpl<>(dtos, pageable, totalRecords);
     }
 
@@ -40,7 +41,7 @@ public class RegionServiceImpl implements RegionService {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Region code has been taken already"));
         Asserts.state(dto.getParentCode(), this::validateExistenceByCode, () -> new NoSuchEntityException("Parent does not exist"));
 
-        Region entity = RegionConverter.INSTANCE.dtoToEntity(dto);
+        Region entity = RegionDtoConverter.INSTANCE.toEntity(dto);
         AuditingEntitySupport.insertAuditingProperties(entity);
         dao.insert(entity);
     }
@@ -51,7 +52,7 @@ public class RegionServiceImpl implements RegionService {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Region code has been taken already"));
         Asserts.state(dto.getParentCode(), this::validateExistenceByCode, () -> new NoSuchEntityException("Parent does not exist"));
 
-        Region entity = RegionConverter.INSTANCE.dtoToEntity(dto);
+        Region entity = RegionDtoConverter.INSTANCE.toEntity(dto);
         AuditingEntitySupport.updateAuditingProperties(entity);
         dao.updateById(entity);
     }

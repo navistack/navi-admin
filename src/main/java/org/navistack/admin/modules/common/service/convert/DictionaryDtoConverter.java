@@ -8,10 +8,10 @@ import org.navistack.admin.modules.common.service.dto.DictionaryDto;
 import java.util.Collection;
 
 @Mapper
-public interface DictionaryConverter {
-    DictionaryConverter INSTANCE = Mappers.getMapper(DictionaryConverter.class);
+public interface DictionaryDtoConverter {
+    DictionaryDtoConverter INSTANCE = Mappers.getMapper(DictionaryDtoConverter.class);
 
-    DictionaryDto toDto(Dictionary entity);
+    Dictionary toEntity(DictionaryDto dto);
 
-    Collection<DictionaryDto> toDtos(Collection<Dictionary> entities);
+    Collection<Dictionary> toEntities(Collection<DictionaryDto> dtos);
 }
