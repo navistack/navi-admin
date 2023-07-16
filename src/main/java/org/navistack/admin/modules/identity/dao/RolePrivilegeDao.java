@@ -11,23 +11,29 @@ import java.util.List;
 @Mapper
 public interface RolePrivilegeDao {
 
-    List<RolePrivilege> select(RolePrivilegeQuery query);
+    List<RolePrivilege> selectAllByQuery(RolePrivilegeQuery query);
 
-    List<RolePrivilege> selectByRoleIdIn(Collection<Long> roleIds);
+    List<RolePrivilege> selectAllByRoleIds(Collection<Long> roleIds);
 
-    long count(RolePrivilegeQuery query);
+    boolean existsByQuery(RolePrivilegeQuery query);
 
-    List<RolePrivilege> selectWithPageable(RolePrivilegeQuery query, Pageable pageable);
+    long countByQuery(RolePrivilegeQuery query);
 
-    RolePrivilege selectOne(RolePrivilegeQuery query);
+    List<RolePrivilege> paginateByQuery(RolePrivilegeQuery query, Pageable pageable);
 
-    RolePrivilege selectOneById(Long id);
+    RolePrivilege selectByQuery(RolePrivilegeQuery query);
+
+    RolePrivilege selectById(Long id);
 
     int insert(RolePrivilege entity);
+
+    int insertAll(List<RolePrivilege> entities);
 
     int updateById(RolePrivilege entity);
 
     int deleteById(Long id);
 
-    int delete(RolePrivilegeQuery query);
+    int deleteAllByQuery(RolePrivilegeQuery query);
+
+    int deleteAllByRoleId(Long roleId);
 }

@@ -30,8 +30,8 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 
     @Override
     public Page<PrivilegeDto> paginate(PrivilegeQuery query, Pageable pageable) {
-        long totalRecords = dao.count(query);
-        List<Privilege> entities = dao.selectWithPageable(query, pageable);
+        long totalRecords = dao.countByQuery(query);
+        List<Privilege> entities = dao.paginateByQuery(query, pageable);
         Collection<PrivilegeDto> dtos = PrivilegeConverter.INSTANCE.toDtos(entities);
         return new PageImpl<>(dtos, pageable, totalRecords);
     }
@@ -67,35 +67,16 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     // region Validation methods
 
     protected boolean validateExistenceById(Long id) {
-        return id != null && dao.selectOneById(id) != null;
+        return id != null && dao.existsById(id);
     }
 
     protected boolean validateAvailabilityOfCode(String code, Long modifiedId) {
-        PrivilegeQuery query = PrivilegeQuery.builder()
-                .code(code)
-                .build();
-        Privilege existingOne = dao.selectOne(query);
-
-        if (existingOne == null) {
-            return true;
-        }
-
-        if (!existingOne.getCode().equals(code)) {
-            return true;
-        }
-
-        if (existingOne.getId().equals(modifiedId)) {
-            return true;
-        }
-
-        return false;
+        Long currentId = dao.selectIdByCode(code);
+        return currentId == null || currentId.equals(modifiedId);
     }
 
     protected boolean validateAbsenceOfSubordinate(Long id) {
-        PrivilegeQuery query = PrivilegeQuery.builder()
-                .parentId(id)
-                .build();
-        return dao.count(query) <= 0;
+        return id == null || !dao.existsByParentId(id);
     }
 
     // endregion

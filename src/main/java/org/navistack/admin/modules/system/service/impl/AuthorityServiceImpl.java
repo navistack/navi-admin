@@ -31,7 +31,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     public List<Privilege> listGrantedPrivilegesOf(User user) {
-        List<UserRole> userRoles = userRoleDao.select(
+        List<UserRole> userRoles = userRoleDao.selectAllByQuery(
                 UserRoleQuery.builder()
                         .userId(user.getId())
                         .build()
@@ -43,7 +43,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
         List<RolePrivilege> rolePrivileges = userRoles.isEmpty()
                 ? Collections.emptyList()
-                : rolePrivilegeDao.selectByRoleIdIn(userRoleIds);
+                : rolePrivilegeDao.selectAllByRoleIds(userRoleIds);
 
         List<Long> privilegeIds = rolePrivileges.stream()
                 .map(RolePrivilege::getPrivilegeId)
@@ -51,7 +51,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
         return privilegeIds.isEmpty()
                 ? Collections.emptyList()
-                : privilegeDao.selectByIds(privilegeIds)
+                : privilegeDao.selectAllByIds(privilegeIds)
                 ;
     }
 }

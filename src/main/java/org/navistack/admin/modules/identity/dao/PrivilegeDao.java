@@ -11,17 +11,27 @@ import java.util.List;
 @Mapper
 public interface PrivilegeDao {
 
-    List<Privilege> select(PrivilegeQuery query);
+    List<Privilege> selectAllByQuery(PrivilegeQuery query);
 
-    List<Privilege> selectByIds(Collection<Long> ids);
+    List<Privilege> selectAllByIds(Collection<Long> ids);
 
-    long count(PrivilegeQuery query);
+    boolean existsByQuery(PrivilegeQuery query);
 
-    List<Privilege> selectWithPageable(PrivilegeQuery query, Pageable pageable);
+    long countByQuery(PrivilegeQuery query);
 
-    Privilege selectOne(PrivilegeQuery query);
+    List<Privilege> paginateByQuery(PrivilegeQuery query, Pageable pageable);
 
-    Privilege selectOneById(Long id);
+    Privilege selectByQuery(PrivilegeQuery query);
+
+    Privilege selectById(Long id);
+
+    Long selectIdByCode(String code);
+
+    List<Long> selectAllIdsByIds(List<Long> ids);
+
+    boolean existsById(Long id);
+
+    boolean existsByParentId(Long id);
 
     int insert(Privilege entity);
 

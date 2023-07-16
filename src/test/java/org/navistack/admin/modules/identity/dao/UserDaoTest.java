@@ -45,38 +45,38 @@ class UserDaoTest {
     }
 
     @Test
-    void testSelect() {
-        assertThat(dao.select(UserQuery.builder().id(1L).build()))
+    void selectAllByQuery_shouldWorkAsExpected() {
+        assertThat(dao.selectAllByQuery(UserQuery.builder().id(1L).build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .containsExactly(
                         GenericBuilder.of(User::new).set(User::setId, 1L).set(User::setNickName, "Test User 01").set(User::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(User::setGender, Gender.FEMALE).set(User::setBirthday, LocalDate.of(1975, 2, 15)).set(User::setLoginName, "testuser01").set(User::setMobileNumber, "813-862-8139").set(User::setEmailAddress, "reilly.durgan49@yahoo.com").set(User::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(User::setStatus, UserStatus.FORBIDDEN).build()
                 );
-        assertThat(dao.select(UserQuery.builder().nickName("Test User 01").build()))
+        assertThat(dao.selectAllByQuery(UserQuery.builder().nickName("Test User 01").build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .containsExactly(
                         GenericBuilder.of(User::new).set(User::setId, 1L).set(User::setNickName, "Test User 01").set(User::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(User::setGender, Gender.FEMALE).set(User::setBirthday, LocalDate.of(1975, 2, 15)).set(User::setLoginName, "testuser01").set(User::setMobileNumber, "813-862-8139").set(User::setEmailAddress, "reilly.durgan49@yahoo.com").set(User::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(User::setStatus, UserStatus.FORBIDDEN).build()
                 );
-        assertThat(dao.select(UserQuery.builder().loginName("testuser01").build()))
+        assertThat(dao.selectAllByQuery(UserQuery.builder().loginName("testuser01").build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .containsExactly(
                         GenericBuilder.of(User::new).set(User::setId, 1L).set(User::setNickName, "Test User 01").set(User::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(User::setGender, Gender.FEMALE).set(User::setBirthday, LocalDate.of(1975, 2, 15)).set(User::setLoginName, "testuser01").set(User::setMobileNumber, "813-862-8139").set(User::setEmailAddress, "reilly.durgan49@yahoo.com").set(User::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(User::setStatus, UserStatus.FORBIDDEN).build()
                 );
-        assertThat(dao.select(UserQuery.builder().mobileNumber("813-862-8139").build()))
+        assertThat(dao.selectAllByQuery(UserQuery.builder().mobileNumber("813-862-8139").build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .containsExactly(
                         GenericBuilder.of(User::new).set(User::setId, 1L).set(User::setNickName, "Test User 01").set(User::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(User::setGender, Gender.FEMALE).set(User::setBirthday, LocalDate.of(1975, 2, 15)).set(User::setLoginName, "testuser01").set(User::setMobileNumber, "813-862-8139").set(User::setEmailAddress, "reilly.durgan49@yahoo.com").set(User::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(User::setStatus, UserStatus.FORBIDDEN).build()
                 );
-        assertThat(dao.select(UserQuery.builder().emailAddress("reilly.durgan49@yahoo.com").build()))
+        assertThat(dao.selectAllByQuery(UserQuery.builder().emailAddress("reilly.durgan49@yahoo.com").build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .containsExactly(
                         GenericBuilder.of(User::new).set(User::setId, 1L).set(User::setNickName, "Test User 01").set(User::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(User::setGender, Gender.FEMALE).set(User::setBirthday, LocalDate.of(1975, 2, 15)).set(User::setLoginName, "testuser01").set(User::setMobileNumber, "813-862-8139").set(User::setEmailAddress, "reilly.durgan49@yahoo.com").set(User::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(User::setStatus, UserStatus.FORBIDDEN).build()
                 );
-        assertThat(dao.select(UserQuery.builder().status(UserStatus.FORBIDDEN).build()))
+        assertThat(dao.selectAllByQuery(UserQuery.builder().status(UserStatus.FORBIDDEN).build()))
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .containsExactlyInAnyOrder(
@@ -89,17 +89,33 @@ class UserDaoTest {
     }
 
     @Test
-    void testCount() {
-        assertThat(dao.count(UserQuery.builder().id(1L).build())).isEqualTo(1L);
-        assertThat(dao.count(UserQuery.builder().nickName("Test User 01").build())).isEqualTo(1L);
-        assertThat(dao.count(UserQuery.builder().loginName("testuser01").build())).isEqualTo(1L);
-        assertThat(dao.count(UserQuery.builder().mobileNumber("813-862-8139").build())).isEqualTo(1L);
-        assertThat(dao.count(UserQuery.builder().emailAddress("reilly.durgan49@yahoo.com").build())).isEqualTo(1L);
-        assertThat(dao.count(UserQuery.builder().status(UserStatus.FORBIDDEN).build())).isEqualTo(5L);
+    void existsByQuery_shouldWorkAsExpected() {
+        assertThat(dao.existsByQuery(UserQuery.builder().id(1L).build())).isTrue();
+        assertThat(dao.existsByQuery(UserQuery.builder().nickName("Test User 01").build())).isTrue();
+        assertThat(dao.existsByQuery(UserQuery.builder().loginName("testuser01").build())).isTrue();
+        assertThat(dao.existsByQuery(UserQuery.builder().mobileNumber("813-862-8139").build())).isTrue();
+        assertThat(dao.existsByQuery(UserQuery.builder().emailAddress("reilly.durgan49@yahoo.com").build())).isTrue();
+        assertThat(dao.existsByQuery(UserQuery.builder().status(UserStatus.FORBIDDEN).build())).isTrue();
+
+        assertThat(dao.existsByQuery(UserQuery.builder().id(100L).build())).isFalse();
+        assertThat(dao.existsByQuery(UserQuery.builder().nickName("Test User 100").build())).isFalse();
+        assertThat(dao.existsByQuery(UserQuery.builder().loginName("testuser100").build())).isFalse();
+        assertThat(dao.existsByQuery(UserQuery.builder().mobileNumber("440-832-6332").build())).isFalse();
+        assertThat(dao.existsByQuery(UserQuery.builder().emailAddress("TeraEMuro@rhyta.com").build())).isFalse();
     }
 
     @Test
-    void testSelectWithPageable() {
+    void countByQuery_shouldWorkAsExpected() {
+        assertThat(dao.countByQuery(UserQuery.builder().id(1L).build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(UserQuery.builder().nickName("Test User 01").build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(UserQuery.builder().loginName("testuser01").build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(UserQuery.builder().mobileNumber("813-862-8139").build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(UserQuery.builder().emailAddress("reilly.durgan49@yahoo.com").build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(UserQuery.builder().status(UserStatus.FORBIDDEN).build())).isEqualTo(5L);
+    }
+
+    @Test
+    void paginateByQuery_shouldWorkAsExpected() {
         UserQuery query = UserQuery.builder()
                 .build();
         PageRequest pageRequest = GenericBuilder.of(PageRequest::new)
@@ -107,7 +123,7 @@ class UserDaoTest {
                 .set(PageRequest::setPageSize, 5)
                 .set(PageRequest::setSort, Sort.by(Sort.Direction.DESC, "id"))
                 .build();
-        assertThat(dao.selectWithPageable(query, pageRequest)).hasSize(5)
+        assertThat(dao.paginateByQuery(query, pageRequest)).hasSize(5)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .containsExactlyInAnyOrder(
                         GenericBuilder.of(User::new).set(User::setId, 6L).set(User::setNickName, "Test User 06").set(User::setAvatarUrl, "avatar:/1b/23a4eacf6463571edc6d1b28209db6/avatar.jpg").set(User::setGender, Gender.FEMALE).set(User::setBirthday, LocalDate.of(1998, 5, 24)).set(User::setLoginName, "testuser06").set(User::setMobileNumber, "212-403-5257").set(User::setEmailAddress, "maye6@gmail.com").set(User::setPassword, "$2a$10$MKDPkDwWzgDluid0KHAGBuxCPHxyjiM4jf.yg7sxfbH2gLtyx.IB6").set(User::setStatus, UserStatus.NORMAL).build(),
@@ -119,23 +135,23 @@ class UserDaoTest {
     }
 
     @Test
-    void testSelectOne() {
-        assertThat(dao.selectOne(UserQuery.builder().id(1L).build()))
+    void selectByQuery_shouldWorkAsExpected() {
+        assertThat(dao.selectByQuery(UserQuery.builder().id(1L).build()))
                 .usingRecursiveComparison().comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .isEqualTo(
                         GenericBuilder.of(User::new).set(User::setId, 1L).set(User::setNickName, "Test User 01").set(User::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(User::setGender, Gender.FEMALE).set(User::setBirthday, LocalDate.of(1975, 2, 15)).set(User::setLoginName, "testuser01").set(User::setMobileNumber, "813-862-8139").set(User::setEmailAddress, "reilly.durgan49@yahoo.com").set(User::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(User::setStatus, UserStatus.FORBIDDEN).build()
                 );
-        assertThat(dao.selectOne(UserQuery.builder().loginName("testuser01").build()))
+        assertThat(dao.selectByQuery(UserQuery.builder().loginName("testuser01").build()))
                 .usingRecursiveComparison().comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .isEqualTo(
                         GenericBuilder.of(User::new).set(User::setId, 1L).set(User::setNickName, "Test User 01").set(User::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(User::setGender, Gender.FEMALE).set(User::setBirthday, LocalDate.of(1975, 2, 15)).set(User::setLoginName, "testuser01").set(User::setMobileNumber, "813-862-8139").set(User::setEmailAddress, "reilly.durgan49@yahoo.com").set(User::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(User::setStatus, UserStatus.FORBIDDEN).build()
                 );
-        assertThat(dao.selectOne(UserQuery.builder().mobileNumber("813-862-8139").build()))
+        assertThat(dao.selectByQuery(UserQuery.builder().mobileNumber("813-862-8139").build()))
                 .usingRecursiveComparison().comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .isEqualTo(
                         GenericBuilder.of(User::new).set(User::setId, 1L).set(User::setNickName, "Test User 01").set(User::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(User::setGender, Gender.FEMALE).set(User::setBirthday, LocalDate.of(1975, 2, 15)).set(User::setLoginName, "testuser01").set(User::setMobileNumber, "813-862-8139").set(User::setEmailAddress, "reilly.durgan49@yahoo.com").set(User::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(User::setStatus, UserStatus.FORBIDDEN).build()
                 );
-        assertThat(dao.selectOne(UserQuery.builder().emailAddress("reilly.durgan49@yahoo.com").build()))
+        assertThat(dao.selectByQuery(UserQuery.builder().emailAddress("reilly.durgan49@yahoo.com").build()))
                 .usingRecursiveComparison().comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .isEqualTo(
                         GenericBuilder.of(User::new).set(User::setId, 1L).set(User::setNickName, "Test User 01").set(User::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(User::setGender, Gender.FEMALE).set(User::setBirthday, LocalDate.of(1975, 2, 15)).set(User::setLoginName, "testuser01").set(User::setMobileNumber, "813-862-8139").set(User::setEmailAddress, "reilly.durgan49@yahoo.com").set(User::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(User::setStatus, UserStatus.FORBIDDEN).build()
@@ -143,18 +159,18 @@ class UserDaoTest {
     }
 
     @Test
-    void testSelectOneByLoginName() {
+    void selectByLoginName_shouldWorkAsExpected() {
         UserLoginNameQuery query = UserLoginNameQuery.builder()
                 .loginName("testuser01")
                 .mobileNumber("813-862-8139")
                 .emailAddress("reilly.durgan49@yahoo.com")
                 .build();
-        assertThat(dao.selectOneByLoginName(query)).usingRecursiveComparison().comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status").isEqualTo(GenericBuilder.of(User::new).set(User::setId, 1L).set(User::setNickName, "Test User 01").set(User::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(User::setGender, Gender.FEMALE).set(User::setBirthday, LocalDate.of(1975, 2, 15)).set(User::setLoginName, "testuser01").set(User::setMobileNumber, "813-862-8139").set(User::setEmailAddress, "reilly.durgan49@yahoo.com").set(User::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(User::setStatus, UserStatus.FORBIDDEN).build());
+        assertThat(dao.selectByLoginName(query)).usingRecursiveComparison().comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status").isEqualTo(GenericBuilder.of(User::new).set(User::setId, 1L).set(User::setNickName, "Test User 01").set(User::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(User::setGender, Gender.FEMALE).set(User::setBirthday, LocalDate.of(1975, 2, 15)).set(User::setLoginName, "testuser01").set(User::setMobileNumber, "813-862-8139").set(User::setEmailAddress, "reilly.durgan49@yahoo.com").set(User::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(User::setStatus, UserStatus.FORBIDDEN).build());
     }
 
     @Test
-    void testSelectOneById() {
-        assertThat(dao.selectOneById(1L))
+    void selectById_shouldWorkAsExpected() {
+        assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .isEqualTo(
@@ -163,8 +179,32 @@ class UserDaoTest {
     }
 
     @Test
+    void selectIdByLoginName_shouldWorkAsExpected() {
+        assertThat(dao.selectIdByLoginName("testuser01")).isEqualTo(1L);
+        assertThat(dao.selectIdByLoginName("testuser100")).isNull();
+    }
+
+    @Test
+    void selectIdByMobileNumber_shouldWorkAsExpected() {
+        assertThat(dao.selectIdByMobileNumber("813-862-8139")).isEqualTo(1L);
+        assertThat(dao.selectIdByMobileNumber("440-832-6332")).isNull();
+    }
+
+    @Test
+    void selectIdByEmailAddress_shouldWorkAsExpected() {
+        assertThat(dao.selectIdByEmailAddress("reilly.durgan49@yahoo.com")).isEqualTo(1L);
+        assertThat(dao.selectIdByEmailAddress("TeraEMuro@rhyta.com")).isNull();
+    }
+
+    @Test
+    void existsById_shouldWorkAsExpected() {
+        assertThat(dao.existsById(1L)).isTrue();
+        assertThat(dao.existsById(100L)).isFalse();
+    }
+
+    @Test
     @Transactional
-    void testInsert() {
+    void insert_shouldWorkAsExpected() {
         User entity = GenericBuilder.of(User::new)
                 .set(User::setId, 11L)
                 .set(User::setNickName, "Test User 11")
@@ -178,14 +218,14 @@ class UserDaoTest {
                 .set(User::setStatus, UserStatus.FORBIDDEN)
                 .build();
         assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(dao.selectOneById(11L))
+        assertThat(dao.selectById(11L))
                 .usingRecursiveComparison().comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .isEqualTo(entity);
     }
 
     @Test
     @Transactional
-    void testUpdateById() {
+    void updateById_shouldWorkAsExpected() {
         User entity = GenericBuilder.of(User::new)
                 .set(User::setId, 1L)
                 .set(User::setNickName, "Test User 12")
@@ -199,7 +239,7 @@ class UserDaoTest {
                 .set(User::setStatus, UserStatus.NORMAL)
                 .build();
         assertThat(dao.updateById(entity)).isEqualTo(1);
-        assertThat(dao.selectOneById(1L))
+        assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .isEqualTo(entity);
@@ -207,8 +247,8 @@ class UserDaoTest {
 
     @Test
     @Transactional
-    void testDeleteById() {
+    void deleteById_shouldWorkAsExpected() {
         assertThat(dao.deleteById(2L)).isEqualTo(1);
-        assertThat(dao.selectOneById(2L)).isNull();
+        assertThat(dao.selectById(2L)).isNull();
     }
 }

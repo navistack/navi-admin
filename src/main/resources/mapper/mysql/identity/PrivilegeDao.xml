@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.navistack.admin.modules.identity.dao.PrivilegeDao">
-    <select id="select" resultType="org.navistack.admin.modules.identity.entity.Privilege">
+    <select id="selectAllByQuery" resultType="org.navistack.admin.modules.identity.entity.Privilege">
         SELECT *
           FROM privilege
         <where>
@@ -14,7 +14,7 @@
         </where>
     </select>
 
-    <select id="selectByIds" resultType="org.navistack.admin.modules.identity.entity.Privilege">
+    <select id="selectAllByIds" resultType="org.navistack.admin.modules.identity.entity.Privilege">
         SELECT *
           FROM privilege
         <where>
@@ -30,7 +30,20 @@
         </where>
     </select>
 
-    <select id="count" resultType="java.lang.Long">
+    <select id="existsByQuery" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM privilege
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
+            <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
+            <if test="parentId != null">AND parent_id = #{parentId}</if>
+        </where>
+        )
+    </select>
+
+    <select id="countByQuery" resultType="java.lang.Long">
         SELECT COUNT(*)
         FROM privilege
         <where>
@@ -41,7 +54,7 @@
         </where>
     </select>
 
-    <select id="selectWithPageable" resultType="org.navistack.admin.modules.identity.entity.Privilege">
+    <select id="paginateByQuery" resultType="org.navistack.admin.modules.identity.entity.Privilege">
         SELECT *
           FROM privilege
         <where>
@@ -75,7 +88,7 @@
         </if>
     </select>
 
-    <select id="selectOne" resultType="org.navistack.admin.modules.identity.entity.Privilege">
+    <select id="selectByQuery" resultType="org.navistack.admin.modules.identity.entity.Privilege">
         SELECT *
         FROM privilege
         <where>
@@ -86,10 +99,41 @@
         </where>
     </select>
 
-    <select id="selectOneById" resultType="org.navistack.admin.modules.identity.entity.Privilege">
+    <select id="selectById" resultType="org.navistack.admin.modules.identity.entity.Privilege">
         SELECT *
           FROM privilege
          WHERE id = #{id}
+    </select>
+
+    <select id="selectIdByCode" resultType="java.lang.Long">
+        SELECT id
+          FROM privilege
+         WHERE code = #{code}
+    </select>
+
+    <select id="selectAllIdsByIds" resultType="java.lang.Long">
+        SELECT id
+          FROM privilege
+         WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="existsById" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM privilege
+             WHERE id = #{id}
+        )
+    </select>
+
+    <select id="existsByParentId" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM privilege
+             WHERE parent_id = #{parentId}
+        )
     </select>
 
     <insert id="insert">

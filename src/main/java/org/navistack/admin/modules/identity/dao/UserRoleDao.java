@@ -10,21 +10,29 @@ import java.util.List;
 @Mapper
 public interface UserRoleDao {
 
-    List<UserRole> select(UserRoleQuery query);
+    List<UserRole> selectAllByQuery(UserRoleQuery query);
 
-    long count(UserRoleQuery query);
+    boolean existsByQuery(UserRoleQuery query);
 
-    List<UserRole> selectWithPageable(UserRoleQuery query, Pageable pageable);
+    long countByQuery(UserRoleQuery query);
 
-    UserRole selectOne(UserRoleQuery query);
+    List<UserRole> paginateByQuery(UserRoleQuery query, Pageable pageable);
 
-    UserRole selectOneById(Long id);
+    UserRole selectByQuery(UserRoleQuery query);
+
+    UserRole selectById(Long id);
+
+    boolean existsByRoleId(Long roleId);
 
     int insert(UserRole entity);
+
+    int insertAll(List<UserRole> entities);
 
     int updateById(UserRole entity);
 
     int deleteById(Long id);
 
-    int delete(UserRoleQuery query);
+    int deleteAllByQuery(UserRoleQuery query);
+
+    int deleteAllByUserId(Long userId);
 }

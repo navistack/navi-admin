@@ -8,7 +8,7 @@
           FROM dictionary_item
     </select>
 
-    <select id="select" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
+    <select id="selectAllByQuery" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
         SELECT *
           FROM dictionary_item
         <where>
@@ -19,7 +19,20 @@
         </where>
     </select>
 
-    <select id="count" resultType="java.lang.Long">
+    <select id="existsByQuery" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM dictionary_item
+            <where>
+                <if test="id != null">AND id = #{id}</if>
+                <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
+                <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
+                <if test="dictionaryId != null">AND dictionary_id = #{dictionaryId}</if>
+            </where>
+        )
+    </select>
+
+    <select id="countByQuery" resultType="java.lang.Long">
         SELECT COUNT(*)
         FROM dictionary_item
         <where>
@@ -30,7 +43,7 @@
         </where>
     </select>
 
-    <select id="selectWithPageable" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
+    <select id="paginateByQuery" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
         SELECT *
           FROM dictionary_item
         <where>
@@ -64,7 +77,7 @@
         </if>
     </select>
 
-    <select id="selectOne" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
+    <select id="selectByQuery" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
         SELECT *
         FROM dictionary_item
         <where>
@@ -75,10 +88,33 @@
         </where>
     </select>
 
-    <select id="selectOneById" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
+    <select id="selectById" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
         SELECT *
           FROM dictionary_item
          WHERE id = #{id}
+    </select>
+
+    <select id="selectIdByCodeAndDictionaryId" resultType="java.lang.Long">
+        SELECT id
+          FROM dictionary_item
+         WHERE code = #{code}
+           AND dictionary_id = #{dictionaryId}
+    </select>
+
+    <select id="existsById" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM dictionary_item
+             WHERE id = #{id}
+        )
+    </select>
+
+    <select id="existsByDictionaryId" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM dictionary_item
+             WHERE dictionary_id = #{dictionaryId}
+        )
     </select>
 
     <insert id="insert">

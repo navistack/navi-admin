@@ -11,15 +11,21 @@ import java.util.List;
 public interface DictionaryDao {
     List<Dictionary> selectAll();
 
-    List<Dictionary> select(DictionaryQuery query);
+    List<Dictionary> selectAllByQuery(DictionaryQuery query);
 
-    long count(DictionaryQuery query);
+    boolean existsByQuery(DictionaryQuery query);
 
-    List<Dictionary> selectWithPageable(DictionaryQuery query, Pageable pageable);
+    long countByQuery(DictionaryQuery query);
 
-    Dictionary selectOne(DictionaryQuery query);
+    List<Dictionary> paginateByQuery(DictionaryQuery query, Pageable pageable);
 
-    Dictionary selectOneById(Long id);
+    Dictionary selectByQuery(DictionaryQuery query);
+
+    Dictionary selectById(Long id);
+
+    Long selectIdByCode(String code);
+
+    boolean existsById(Long id);
 
     int insert(Dictionary entity);
 

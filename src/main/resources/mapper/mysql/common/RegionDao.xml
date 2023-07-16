@@ -8,7 +8,7 @@
         FROM region
     </select>
 
-    <select id="select" resultType="org.navistack.admin.modules.common.entity.Region">
+    <select id="selectAllByQuery" resultType="org.navistack.admin.modules.common.entity.Region">
         SELECT *
         FROM region
         <where>
@@ -19,10 +19,10 @@
         </where>
     </select>
 
-    <select id="selectRecursively" resultType="org.navistack.admin.modules.common.entity.Region">
-        WITH RECURSIVE `t` AS (
+    <select id="selectAllByQueryRecursively" resultType="org.navistack.admin.modules.common.entity.Region">
+        WITH RECURSIVE t AS (
             SELECT *
-            FROM `region` `r`
+            FROM region r
             <where>
                 <if test="id != null">AND id = #{id}</if>
                 <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
@@ -30,15 +30,28 @@
                 <if test="parentCode != null and !parentCode.isEmpty()">AND parent_code = #{parentCode}</if>
             </where>
             UNION
-            SELECT `r`.*
-            FROM `t`
-            CROSS JOIN `region` `r` ON `t`.`code` = `r`.`parent_code`
+            SELECT r.*
+            FROM t
+            CROSS JOIN region r ON t.code = r.parent_code
         )
         SELECT *
-        FROM `t`
+        FROM t
     </select>
 
-    <select id="count" resultType="java.lang.Long">
+    <select id="existsByQuery" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM region
+            <where>
+                <if test="id != null">AND id = #{id}</if>
+                <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
+                <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
+                <if test="parentCode != null and !parentCode.isEmpty()">AND parent_code = #{parentCode}</if>
+            </where>
+        )
+    </select>
+
+    <select id="countByQuery" resultType="java.lang.Long">
         SELECT COUNT(*)
         FROM region
         <where>
@@ -49,7 +62,7 @@
         </where>
     </select>
 
-    <select id="selectWithPageable" resultType="org.navistack.admin.modules.common.entity.Region">
+    <select id="paginateByQuery" resultType="org.navistack.admin.modules.common.entity.Region">
         SELECT *
         FROM region
         <where>
@@ -83,7 +96,7 @@
         </if>
     </select>
 
-    <select id="selectOne" resultType="org.navistack.admin.modules.common.entity.Region">
+    <select id="selectByQuery" resultType="org.navistack.admin.modules.common.entity.Region">
         SELECT *
         FROM region
         <where>
@@ -94,11 +107,36 @@
         </where>
     </select>
 
-    <select id="selectOneById" resultType="org.navistack.admin.modules.common.entity.Region">
+    <select id="selectById" resultType="org.navistack.admin.modules.common.entity.Region">
         SELECT *
         FROM region
         WHERE id = #{id}
     </select>
+
+    <select id="existsById" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM region
+             WHERE id = #{id}
+        )
+    </select>
+
+    <select id="existsByCode" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM region
+             WHERE code = #{code}
+        )
+    </select>
+
+    <select id="existsByParentCode" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM region
+             WHERE parent_code = #{parentCode}
+        )
+    </select>
+
 
     <insert id="insert">
         INSERT INTO region

@@ -10,15 +10,17 @@ import java.util.List;
 @Mapper
 public interface UserOrganizationDao {
 
-    List<UserOrganization> select(UserOrganizationQuery query);
+    List<UserOrganization> selectAllByQuery(UserOrganizationQuery query);
 
-    long count(UserOrganizationQuery query);
+    boolean existsByQuery(UserOrganizationQuery query);
 
-    List<UserOrganization> selectWithPageable(UserOrganizationQuery query, Pageable pageable);
+    long countByQuery(UserOrganizationQuery query);
 
-    UserOrganization selectOne(UserOrganizationQuery query);
+    List<UserOrganization> paginateByQuery(UserOrganizationQuery query, Pageable pageable);
 
-    UserOrganization selectOneById(Long id);
+    UserOrganization selectByQuery(UserOrganizationQuery query);
+
+    UserOrganization selectById(Long id);
 
     int insert(UserOrganization entity);
 
@@ -26,5 +28,5 @@ public interface UserOrganizationDao {
 
     int deleteById(Long id);
 
-    int delete(UserOrganizationQuery query);
+    int deleteAllByQuery(UserOrganizationQuery query);
 }

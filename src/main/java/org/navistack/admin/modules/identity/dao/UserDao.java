@@ -11,17 +11,27 @@ import java.util.List;
 @Mapper
 public interface UserDao {
 
-    List<User> select(UserQuery query);
+    List<User> selectAllByQuery(UserQuery query);
 
-    long count(UserQuery query);
+    boolean existsByQuery(UserQuery query);
 
-    List<User> selectWithPageable(UserQuery query, Pageable pageable);
+    long countByQuery(UserQuery query);
 
-    User selectOne(UserQuery query);
+    List<User> paginateByQuery(UserQuery query, Pageable pageable);
 
-    User selectOneByLoginName(UserLoginNameQuery query);
+    User selectByQuery(UserQuery query);
 
-    User selectOneById(Long id);
+    User selectByLoginName(UserLoginNameQuery query);
+
+    User selectById(Long id);
+
+    Long selectIdByLoginName(String loginName);
+
+    Long selectIdByMobileNumber(String mobileNumber);
+
+    Long selectIdByEmailAddress(String emailAddress);
+
+    boolean existsById(Long id);
 
     int insert(User entity);
 

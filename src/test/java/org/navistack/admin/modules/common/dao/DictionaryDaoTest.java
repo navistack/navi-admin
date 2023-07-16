@@ -41,7 +41,7 @@ class DictionaryDaoTest {
     }
 
     @Test
-    void testSelectAll() {
+    void selectAll_shouldWorkAsExpected() {
         assertThat(dao.selectAll())
                 .hasSize(10)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name")
@@ -60,20 +60,20 @@ class DictionaryDaoTest {
     }
 
     @Test
-    void testSelect() {
-        assertThat(dao.select(DictionaryQuery.builder().id(1L).build()))
+    void selectAllByQuery_shouldWorkAsExpected() {
+        assertThat(dao.selectAllByQuery(DictionaryQuery.builder().id(1L).build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name")
                 .containsExactly(
                         GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
                 );
-        assertThat(dao.select(DictionaryQuery.builder().code("DICT_CODE_01").build()))
+        assertThat(dao.selectAllByQuery(DictionaryQuery.builder().code("DICT_CODE_01").build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name")
                 .containsExactly(
                         GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
                 );
-        assertThat(dao.select(DictionaryQuery.builder().name("DICT NAME 01").build()))
+        assertThat(dao.selectAllByQuery(DictionaryQuery.builder().name("DICT NAME 01").build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name")
                 .containsExactly(
@@ -82,14 +82,25 @@ class DictionaryDaoTest {
     }
 
     @Test
-    void testCount() {
-        assertThat(dao.count(DictionaryQuery.builder().id(1L).build())).isEqualTo(1L);
-        assertThat(dao.count(DictionaryQuery.builder().code("DICT_CODE_01").build())).isEqualTo(1L);
-        assertThat(dao.count(DictionaryQuery.builder().name("DICT NAME 01").build())).isEqualTo(1L);
+    void existsByQuery_shouldWorkAsExpected() {
+        assertThat(dao.existsByQuery(DictionaryQuery.builder().id(1L).build())).isTrue();
+        assertThat(dao.existsByQuery(DictionaryQuery.builder().code("DICT_CODE_01").build())).isTrue();
+        assertThat(dao.existsByQuery(DictionaryQuery.builder().name("DICT NAME 01").build())).isTrue();
+
+        assertThat(dao.existsByQuery(DictionaryQuery.builder().id(100L).build())).isFalse();
+        assertThat(dao.existsByQuery(DictionaryQuery.builder().code("DICT_CODE_100").build())).isFalse();
+        assertThat(dao.existsByQuery(DictionaryQuery.builder().name("DICT NAME 100").build())).isFalse();
     }
 
     @Test
-    void testSelectWithPageable() {
+    void countByQuery_shouldWorkAsExpected() {
+        assertThat(dao.countByQuery(DictionaryQuery.builder().id(1L).build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(DictionaryQuery.builder().code("DICT_CODE_01").build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(DictionaryQuery.builder().name("DICT NAME 01").build())).isEqualTo(1L);
+    }
+
+    @Test
+    void paginateByQuery_shouldWorkAsExpected() {
         DictionaryQuery query = DictionaryQuery.builder()
                 .name("DICT NAME")
                 .build();
@@ -98,7 +109,7 @@ class DictionaryDaoTest {
                 .set(PageRequest::setPageSize, 5)
                 .set(PageRequest::setSort, Sort.by(Sort.Direction.DESC, "id"))
                 .build();
-        assertThat(dao.selectWithPageable(query, pageRequest))
+        assertThat(dao.paginateByQuery(query, pageRequest))
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name")
                 .containsExactlyInAnyOrder(
@@ -111,20 +122,20 @@ class DictionaryDaoTest {
     }
 
     @Test
-    void testSelectOne() {
-        assertThat(dao.selectOne(DictionaryQuery.builder().id(1L).build()))
+    void selectByQuery_shouldWorkAsExpected() {
+        assertThat(dao.selectByQuery(DictionaryQuery.builder().id(1L).build()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name")
                 .isEqualTo(
                         GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
                 );
-        assertThat(dao.selectOne(DictionaryQuery.builder().code("DICT_CODE_01").build()))
+        assertThat(dao.selectByQuery(DictionaryQuery.builder().code("DICT_CODE_01").build()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name")
                 .isEqualTo(
                         GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
                 );
-        assertThat(dao.selectOne(DictionaryQuery.builder().name("DICT NAME 01").build()))
+        assertThat(dao.selectByQuery(DictionaryQuery.builder().name("DICT NAME 01").build()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name")
                 .isEqualTo(
@@ -133,25 +144,37 @@ class DictionaryDaoTest {
     }
 
     @Test
-    void testSelectOneById() {
-        assertThat(dao.selectOneById(1L))
+    void selectIdByCode_shouldWorkAsExpected() {
+        assertThat(dao.selectIdByCode("DICT_CODE_01")).isEqualTo(1L);
+        assertThat(dao.selectIdByCode("DICT_CODE_0100")).isNull();
+    }
+
+    @Test
+    void selectById_shouldWorkAsExpected() {
+        assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name")
                 .isEqualTo(
                         GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
                 );
+    }
+
+    @Test
+    void existsById_shouldWorkAsExpected() {
+        assertThat(dao.existsById(1L)).isTrue();
+        assertThat(dao.existsById(100L)).isFalse();
     }
 
     @Test
     @Transactional
-    void testInsert() {
+    void insert_shouldWorkAsExpected() {
         Dictionary entity = GenericBuilder.of(Dictionary::new)
                 .set(Dictionary::setId, 11L)
                 .set(Dictionary::setCode, "DICT_CODE_11")
                 .set(Dictionary::setName, "DICT NAME 11")
                 .build();
         assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(dao.selectOneById(11L))
+        assertThat(dao.selectById(11L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name")
                 .isEqualTo(entity);
@@ -159,14 +182,14 @@ class DictionaryDaoTest {
 
     @Test
     @Transactional
-    void testUpdateById() {
+    void updateById_shouldWorkAsExpected() {
         Dictionary entity = GenericBuilder.of(Dictionary::new)
                 .set(Dictionary::setId, 1L)
                 .set(Dictionary::setCode, "DICT_CODE_12")
                 .set(Dictionary::setName, "DICT NAME 12")
                 .build();
         assertThat(dao.updateById(entity)).isEqualTo(1);
-        assertThat(dao.selectOneById(1L))
+        assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name")
                 .isEqualTo(entity);
@@ -174,9 +197,9 @@ class DictionaryDaoTest {
 
     @Test
     @Transactional
-    void testDeleteById() {
+    void deleteById_shouldWorkAsExpected() {
         assertThat(dao.deleteById(2L)).isEqualTo(1);
-        assertThat(dao.selectOneById(2L))
+        assertThat(dao.selectById(2L))
                 .isNull();
     }
 }

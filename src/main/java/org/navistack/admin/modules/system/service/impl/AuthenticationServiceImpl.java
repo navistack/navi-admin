@@ -19,7 +19,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public Optional<User> findUserByLoginName(String loginName) {
         return Optional.ofNullable(
-                userDao.selectOneByLoginName(
+                userDao.selectByLoginName(
                         UserLoginNameQuery.builder()
                                 .loginName(loginName)
                                 .emailAddress(loginName)

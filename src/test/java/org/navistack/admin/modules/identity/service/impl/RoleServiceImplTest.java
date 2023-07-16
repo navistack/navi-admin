@@ -8,15 +8,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.navistack.admin.modules.identity.dao.RoleDao;
 import org.navistack.admin.modules.identity.dao.RolePrivilegeDao;
 import org.navistack.admin.modules.identity.dao.UserRoleDao;
-import org.navistack.admin.modules.identity.entity.Role;
-import org.navistack.admin.modules.identity.query.RolePrivilegeQuery;
-import org.navistack.admin.modules.identity.query.RoleQuery;
-import org.navistack.admin.modules.identity.query.UserRoleQuery;
 import org.navistack.admin.modules.identity.service.dto.RoleDto;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
-import org.navistack.framework.utils.GenericBuilder;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,120 +34,90 @@ class RoleServiceImplTest {
 
     @Test
     void create_shouldCreateSuccessfully() {
+        when(dao.selectIdByCode("DEPT_MGR"))
+                .thenReturn(null);
         RoleDto dto = new RoleDto();
         dto.setCode("DEPT_MGR");
         dto.setName("Department Manager");
         service.create(dto);
-        verify(dao, times(1)).insert(any());
+        verify(dao, times(1))
+                .insert(any());
     }
 
     @Test
     void create_shouldThrowDomainValidationExceptionWhenCodeDuplicated() {
-        when(dao.selectOne(
-                RoleQuery.builder()
-                        .code("DEPT_MGR")
-                        .build()
-        )).thenReturn(
-                GenericBuilder.of(Role::new)
-                        .set(Role::setId, 1L)
-                        .set(Role::setCode, "DEPT_MGR")
-                        .set(Role::setName, "Department Manager")
-                        .build()
-        );
+        when(dao.selectIdByCode("DEPT_MGR"))
+                .thenReturn(1L);
         assertThatThrownBy(() -> {
             RoleDto dto = new RoleDto();
             dto.setCode("DEPT_MGR");
             dto.setName("Department Manager");
             service.create(dto);
-        }).isInstanceOf(DomainValidationException.class);
+        })
+                .isInstanceOf(DomainValidationException.class);
     }
 
     @Test
     void modify_shouldModifySuccessfully() {
-        when(dao.selectOneById(1L)).thenReturn(
-                GenericBuilder.of(Role::new)
-                        .set(Role::setId, 1L)
-                        .set(Role::setCode, "DEPT_MGR")
-                        .set(Role::setName, "Department Manager")
-                        .build()
-        );
+        when(dao.existsById(1L))
+                .thenReturn(true);
+        when(dao.selectIdByCode("DEPT_MGR"))
+                .thenReturn(null);
         RoleDto dto = new RoleDto();
         dto.setId(1L);
         dto.setCode("DEPT_MGR");
         dto.setName("Manager of Department");
         service.modify(dto);
-        verify(dao, times(1)).updateById(any());
+        verify(dao, times(1))
+                .updateById(any());
     }
 
     @Test
     void modify_shouldThrowDomainValidationExceptionWhenCodeDuplicated() {
-        when(dao.selectOne(
-                RoleQuery.builder()
-                        .code("GRL_MGR")
-                        .build()
-        )).thenReturn(
-                GenericBuilder.of(Role::new)
-                        .set(Role::setId, 1L)
-                        .set(Role::setCode, "GRL_MGR")
-                        .set(Role::setName, "General Manager")
-                        .build()
-        );
-        when(dao.selectOneById(2L)).thenReturn(
-                GenericBuilder.of(Role::new)
-                        .set(Role::setId, 2L)
-                        .set(Role::setCode, "DEPT_MGR")
-                        .set(Role::setName, "Department Manager")
-                        .build()
-        );
+        when(dao.existsById(2L))
+                .thenReturn(true);
+        when(dao.selectIdByCode("GRL_MGR"))
+                .thenReturn(1L);
         assertThatThrownBy(() -> {
             RoleDto dto = new RoleDto();
             dto.setId(2L);
             dto.setCode("GRL_MGR");
             dto.setName("General Manager");
             service.modify(dto);
-        }).isInstanceOf(DomainValidationException.class);
+        })
+                .isInstanceOf(DomainValidationException.class);
     }
 
     @Test
     void remove_shouldRemoveSuccessfully() {
-        when(dao.selectOneById(1L)).thenReturn(
-                GenericBuilder.of(Role::new)
-                        .set(Role::setId, 1L)
-                        .set(Role::setCode, "DEPT_MGR")
-                        .set(Role::setName, "Department Manager")
-                        .build()
-        );
+        when(dao.existsById(1L))
+                .thenReturn(true);
+        when(userRoleDao.existsByRoleId(1L))
+                .thenReturn(false);
         service.remove(1L);
-        verify(dao, times(1)).deleteById(any());
-        verify(rolePrivilegeDao, times(1)).delete(any(RolePrivilegeQuery.class));
+        verify(dao, times(1))
+                .deleteById(any());
+        verify(rolePrivilegeDao, times(1))
+                .deleteAllByRoleId(1L);
     }
 
     @Test
     void remove_shouldThrowConstraintViolationExceptionWhenUserExists() {
-        when(dao.selectOneById(1L)).thenReturn(
-                GenericBuilder.of(Role::new)
-                        .set(Role::setId, 1L)
-                        .set(Role::setCode, "DEPT_MGR")
-                        .set(Role::setName, "Department Manager")
-                        .build()
-        );
-        when(userRoleDao.count(
-                UserRoleQuery.builder()
-                        .roleId(1L)
-                        .build()
-        )).thenReturn(10L);
-        assertThatThrownBy(() -> {
-            service.remove(1L);
-        }).isInstanceOf(ConstraintViolationException.class);
+        when(dao.existsById(1L))
+                .thenReturn(true);
+        when(userRoleDao.existsByRoleId(1L))
+                .thenReturn(true);
+        assertThatThrownBy(() -> service.remove(1L))
+                .isInstanceOf(ConstraintViolationException.class);
     }
 
     @Test
     void remove_shouldThrowNoSuchEntityExceptionWhenIdIsWrong() {
-        assertThatThrownBy(() -> {
-            service.remove(null);
-        }).isInstanceOf(NoSuchEntityException.class);
-        assertThatThrownBy(() -> {
-            service.remove(100L);
-        }).isInstanceOf(NoSuchEntityException.class);
+        when(dao.existsById(100L))
+                .thenReturn(false);
+        assertThatThrownBy(() -> service.remove(null))
+                .isInstanceOf(NoSuchEntityException.class);
+        assertThatThrownBy(() -> service.remove(100L))
+                .isInstanceOf(NoSuchEntityException.class);
     }
 }

@@ -18,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,14 +44,14 @@ class RolePrivilegeDaoTest {
     }
 
     @Test
-    void testSelect() {
-        assertThat(dao.select(RolePrivilegeQuery.builder().id(1L).build()))
+    void selectAllByQuery_shouldWorkAsExpected() {
+        assertThat(dao.selectAllByQuery(RolePrivilegeQuery.builder().id(1L).build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "roleId", "privilegeId")
                 .containsExactly(
                         GenericBuilder.of(RolePrivilege::new).set(RolePrivilege::setId, 1L).set(RolePrivilege::setRoleId, 1L).set(RolePrivilege::setPrivilegeId, 1L).build()
                 );
-        assertThat(dao.select(RolePrivilegeQuery.builder().roleId(1L).build()))
+        assertThat(dao.selectAllByQuery(RolePrivilegeQuery.builder().roleId(1L).build()))
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "roleId", "privilegeId")
                 .containsExactlyInAnyOrder(
@@ -59,7 +61,7 @@ class RolePrivilegeDaoTest {
                         GenericBuilder.of(RolePrivilege::new).set(RolePrivilege::setId, 4L).set(RolePrivilege::setRoleId, 1L).set(RolePrivilege::setPrivilegeId, 4L).build(),
                         GenericBuilder.of(RolePrivilege::new).set(RolePrivilege::setId, 5L).set(RolePrivilege::setRoleId, 1L).set(RolePrivilege::setPrivilegeId, 5L).build()
                 );
-        assertThat(dao.select(RolePrivilegeQuery.builder().privilegeId(4L).build()))
+        assertThat(dao.selectAllByQuery(RolePrivilegeQuery.builder().privilegeId(4L).build()))
                 .hasSize(2)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "roleId", "privilegeId")
                 .containsExactlyInAnyOrder(
@@ -69,8 +71,8 @@ class RolePrivilegeDaoTest {
     }
 
     @Test
-    void testSelectByRoleIdIn() {
-        assertThat(dao.selectByRoleIdIn(Collections.singletonList(1L)))
+    void selectAllByRoleIds_shouldWorkAsExpected() {
+        assertThat(dao.selectAllByRoleIds(Collections.singletonList(1L)))
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "roleId", "privilegeId")
                 .containsExactlyInAnyOrder(
@@ -83,14 +85,25 @@ class RolePrivilegeDaoTest {
     }
 
     @Test
-    void testCount() {
-        assertThat(dao.count(RolePrivilegeQuery.builder().id(1L).build())).isEqualTo(1L);
-        assertThat(dao.count(RolePrivilegeQuery.builder().roleId(1L).build())).isEqualTo(5L);
-        assertThat(dao.count(RolePrivilegeQuery.builder().privilegeId(4L).build())).isEqualTo(2L);
+    void existsByQuery_shouldWorkAsExpected() {
+        assertThat(dao.existsByQuery(RolePrivilegeQuery.builder().id(1L).build())).isTrue();
+        assertThat(dao.existsByQuery(RolePrivilegeQuery.builder().roleId(1L).build())).isTrue();
+        assertThat(dao.existsByQuery(RolePrivilegeQuery.builder().privilegeId(4L).build())).isTrue();
+
+        assertThat(dao.existsByQuery(RolePrivilegeQuery.builder().id(100L).build())).isFalse();
+        assertThat(dao.existsByQuery(RolePrivilegeQuery.builder().roleId(100L).build())).isFalse();
+        assertThat(dao.existsByQuery(RolePrivilegeQuery.builder().privilegeId(100L).build())).isFalse();
     }
 
     @Test
-    void testSelectWithPageable() {
+    void countByQuery_shouldWorkAsExpected() {
+        assertThat(dao.countByQuery(RolePrivilegeQuery.builder().id(1L).build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(RolePrivilegeQuery.builder().roleId(1L).build())).isEqualTo(5L);
+        assertThat(dao.countByQuery(RolePrivilegeQuery.builder().privilegeId(4L).build())).isEqualTo(2L);
+    }
+
+    @Test
+    void paginateByQuery_shouldWorkAsExpected() {
         RolePrivilegeQuery query = RolePrivilegeQuery.builder()
                 .build();
         PageRequest pageRequest = GenericBuilder.of(PageRequest::new)
@@ -98,7 +111,7 @@ class RolePrivilegeDaoTest {
                 .set(PageRequest::setPageSize, 5)
                 .set(PageRequest::setSort, Sort.by(Sort.Direction.DESC, "id"))
                 .build();
-        assertThat(dao.selectWithPageable(query, pageRequest))
+        assertThat(dao.paginateByQuery(query, pageRequest))
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "roleId", "privilegeId")
                 .containsExactlyInAnyOrder(
@@ -111,14 +124,14 @@ class RolePrivilegeDaoTest {
     }
 
     @Test
-    void testSelectOne() {
-        assertThat(dao.selectOne(RolePrivilegeQuery.builder().id(1L).build()))
+    void selectByQuery_shouldWorkAsExpected() {
+        assertThat(dao.selectByQuery(RolePrivilegeQuery.builder().id(1L).build()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "roleId", "privilegeId")
                 .isEqualTo(
                         GenericBuilder.of(RolePrivilege::new).set(RolePrivilege::setId, 1L).set(RolePrivilege::setRoleId, 1L).set(RolePrivilege::setPrivilegeId, 1L).build()
                 );
-        assertThat(dao.selectOne(RolePrivilegeQuery.builder().roleId(1L).privilegeId(1L).build()))
+        assertThat(dao.selectByQuery(RolePrivilegeQuery.builder().roleId(1L).privilegeId(1L).build()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "roleId", "privilegeId")
                 .isEqualTo(
@@ -127,8 +140,8 @@ class RolePrivilegeDaoTest {
     }
 
     @Test
-    void testSelectOneById() {
-        assertThat(dao.selectOneById(1L))
+    void selectById_shouldWorkAsExpected() {
+        assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "roleId", "privilegeId")
                 .isEqualTo(
@@ -138,14 +151,14 @@ class RolePrivilegeDaoTest {
 
     @Test
     @Transactional
-    void testInsert() {
+    void insert_shouldWorkAsExpected() {
         RolePrivilege entity = GenericBuilder.of(RolePrivilege::new)
                 .set(RolePrivilege::setId, 11L)
                 .set(RolePrivilege::setRoleId, 3L)
                 .set(RolePrivilege::setPrivilegeId, 1L)
                 .build();
         assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(dao.selectOneById(11L))
+        assertThat(dao.selectById(11L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "roleId", "privilegeId")
                 .isEqualTo(entity);
@@ -153,14 +166,38 @@ class RolePrivilegeDaoTest {
 
     @Test
     @Transactional
-    void testUpdateById() {
+    void insertAll_shouldWorkAsExpected() {
+        List<RolePrivilege> entities = Arrays.asList(
+                GenericBuilder.of(RolePrivilege::new)
+                        .set(RolePrivilege::setId, 11L)
+                        .set(RolePrivilege::setRoleId, 3L)
+                        .set(RolePrivilege::setPrivilegeId, 1L)
+                        .build(),
+                GenericBuilder.of(RolePrivilege::new)
+                        .set(RolePrivilege::setId, 12L)
+                        .set(RolePrivilege::setRoleId, 3L)
+                        .set(RolePrivilege::setPrivilegeId, 2L)
+                        .build()
+        );
+        assertThat(dao.insertAll(entities)).isEqualTo(2);
+        for (RolePrivilege entity : entities) {
+            assertThat(dao.selectById(entity.getId()))
+                    .usingRecursiveComparison()
+                    .comparingOnlyFields("id", "roleId", "privilegeId")
+                    .isEqualTo(entity);
+        }
+    }
+
+    @Test
+    @Transactional
+    void updateById_shouldWorkAsExpected() {
         RolePrivilege entity = GenericBuilder.of(RolePrivilege::new)
                 .set(RolePrivilege::setId, 1L)
                 .set(RolePrivilege::setRoleId, 3L)
                 .set(RolePrivilege::setPrivilegeId, 2L)
                 .build();
         assertThat(dao.updateById(entity)).isEqualTo(1);
-        assertThat(dao.selectOneById(1L))
+        assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "roleId", "privilegeId")
                 .isEqualTo(entity);
@@ -168,15 +205,22 @@ class RolePrivilegeDaoTest {
 
     @Test
     @Transactional
-    void testDeleteById() {
+    void deleteById_shouldWorkAsExpected() {
         assertThat(dao.deleteById(2L)).isEqualTo(1);
-        assertThat(dao.selectOneById(2L))
+        assertThat(dao.selectById(2L))
                 .isNull();
     }
 
     @Test
-    void testDelete() {
-        assertThat(dao.delete(RolePrivilegeQuery.builder().roleId(1L).build())).isEqualTo(5);
-        assertThat(dao.delete(RolePrivilegeQuery.builder().privilegeId(6L).build())).isEqualTo(1);
+    @Transactional
+    void deleteAllByQuery_shouldWorkAsExpected() {
+        assertThat(dao.deleteAllByQuery(RolePrivilegeQuery.builder().roleId(1L).build())).isEqualTo(5);
+        assertThat(dao.deleteAllByQuery(RolePrivilegeQuery.builder().privilegeId(6L).build())).isEqualTo(1);
+    }
+
+    @Test
+    @Transactional
+    void deleteAllByRoleId_shouldWorkAsExpected() {
+        assertThat(dao.deleteAllByRoleId(1L)).isEqualTo(5);
     }
 }

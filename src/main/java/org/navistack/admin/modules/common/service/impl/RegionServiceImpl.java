@@ -15,6 +15,7 @@ import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageImpl;
 import org.navistack.framework.data.Pageable;
 import org.navistack.framework.utils.Asserts;
+import org.navistack.framework.utils.Strings;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -30,8 +31,8 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Page<RegionDto> paginate(RegionQuery query, Pageable pageable) {
-        long totalRecords = dao.count(query);
-        List<Region> entities = dao.selectWithPageable(query, pageable);
+        long totalRecords = dao.countByQuery(query);
+        List<Region> entities = dao.paginateByQuery(query, pageable);
         Collection<RegionDto> dtos = RegionConverter.INSTANCE.toDtos(entities);
         return new PageImpl<>(dtos, pageable, totalRecords);
     }
@@ -68,59 +69,21 @@ public class RegionServiceImpl implements RegionService {
     // region Validation methods
 
     protected boolean validateExistenceById(Long id) {
-        return id != null && dao.selectOneById(id) != null;
+        return id != null && dao.existsById(id);
     }
 
     protected boolean validateExistenceByCode(String code) {
-        if (code == null) {
-            return false;
-        }
-
-        RegionQuery query = RegionQuery.builder()
-                .code(code)
-                .build();
-
-        return dao.selectOne(query) != null;
+        return code != null && dao.existsByCode(code);
     }
 
     protected boolean validateAvailabilityOfCode(String code, Long modifiedId) {
-        RegionQuery query = RegionQuery.builder()
-                .code(code)
-                .build();
-        Region existingOne = dao.selectOne(query);
-
-        if (existingOne == null) {
-            return true;
-        }
-
-        if (!existingOne.getCode().equals(code)) {
-            return true;
-        }
-
-        if (existingOne.getId().equals(modifiedId)) {
-            return true;
-        }
-
-        return false;
+        Long currentId = dao.selectIdByCode(code);
+        return currentId == null || currentId.equals(modifiedId);
     }
 
     protected boolean validateAbsenceOfSubordinate(Long id) {
-        Region region = dao.selectOneById(id);
-
-        if (region == null) {
-            return true;
-        }
-
-        String regionCode = region.getCode();
-
-        if (regionCode == null || regionCode.isEmpty()) {
-            return true;
-        }
-
-        RegionQuery query = RegionQuery.builder()
-                .parentCode(regionCode)
-                .build();
-        return dao.count(query) <= 0;
+        String regionCode = dao.selectCodeById(id);
+        return !Strings.hasText(regionCode) || !dao.existsByParentCode(regionCode);
     }
 
     // endregion

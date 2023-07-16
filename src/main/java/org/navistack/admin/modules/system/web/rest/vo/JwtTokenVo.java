@@ -4,11 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 public class JwtTokenVo {
     private String idToken;
-
-    public static JwtTokenVo of(String idToken) {
-        return new JwtTokenVo(idToken);
-    }
 }

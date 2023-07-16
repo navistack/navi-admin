@@ -11,17 +11,29 @@ import java.util.List;
 public interface RegionDao {
     List<Region> selectAll();
 
-    List<Region> select(RegionQuery query);
+    List<Region> selectAllByQuery(RegionQuery query);
 
-    List<Region> selectRecursively(RegionQuery query);
+    List<Region> selectAllByQueryRecursively(RegionQuery query);
 
-    long count(RegionQuery query);
+    boolean existsByQuery(RegionQuery query);
 
-    List<Region> selectWithPageable(RegionQuery query, Pageable pageable);
+    long countByQuery(RegionQuery query);
 
-    Region selectOne(RegionQuery query);
+    List<Region> paginateByQuery(RegionQuery query, Pageable pageable);
 
-    Region selectOneById(Long id);
+    Region selectByQuery(RegionQuery query);
+
+    Region selectById(Long id);
+
+    Long selectIdByCode(String code);
+
+    String selectCodeById(Long id);
+
+    boolean existsById(Long id);
+
+    boolean existsByCode(String code);
+
+    boolean existsByParentCode(String regionCode);
 
     int insert(Region entity);
 

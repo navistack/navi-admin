@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.navistack.admin.modules.identity.dao.OrganizationDao">
-    <select id="select" resultType="org.navistack.admin.modules.identity.entity.Organization">
+    <select id="selectAllByQuery" resultType="org.navistack.admin.modules.identity.entity.Organization">
         SELECT *
           FROM organization
         <where>
@@ -14,7 +14,20 @@
         </where>
     </select>
 
-    <select id="count" resultType="java.lang.Long">
+    <select id="existsByQuery" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM organization
+            <where>
+                <if test="id != null">AND id = #{id}</if>
+                <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
+                <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
+                <if test="superId != null">AND super_id = #{superId}</if>
+            </where>
+        )
+    </select>
+
+    <select id="countByQuery" resultType="java.lang.Long">
         SELECT COUNT(*)
         FROM organization
         <where>
@@ -25,7 +38,7 @@
         </where>
     </select>
 
-    <select id="selectWithPageable" resultType="org.navistack.admin.modules.identity.entity.Organization">
+    <select id="paginateByQuery" resultType="org.navistack.admin.modules.identity.entity.Organization">
         SELECT *
           FROM organization
         <where>
@@ -59,7 +72,7 @@
         </if>
     </select>
 
-    <select id="selectOne" resultType="org.navistack.admin.modules.identity.entity.Organization">
+    <select id="selectByQuery" resultType="org.navistack.admin.modules.identity.entity.Organization">
         SELECT *
         FROM organization
         <where>
@@ -70,10 +83,31 @@
         </where>
     </select>
 
-    <select id="selectOneById" resultType="org.navistack.admin.modules.identity.entity.Organization">
+    <select id="selectById" resultType="org.navistack.admin.modules.identity.entity.Organization">
         SELECT *
           FROM organization
          WHERE id = #{id}
+    </select>
+
+    <select id="selectIdByCode" resultType="java.lang.Long">
+        SELECT *
+          FROM organization
+         WHERE code = #{code}
+    </select>
+
+    <select id="existsById" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM organization
+             WHERE id = #{id}
+        )
+    </select>
+    <select id="existsBySuperId" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM organization
+             WHERE super_id = #{superId}
+        )
     </select>
 
     <insert id="insert">

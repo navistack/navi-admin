@@ -6,10 +6,8 @@ import org.navistack.admin.modules.identity.dao.RolePrivilegeDao;
 import org.navistack.admin.modules.identity.dao.UserRoleDao;
 import org.navistack.admin.modules.identity.entity.Role;
 import org.navistack.admin.modules.identity.entity.RolePrivilege;
-import org.navistack.admin.modules.identity.query.PrivilegeQuery;
 import org.navistack.admin.modules.identity.query.RolePrivilegeQuery;
 import org.navistack.admin.modules.identity.query.RoleQuery;
-import org.navistack.admin.modules.identity.query.UserRoleQuery;
 import org.navistack.admin.modules.identity.service.RoleService;
 import org.navistack.admin.modules.identity.service.convert.RoleConverter;
 import org.navistack.admin.modules.identity.service.convert.RoleDtoConverter;
@@ -51,21 +49,21 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Page<RoleDto> paginate(RoleQuery query, Pageable pageable) {
-        long totalRecords = dao.count(query);
-        List<Role> entities = dao.selectWithPageable(query, pageable);
+        long totalRecords = dao.countByQuery(query);
+        List<Role> entities = dao.paginateByQuery(query, pageable);
         Collection<RoleDto> dtos = RoleConverter.INSTANCE.toDtos(entities);
         return new PageImpl<>(dtos, pageable, totalRecords);
     }
 
     @Override
     public RoleDetailVm queryDetailById(Long id) {
-        Role role = dao.selectOneById(id);
+        Role role = dao.selectById(id);
 
         RoleDetailVm vm = ModelMappers.map(role, RoleDetailVm.class);
 
         RolePrivilegeQuery rpq = new RolePrivilegeQuery();
         rpq.setRoleId(id);
-        List<Long> privilegeIds = rolePrivilegeDao.select(rpq)
+        List<Long> privilegeIds = rolePrivilegeDao.selectAllByQuery(rpq)
                 .stream()
                 .map(RolePrivilege::getPrivilegeId)
                 .collect(Collectors.toList());
@@ -105,66 +103,36 @@ public class RoleServiceImpl implements RoleService {
         Asserts.state(id, this::validateAbsenceOfUser, () -> new ConstraintViolationException("Role can not be removed due to user(s) attached"));
 
         dao.deleteById(id);
-
-        RolePrivilegeQuery rpq = RolePrivilegeQuery.builder()
-                .roleId(id)
-                .build();
-        rolePrivilegeDao.delete(rpq);
+        rolePrivilegeDao.deleteAllByRoleId(id);
     }
 
     protected void replacePrivilegesOf(Long roleId, List<Long> privilegeIds) {
-        RolePrivilegeQuery rpq = RolePrivilegeQuery.builder()
-                .roleId(roleId)
-                .build();
-        rolePrivilegeDao.delete(rpq);
+        rolePrivilegeDao.deleteAllByRoleId(roleId);
 
         if (privilegeIds == null || privilegeIds.isEmpty()) {
             return;
         }
 
-        for (Long privilegeId : privilegeIds) {
-            PrivilegeQuery rq = PrivilegeQuery.builder()
-                    .id(privilegeId)
-                    .build();
-            if (privilegeDao.count(rq) > 0) {
-                RolePrivilege entity = RolePrivilege.of(roleId, privilegeId);
-                rolePrivilegeDao.insert(entity);
-            }
-        }
+        privilegeIds = privilegeDao.selectAllIdsByIds(privilegeIds);
+        List<RolePrivilege> rolePrivileges = privilegeIds.stream()
+                .map(privilegeId -> RolePrivilege.of(roleId, privilegeId))
+                .toList();
+        rolePrivilegeDao.insertAll(rolePrivileges);
     }
 
     // region Validation methods
 
     protected boolean validateExistenceById(Long id) {
-        return id != null && dao.selectOneById(id) != null;
+        return id != null && dao.existsById(id);
     }
 
     protected boolean validateAvailabilityOfCode(String code, Long modifiedId) {
-        RoleQuery query = RoleQuery.builder()
-                .code(code)
-                .build();
-        Role existingOne = dao.selectOne(query);
-
-        if (existingOne == null) {
-            return true;
-        }
-
-        if (!existingOne.getCode().equals(code)) {
-            return true;
-        }
-
-        if (existingOne.getId().equals(modifiedId)) {
-            return true;
-        }
-
-        return false;
+        Long currentId = dao.selectIdByCode(code);
+        return currentId == null || currentId.equals(modifiedId);
     }
 
     protected boolean validateAbsenceOfUser(Long roleId) {
-        UserRoleQuery query = UserRoleQuery.builder()
-                .roleId(roleId)
-                .build();
-        return userRoleDao.count(query) <= 0;
+        return roleId == null || !userRoleDao.existsByRoleId(roleId);
     }
 
     // endregion

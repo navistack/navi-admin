@@ -42,26 +42,26 @@ class PrivilegeDaoTest {
     }
 
     @Test
-    void testSelect() {
-        assertThat(dao.select(PrivilegeQuery.builder().id(1L).build()))
+    void selectAllByQuery_shouldWorkAsExpected() {
+        assertThat(dao.selectAllByQuery(PrivilegeQuery.builder().id(1L).build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentId")
                 .containsExactly(
                         GenericBuilder.of(Privilege::new).set(Privilege::setId, 1L).set(Privilege::setCode, "PRIVILEGE_CODE_01").set(Privilege::setName, "PRIVILEGE NAME 01").build()
                 );
-        assertThat(dao.select(PrivilegeQuery.builder().code("PRIVILEGE_CODE_01").build()))
+        assertThat(dao.selectAllByQuery(PrivilegeQuery.builder().code("PRIVILEGE_CODE_01").build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentId")
                 .containsExactly(
                         GenericBuilder.of(Privilege::new).set(Privilege::setId, 1L).set(Privilege::setCode, "PRIVILEGE_CODE_01").set(Privilege::setName, "PRIVILEGE NAME 01").build()
                 );
-        assertThat(dao.select(PrivilegeQuery.builder().name("PRIVILEGE NAME 01").build()))
+        assertThat(dao.selectAllByQuery(PrivilegeQuery.builder().name("PRIVILEGE NAME 01").build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentId")
                 .containsExactly(
                         GenericBuilder.of(Privilege::new).set(Privilege::setId, 1L).set(Privilege::setCode, "PRIVILEGE_CODE_01").set(Privilege::setName, "PRIVILEGE NAME 01").build()
                 );
-        assertThat(dao.select(PrivilegeQuery.builder().parentId(1L).build()))
+        assertThat(dao.selectAllByQuery(PrivilegeQuery.builder().parentId(1L).build()))
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentId")
                 .containsExactly(
@@ -73,8 +73,8 @@ class PrivilegeDaoTest {
     }
 
     @Test
-    void testSelectByIds() {
-        assertThat(dao.selectByIds(Arrays.asList(2L, 3L, 4L)))
+    void selectAllByIds_shouldWorkAsExpected() {
+        assertThat(dao.selectAllByIds(Arrays.asList(2L, 3L, 4L)))
                 .hasSize(3)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentId")
                 .containsExactly(
@@ -85,15 +85,28 @@ class PrivilegeDaoTest {
     }
 
     @Test
-    void testCount() {
-        assertThat(dao.count(PrivilegeQuery.builder().id(1L).build())).isEqualTo(1L);
-        assertThat(dao.count(PrivilegeQuery.builder().code("PRIVILEGE_CODE_01").build())).isEqualTo(1L);
-        assertThat(dao.count(PrivilegeQuery.builder().name("PRIVILEGE NAME 01").build())).isEqualTo(1L);
-        assertThat(dao.count(PrivilegeQuery.builder().parentId(1L).build())).isEqualTo(4L);
+    void existsByQuery_shouldWorkAsExpected() {
+        assertThat(dao.existsByQuery(PrivilegeQuery.builder().id(1L).build())).isTrue();
+        assertThat(dao.existsByQuery(PrivilegeQuery.builder().code("PRIVILEGE_CODE_01").build())).isTrue();
+        assertThat(dao.existsByQuery(PrivilegeQuery.builder().name("PRIVILEGE NAME 01").build())).isTrue();
+        assertThat(dao.existsByQuery(PrivilegeQuery.builder().parentId(1L).build())).isTrue();
+
+        assertThat(dao.existsByQuery(PrivilegeQuery.builder().id(100L).build())).isFalse();
+        assertThat(dao.existsByQuery(PrivilegeQuery.builder().code("PRIVILEGE_CODE_100").build())).isFalse();
+        assertThat(dao.existsByQuery(PrivilegeQuery.builder().name("PRIVILEGE NAME 100").build())).isFalse();
+        assertThat(dao.existsByQuery(PrivilegeQuery.builder().parentId(100L).build())).isFalse();
     }
 
     @Test
-    void testSelectWithPageable() {
+    void countByQuery_shouldWorkAsExpected() {
+        assertThat(dao.countByQuery(PrivilegeQuery.builder().id(1L).build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(PrivilegeQuery.builder().code("PRIVILEGE_CODE_01").build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(PrivilegeQuery.builder().name("PRIVILEGE NAME 01").build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(PrivilegeQuery.builder().parentId(1L).build())).isEqualTo(4L);
+    }
+
+    @Test
+    void paginateByQuery_shouldWorkAsExpected() {
         PrivilegeQuery query = PrivilegeQuery.builder()
                 .parentId(1L)
                 .build();
@@ -102,7 +115,7 @@ class PrivilegeDaoTest {
                 .set(PageRequest::setPageSize, 5)
                 .set(PageRequest::setSort, Sort.by(Sort.Direction.DESC, "id"))
                 .build();
-        assertThat(dao.selectWithPageable(query, pageRequest))
+        assertThat(dao.paginateByQuery(query, pageRequest))
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentId")
                 .containsExactlyInAnyOrder(
@@ -114,20 +127,20 @@ class PrivilegeDaoTest {
     }
 
     @Test
-    void testSelectOne() {
-        assertThat(dao.selectOne(PrivilegeQuery.builder().id(1L).build()))
+    void selectByQuery_shouldWorkAsExpected() {
+        assertThat(dao.selectByQuery(PrivilegeQuery.builder().id(1L).build()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentId")
                 .isEqualTo(
                         GenericBuilder.of(Privilege::new).set(Privilege::setId, 1L).set(Privilege::setCode, "PRIVILEGE_CODE_01").set(Privilege::setName, "PRIVILEGE NAME 01").build()
                 );
-        assertThat(dao.selectOne(PrivilegeQuery.builder().code("PRIVILEGE_CODE_01").build()))
+        assertThat(dao.selectByQuery(PrivilegeQuery.builder().code("PRIVILEGE_CODE_01").build()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentId")
                 .isEqualTo(
                         GenericBuilder.of(Privilege::new).set(Privilege::setId, 1L).set(Privilege::setCode, "PRIVILEGE_CODE_01").set(Privilege::setName, "PRIVILEGE NAME 01").build()
                 );
-        assertThat(dao.selectOne(PrivilegeQuery.builder().name("PRIVILEGE NAME 01").build()))
+        assertThat(dao.selectByQuery(PrivilegeQuery.builder().name("PRIVILEGE NAME 01").build()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentId")
                 .isEqualTo(
@@ -136,8 +149,31 @@ class PrivilegeDaoTest {
     }
 
     @Test
-    void testSelectOneById() {
-        assertThat(dao.selectOneById(1L))
+    void selectIdByCode_shouldWorkAsExpected() {
+        assertThat(dao.selectIdByCode("PRIVILEGE_CODE_01")).isEqualTo(1L);
+        assertThat(dao.selectIdByCode("PRIVILEGE_CODE_100")).isNull();
+    }
+
+    @Test
+    void selectAllIdsByIds_shouldWorkAsExpected() {
+        assertThat(dao.selectAllIdsByIds(Arrays.asList(9L, 10L, 11L))).containsExactly(9L, 10L);
+    }
+
+    @Test
+    void existsById_shouldWorkAsExpected() {
+        assertThat(dao.existsById(1L)).isTrue();
+        assertThat(dao.existsById(100L)).isFalse();
+    }
+
+    @Test
+    void existsByParentId_shouldWorkAsExpected() {
+        assertThat(dao.existsByParentId(1L)).isTrue();
+        assertThat(dao.existsByParentId(100L)).isFalse();
+    }
+
+    @Test
+    void selectById_shouldWorkAsExpected() {
+        assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentId")
                 .isEqualTo(
@@ -147,14 +183,14 @@ class PrivilegeDaoTest {
 
     @Test
     @Transactional
-    void testInsert() {
+    void insert_shouldWorkAsExpected() {
         Privilege entity = GenericBuilder.of(Privilege::new)
                 .set(Privilege::setId, 11L)
                 .set(Privilege::setCode, "PRIVILEGE_CODE_11")
                 .set(Privilege::setName, "PRIVILEGE NAME 11")
                 .build();
         assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(dao.selectOneById(11L))
+        assertThat(dao.selectById(11L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentId")
                 .isEqualTo(entity);
@@ -162,14 +198,14 @@ class PrivilegeDaoTest {
 
     @Test
     @Transactional
-    void testUpdateById() {
+    void updateById_shouldWorkAsExpected() {
         Privilege entity = GenericBuilder.of(Privilege::new)
                 .set(Privilege::setId, 1L)
                 .set(Privilege::setCode, "PRIVILEGE_CODE_12")
                 .set(Privilege::setName, "PRIVILEGE NAME 12")
                 .build();
         assertThat(dao.updateById(entity)).isEqualTo(1);
-        assertThat(dao.selectOneById(1L))
+        assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentId")
                 .isEqualTo(entity);
@@ -177,9 +213,9 @@ class PrivilegeDaoTest {
 
     @Test
     @Transactional
-    void testDeleteById() {
+    void deleteById_shouldWorkAsExpected() {
         assertThat(dao.deleteById(2L)).isEqualTo(1);
-        assertThat(dao.selectOneById(2L))
+        assertThat(dao.selectById(2L))
                 .isNull();
     }
 }

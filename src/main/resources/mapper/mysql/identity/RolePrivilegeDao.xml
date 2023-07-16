@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.navistack.admin.modules.identity.dao.RolePrivilegeDao">
-    <select id="select" resultType="org.navistack.admin.modules.identity.entity.RolePrivilege">
+    <select id="selectAllByQuery" resultType="org.navistack.admin.modules.identity.entity.RolePrivilege">
         SELECT *
           FROM role_privilege
         <where>
@@ -13,7 +13,7 @@
         </where>
     </select>
 
-    <select id="selectByRoleIdIn" resultType="org.navistack.admin.modules.identity.entity.RolePrivilege">
+    <select id="selectAllByRoleIds" resultType="org.navistack.admin.modules.identity.entity.RolePrivilege">
         SELECT *
           FROM role_privilege
         <where>
@@ -29,7 +29,19 @@
         </where>
     </select>
 
-    <select id="count" resultType="java.lang.Long">
+    <select id="existsByQuery" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM role_privilege
+            <where>
+                <if test="id != null">AND id = #{id}</if>
+                <if test="roleId != null">AND role_id = #{roleId}</if>
+                <if test="privilegeId != null">AND privilege_id = #{privilegeId}</if>
+            </where>
+        )
+    </select>
+
+    <select id="countByQuery" resultType="java.lang.Long">
         SELECT COUNT(*)
         FROM role_privilege
         <where>
@@ -39,7 +51,7 @@
         </where>
     </select>
 
-    <select id="selectWithPageable" resultType="org.navistack.admin.modules.identity.entity.RolePrivilege">
+    <select id="paginateByQuery" resultType="org.navistack.admin.modules.identity.entity.RolePrivilege">
         SELECT *
           FROM role_privilege
         <where>
@@ -72,7 +84,7 @@
         </if>
     </select>
 
-    <select id="selectOne" resultType="org.navistack.admin.modules.identity.entity.RolePrivilege">
+    <select id="selectByQuery" resultType="org.navistack.admin.modules.identity.entity.RolePrivilege">
         SELECT *
         FROM role_privilege
         <where>
@@ -82,7 +94,7 @@
         </where>
     </select>
 
-    <select id="selectOneById" resultType="org.navistack.admin.modules.identity.entity.RolePrivilege">
+    <select id="selectById" resultType="org.navistack.admin.modules.identity.entity.RolePrivilege">
         SELECT *
           FROM role_privilege
          WHERE id = #{id}
@@ -106,6 +118,27 @@
         </trim>
     </insert>
 
+    <insert id="insertAll">
+        INSERT INTO role_privilege
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            role_id,
+            privilege_id,
+            created_at,
+            created_by,
+        </trim>
+        VALUES
+        <foreach item="entity" collection="entities" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{entity.id},
+                #{entity.roleId},
+                #{entity.privilegeId},
+                COALESCE(#{entity.createdAt}, CURRENT_TIMESTAMP),
+                #{entity.createdBy},
+            </trim>
+        </foreach>
+    </insert>
+
     <update id="updateById">
         UPDATE role_privilege
         <set>
@@ -125,7 +158,7 @@
          WHERE id = #{id}
     </delete>
 
-    <delete id="delete">
+    <delete id="deleteAllByQuery">
         DELETE
           FROM role_privilege
         <where>
@@ -133,5 +166,11 @@
             <if test="roleId != null">AND role_id = #{roleId}</if>
             <if test="privilegeId != null">AND privilege_id = #{privilegeId}</if>
         </where>
+    </delete>
+
+    <delete id="deleteAllByRoleId">
+        DELETE
+          FROM role_privilege
+         WHERE role_id = #{roleId}
     </delete>
 </mapper>

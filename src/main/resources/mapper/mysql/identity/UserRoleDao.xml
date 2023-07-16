@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.navistack.admin.modules.identity.dao.UserRoleDao">
-    <select id="select" resultType="org.navistack.admin.modules.identity.entity.UserRole">
+    <select id="selectAllByQuery" resultType="org.navistack.admin.modules.identity.entity.UserRole">
         SELECT *
           FROM user_role
         <where>
@@ -13,7 +13,19 @@
         </where>
     </select>
 
-    <select id="count" resultType="java.lang.Long">
+    <select id="existsByQuery" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM user_role
+            <where>
+                <if test="id != null">AND id = #{id}</if>
+                <if test="userId != null">AND user_id = #{userId}</if>
+                <if test="roleId != null">AND role_id = #{roleId}</if>
+            </where>
+        )
+    </select>
+
+    <select id="countByQuery" resultType="java.lang.Long">
         SELECT COUNT(*)
         FROM user_role
         <where>
@@ -23,7 +35,7 @@
         </where>
     </select>
 
-    <select id="selectWithPageable" resultType="org.navistack.admin.modules.identity.entity.UserRole">
+    <select id="paginateByQuery" resultType="org.navistack.admin.modules.identity.entity.UserRole">
         SELECT *
           FROM user_role
         <where>
@@ -56,7 +68,7 @@
         </if>
     </select>
 
-    <select id="selectOne" resultType="org.navistack.admin.modules.identity.entity.UserRole">
+    <select id="selectByQuery" resultType="org.navistack.admin.modules.identity.entity.UserRole">
         SELECT *
         FROM user_role
         <where>
@@ -66,10 +78,18 @@
         </where>
     </select>
 
-    <select id="selectOneById" resultType="org.navistack.admin.modules.identity.entity.UserRole">
+    <select id="selectById" resultType="org.navistack.admin.modules.identity.entity.UserRole">
         SELECT *
           FROM user_role
          WHERE id = #{id}
+    </select>
+
+    <select id="existsByRoleId" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM user_role
+             WHERE role_id = #{roleId}
+        )
     </select>
 
     <insert id="insert">
@@ -88,6 +108,27 @@
             <if test="createdAt != null">#{createdAt},</if>
             <if test="createdBy != null">#{createdBy},</if>
         </trim>
+    </insert>
+
+    <insert id="insertAll">
+        INSERT INTO user_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            user_id,
+            role_id,
+            created_at,
+            created_by,
+        </trim>
+        VALUES
+        <foreach item="entity" collection="entities" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{entity.id},
+                #{entity.userId},
+                #{entity.roleId},
+                COALESCE(#{entity.createdAt}, CURRENT_TIMESTAMP),
+                #{entity.createdBy},
+            </trim>
+        </foreach>
     </insert>
 
     <update id="updateById">
@@ -109,7 +150,7 @@
          WHERE id = #{id}
     </delete>
 
-    <delete id="delete">
+    <delete id="deleteAllByQuery">
         DELETE
           FROM user_role
         <where>
@@ -117,5 +158,11 @@
             <if test="userId != null">AND user_id = #{userId}</if>
             <if test="roleId != null">AND role_id = #{roleId}</if>
         </where>
+    </delete>
+
+    <delete id="deleteAllByUserId">
+        DELETE
+        FROM user_role
+        WHERE user_id = #{userId}
     </delete>
 </mapper>

@@ -5,7 +5,6 @@ import org.navistack.admin.modules.identity.dao.UserDao;
 import org.navistack.admin.modules.identity.dao.UserRoleDao;
 import org.navistack.admin.modules.identity.entity.User;
 import org.navistack.admin.modules.identity.entity.UserRole;
-import org.navistack.admin.modules.identity.query.RoleQuery;
 import org.navistack.admin.modules.identity.query.UserQuery;
 import org.navistack.admin.modules.identity.query.UserRoleQuery;
 import org.navistack.admin.modules.identity.service.UserService;
@@ -42,21 +41,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserDto> paginate(UserQuery query, Pageable pageable) {
-        long totalRecords = dao.count(query);
-        List<User> entities = dao.selectWithPageable(query, pageable);
+        long totalRecords = dao.countByQuery(query);
+        List<User> entities = dao.paginateByQuery(query, pageable);
         Collection<UserDto> dtos = UserConverter.INSTANCE.toDtos(entities);
         return new PageImpl<>(dtos, pageable, totalRecords);
     }
 
     @Override
     public UserDetailVm queryDetailById(Long id) {
-        User user = dao.selectOneById(id);
+        User user = dao.selectById(id);
 
         UserDetailVm vm = ModelMappers.map(user, UserDetailVm.class);
 
         UserRoleQuery urq = new UserRoleQuery();
         urq.setUserId(id);
-        List<Long> roleIds = userRoleDao.select(urq)
+        List<Long> roleIds = userRoleDao.selectAllByQuery(urq)
                 .stream()
                 .map(UserRole::getRoleId)
                 .collect(Collectors.toList());
@@ -99,89 +98,42 @@ public class UserServiceImpl implements UserService {
         Asserts.state(id, this::validateExistenceById, () -> new NoSuchEntityException("User does not exist"));
 
         dao.deleteById(id);
-
-        UserRoleQuery urq = UserRoleQuery.builder()
-                .userId(id)
-                .build();
-        userRoleDao.delete(urq);
+        userRoleDao.deleteAllByUserId(id);
     }
 
     protected void replaceRolesOf(Long userId, List<Long> roleIds) {
-        UserRoleQuery urq = UserRoleQuery.builder()
-                .userId(userId)
-                .build();
-        userRoleDao.delete(urq);
+        userRoleDao.deleteAllByUserId(userId);
 
         if (roleIds == null || roleIds.isEmpty()) {
             return;
         }
 
-        for (Long roleId : roleIds) {
-            RoleQuery rq = RoleQuery.builder()
-                    .id(roleId)
-                    .build();
-            if (roleDao.count(rq) > 0) {
-                UserRole entity = UserRole.of(userId, roleId);
-                userRoleDao.insert(entity);
-            }
-        }
+        roleIds = roleDao.selectAllIdsByIds(roleIds);
+        List<UserRole> userRoles = roleIds.stream()
+                .map(roleId -> UserRole.of(userId, roleId))
+                .toList();
+        userRoleDao.insertAll(userRoles);
     }
 
     // region Validation methods
 
     protected boolean validateExistenceById(Long id) {
-        return id != null && dao.selectOneById(id) != null;
+        return id != null && dao.existsById(id);
     }
 
     protected boolean validateAvailabilityOfLoginName(String loginName, Long modifiedId) {
-        UserQuery query = UserQuery.builder()
-                .loginName(loginName)
-                .build();
-        User existingOne = dao.selectOne(query);
-
-        if (existingOne == null) {
-            return true;
-        }
-
-        if (existingOne.getId().equals(modifiedId)) {
-            return true;
-        }
-
-        return false;
+        Long currentId = dao.selectIdByLoginName(loginName);
+        return currentId == null || currentId.equals(modifiedId);
     }
 
     protected boolean validateAvailabilityOfMobileNumber(String mobileNumber, Long modifiedId) {
-        UserQuery query = UserQuery.builder()
-                .mobileNumber(mobileNumber)
-                .build();
-        User existingOne = dao.selectOne(query);
-
-        if (existingOne == null) {
-            return true;
-        }
-
-        if (existingOne.getId().equals(modifiedId)) {
-            return true;
-        }
-
-        return false;
+        Long currentId = dao.selectIdByMobileNumber(mobileNumber);
+        return currentId == null || currentId.equals(modifiedId);
     }
 
     protected boolean validateAvailabilityOfEmailAddress(String emailAddress, Long modifiedId) {
-        UserQuery query = UserQuery.builder()
-                .emailAddress(emailAddress)
-                .build();
-        User existingOne = dao.selectOne(query);
-
-        if (existingOne == null) {
-            return true;
-        }
-
-        if (existingOne.getId().equals(modifiedId)) {
-            return true;
-        }
-
-        return false;
+        Long currentId = dao.selectIdByEmailAddress(emailAddress);
+        return currentId == null || currentId.equals(modifiedId);
     }
 
     // endregion

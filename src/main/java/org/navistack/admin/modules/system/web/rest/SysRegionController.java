@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.common.dao.RegionDao;
 import org.navistack.admin.modules.common.entity.Region;
 import org.navistack.admin.modules.common.query.RegionQuery;
+import org.navistack.admin.modules.system.web.rest.convert.RegionVmConverter;
 import org.navistack.admin.modules.system.web.rest.vm.RegionVm;
 import org.navistack.framework.data.TreeBuilder;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class SysRegionController {
     public Collection<RegionVm> get() {
         List<Region> regions = regionDao.selectAll();
         Collection<RegionVm> vms = regions.stream()
-                .map(RegionVm::of)
+                .map(RegionVmConverter.INSTANCE::fromEntity)
                 .collect(TreeBuilder.collector());
         return vms;
     }
@@ -44,12 +45,12 @@ public class SysRegionController {
             RegionQuery regionQuery = RegionQuery.builder()
                     .code(regionCode)
                     .build();
-            regions = regionDao.selectRecursively(regionQuery);
+            regions = regionDao.selectAllByQueryRecursively(regionQuery);
         } else {
             RegionQuery regionQuery = RegionQuery.builder()
                     .parentCode(regionCode)
                     .build();
-            regions = regionDao.select(regionQuery);
+            regions = regionDao.selectAllByQuery(regionQuery);
         }
 
         if (regions.isEmpty()) {
@@ -57,7 +58,7 @@ public class SysRegionController {
         }
 
         Collection<RegionVm> vms = regions.stream()
-                .map(RegionVm::of)
+                .map(RegionVmConverter.INSTANCE::fromEntity)
                 .collect(TreeBuilder.<RegionVm>of().orphanAsRoot(true).toCollector());
         return vms;
     }

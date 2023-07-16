@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.navistack.admin.modules.identity.dao.UserDao">
-    <select id="select" resultType="org.navistack.admin.modules.identity.entity.User">
+    <select id="selectAllByQuery" resultType="org.navistack.admin.modules.identity.entity.User">
         SELECT *
           FROM user
         <where>
@@ -16,7 +16,22 @@
         </where>
     </select>
 
-    <select id="count" resultType="java.lang.Long">
+    <select id="existsByQuery" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM user
+            <where>
+                <if test="id != null">AND id = #{id}</if>
+                <if test="nickName != null and !nickName.isEmpty()">AND nick_name LIKE #{nickName} '%'</if>
+                <if test="loginName != null and !loginName.isEmpty()">AND login_name = #{loginName}</if>
+                <if test="mobileNumber != null and !mobileNumber.isEmpty()">AND mobile_number = #{mobileNumber}</if>
+                <if test="emailAddress != null and !emailAddress.isEmpty()">AND email_address = #{emailAddress}</if>
+                <if test="status != null">AND status = #{status}</if>
+            </where>
+        )
+    </select>
+
+    <select id="countByQuery" resultType="java.lang.Long">
         SELECT COUNT(*)
         FROM user
         <where>
@@ -29,7 +44,7 @@
         </where>
     </select>
 
-    <select id="selectWithPageable" resultType="org.navistack.admin.modules.identity.entity.User">
+    <select id="paginateByQuery" resultType="org.navistack.admin.modules.identity.entity.User">
         SELECT *
           FROM user
         <where>
@@ -63,7 +78,7 @@
         </if>
     </select>
 
-    <select id="selectOne" resultType="org.navistack.admin.modules.identity.entity.User">
+    <select id="selectByQuery" resultType="org.navistack.admin.modules.identity.entity.User">
         SELECT *
         FROM user
         <where>
@@ -76,7 +91,7 @@
         </where>
     </select>
 
-    <select id="selectOneByLoginName" resultType="org.navistack.admin.modules.identity.entity.User">
+    <select id="selectByLoginName" resultType="org.navistack.admin.modules.identity.entity.User">
         SELECT *
           FROM user
          WHERE login_name = #{loginName}
@@ -84,10 +99,36 @@
             OR email_address = #{emailAddress}
     </select>
 
-    <select id="selectOneById" resultType="org.navistack.admin.modules.identity.entity.User">
+    <select id="selectById" resultType="org.navistack.admin.modules.identity.entity.User">
         SELECT *
           FROM user
          WHERE id = #{id}
+    </select>
+
+    <select id="selectIdByLoginName" resultType="java.lang.Long">
+        SELECT id
+          FROM user
+         WHERE login_name = #{loginName}
+    </select>
+
+    <select id="selectIdByMobileNumber" resultType="java.lang.Long">
+        SELECT id
+          FROM user
+         WHERE mobile_number = #{mobileNumber}
+    </select>
+
+    <select id="selectIdByEmailAddress" resultType="java.lang.Long">
+        SELECT id
+          FROM user
+         WHERE email_address = #{emailAddress}
+    </select>
+
+    <select id="existsById" resultType="java.lang.Boolean">
+        SELECT EXISTS(
+            SELECT *
+              FROM user
+             WHERE id = #{id}
+        )
     </select>
 
     <insert id="insert">

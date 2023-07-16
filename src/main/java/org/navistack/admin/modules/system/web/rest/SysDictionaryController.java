@@ -8,6 +8,8 @@ import org.navistack.admin.modules.common.entity.Dictionary;
 import org.navistack.admin.modules.common.entity.DictionaryItem;
 import org.navistack.admin.modules.common.query.DictionaryItemQuery;
 import org.navistack.admin.modules.common.query.DictionaryQuery;
+import org.navistack.admin.modules.system.web.rest.convert.DictionaryItemVmConverter;
+import org.navistack.admin.modules.system.web.rest.convert.DictionaryVmConverter;
 import org.navistack.admin.modules.system.web.rest.vm.DictionaryItemVm;
 import org.navistack.admin.modules.system.web.rest.vm.DictionaryVm;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +43,7 @@ public class SysDictionaryController {
         List<DictionaryItem> items = dictionaryItemDao.selectAll();
         if (items.isEmpty()) {
             Collection<DictionaryVm> dictionaryVms = dictionaries.stream()
-                    .map(d -> DictionaryVm.of(d.getCode(), d.getName()))
+                    .map(DictionaryVmConverter.INSTANCE::fromEntity)
                     .collect(Collectors.toList());
             return dictionaryVms;
         }
@@ -49,12 +51,12 @@ public class SysDictionaryController {
         Collection<DictionaryVm> dictionaryVms = new ArrayList<>(dictionaries.size());
         Map<Long, DictionaryVm> dictVmMap = new HashMap<>(dictionaries.size());
         for (Dictionary dict : dictionaries) {
-            DictionaryVm vm = DictionaryVm.of(dict.getCode(), dict.getName());
+            DictionaryVm vm = DictionaryVmConverter.INSTANCE.fromEntity(dict);
             dictVmMap.put(dict.getId(), vm);
         }
 
         for (DictionaryItem item : items) {
-            DictionaryItemVm itemVm = DictionaryItemVm.of(item.getCode(), item.getName());
+            DictionaryItemVm itemVm = DictionaryItemVmConverter.INSTANCE.fromEntity(item);
 
             DictionaryVm dictionaryVm = dictVmMap.get(item.getDictionaryId());
 
@@ -73,23 +75,23 @@ public class SysDictionaryController {
                 .code(dictionaryCode)
                 .build();
 
-        Dictionary dictionary = dictionaryDao.selectOne(dictionaryQuery);
+        Dictionary dictionary = dictionaryDao.selectByQuery(dictionaryQuery);
         if (dictionary == null) {
             return null;
         }
 
-        DictionaryVm dictionaryVm = DictionaryVm.of(dictionary.getCode(), dictionary.getName());
+        DictionaryVm dictionaryVm = DictionaryVmConverter.INSTANCE.fromEntity(dictionary);
 
         DictionaryItemQuery itemQuery = DictionaryItemQuery.builder()
                 .dictionaryId(dictionary.getId())
                 .build();
-        List<DictionaryItem> items = dictionaryItemDao.select(itemQuery);
+        List<DictionaryItem> items = dictionaryItemDao.selectAllByQuery(itemQuery);
         if (items.isEmpty()) {
             return dictionaryVm;
         }
 
         Collection<DictionaryItemVm> dictionaryItemVms = items.stream()
-                .map(item -> DictionaryItemVm.of(item.getCode(), item.getName()))
+                .map(DictionaryItemVmConverter.INSTANCE::fromEntity)
                 .collect(Collectors.toList());
         dictionaryVm.setItems(dictionaryItemVms);
 
@@ -102,7 +104,7 @@ public class SysDictionaryController {
         DictionaryQuery dictionaryQuery = DictionaryQuery.builder()
                 .code(dictionaryCode)
                 .build();
-        Dictionary dictionary = dictionaryDao.selectOne(dictionaryQuery);
+        Dictionary dictionary = dictionaryDao.selectByQuery(dictionaryQuery);
         if (dictionary == null) {
             return Collections.emptyList();
         }
@@ -110,13 +112,13 @@ public class SysDictionaryController {
         DictionaryItemQuery dictionaryItemQuery = DictionaryItemQuery.builder()
                 .dictionaryId(dictionary.getId())
                 .build();
-        List<DictionaryItem> items = dictionaryItemDao.select(dictionaryItemQuery);
+        List<DictionaryItem> items = dictionaryItemDao.selectAllByQuery(dictionaryItemQuery);
         if (items.isEmpty()) {
             return Collections.emptyList();
         }
 
         Collection<DictionaryItemVm> dictionaryItemVms = items.stream()
-                .map(item -> DictionaryItemVm.of(item.getCode(), item.getName()))
+                .map(DictionaryItemVmConverter.INSTANCE::fromEntity)
                 .collect(Collectors.toList());
 
         return dictionaryItemVms;

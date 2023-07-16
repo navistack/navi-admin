@@ -30,8 +30,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Page<OrganizationDto> paginate(OrganizationQuery query, Pageable pageable) {
-        long totalRecords = dao.count(query);
-        List<Organization> entities = dao.selectWithPageable(query, pageable);
+        long totalRecords = dao.countByQuery(query);
+        List<Organization> entities = dao.paginateByQuery(query, pageable);
         Collection<OrganizationDto> dtos = OrganizationConverter.INSTANCE.toDtos(entities);
         return new PageImpl<>(dtos, pageable, totalRecords);
     }
@@ -67,35 +67,16 @@ public class OrganizationServiceImpl implements OrganizationService {
     // region Validation methods
 
     protected boolean validateExistenceById(Long id) {
-        return id != null && dao.selectOneById(id) != null;
+        return id != null && dao.existsById(id);
     }
 
     protected boolean validateAvailabilityOfCode(String code, Long modifiedId) {
-        OrganizationQuery query = OrganizationQuery.builder()
-                .code(code)
-                .build();
-        Organization existingOne = dao.selectOne(query);
-
-        if (existingOne == null) {
-            return true;
-        }
-
-        if (!existingOne.getCode().equals(code)) {
-            return true;
-        }
-
-        if (existingOne.getId().equals(modifiedId)) {
-            return true;
-        }
-
-        return false;
+        Long currentId = dao.selectIdByCode(code);
+        return currentId == null || currentId.equals(modifiedId);
     }
 
     protected boolean validateAbsenceOfSubordinate(Long superId) {
-        OrganizationQuery query = OrganizationQuery.builder()
-                .superId(superId)
-                .build();
-        return dao.count(query) <= 0;
+        return superId == null || !dao.existsBySuperId(superId);
     }
 
     // endregion

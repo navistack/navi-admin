@@ -41,7 +41,7 @@ class RegionDaoTest {
     }
 
     @Test
-    void testSelectAll() {
+    void selectAll_shouldWorkAsExpected() {
         assertThat(dao.selectAll())
                 .hasSize(10)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
@@ -60,26 +60,26 @@ class RegionDaoTest {
     }
 
     @Test
-    void testSelect() {
-        assertThat(dao.select(RegionQuery.builder().id(1L).build()))
+    void selectAllByQuery_shouldWorkAsExpected() {
+        assertThat(dao.selectAllByQuery(RegionQuery.builder().id(1L).build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
                 .containsExactly(
                         GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build()
                 );
-        assertThat(dao.select(RegionQuery.builder().code("REGION_CODE_01").build()))
+        assertThat(dao.selectAllByQuery(RegionQuery.builder().code("REGION_CODE_01").build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
                 .containsExactly(
                         GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build()
                 );
-        assertThat(dao.select(RegionQuery.builder().name("REGION NAME 01").build()))
+        assertThat(dao.selectAllByQuery(RegionQuery.builder().name("REGION NAME 01").build()))
                 .hasSize(1)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
                 .containsExactly(
                         GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build()
                 );
-        assertThat(dao.select(RegionQuery.builder().parentCode("REGION_CODE_01").build()))
+        assertThat(dao.selectAllByQuery(RegionQuery.builder().parentCode("REGION_CODE_01").build()))
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
                 .containsExactly(
@@ -91,8 +91,8 @@ class RegionDaoTest {
     }
 
     @Test
-    void testSelectRecursively() {
-        assertThat(dao.selectRecursively(RegionQuery.builder().code("REGION_CODE_05").build()))
+    void selectAllByQueryRecursively_shouldWorkAsExpected() {
+        assertThat(dao.selectAllByQueryRecursively(RegionQuery.builder().code("REGION_CODE_05").build()))
                 .hasSize(6)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
                 .containsExactlyInAnyOrder(
@@ -106,15 +106,28 @@ class RegionDaoTest {
     }
 
     @Test
-    void testCount() {
-        assertThat(dao.count(RegionQuery.builder().id(1L).build())).isEqualTo(1L);
-        assertThat(dao.count(RegionQuery.builder().code("REGION_CODE_01").build())).isEqualTo(1L);
-        assertThat(dao.count(RegionQuery.builder().name("REGION NAME 01").build())).isEqualTo(1L);
-        assertThat(dao.count(RegionQuery.builder().parentCode("REGION_CODE_01").build())).isEqualTo(4L);
+    void existsByQuery_shouldWorkAsExpected() {
+        assertThat(dao.existsByQuery(RegionQuery.builder().id(1L).build())).isTrue();
+        assertThat(dao.existsByQuery(RegionQuery.builder().code("REGION_CODE_01").build())).isTrue();
+        assertThat(dao.existsByQuery(RegionQuery.builder().name("REGION NAME 01").build())).isTrue();
+        assertThat(dao.existsByQuery(RegionQuery.builder().parentCode("REGION_CODE_01").build())).isTrue();
+
+        assertThat(dao.existsByQuery(RegionQuery.builder().id(100L).build())).isFalse();
+        assertThat(dao.existsByQuery(RegionQuery.builder().code("REGION_CODE_100").build())).isFalse();
+        assertThat(dao.existsByQuery(RegionQuery.builder().name("REGION NAME 100").build())).isFalse();
+        assertThat(dao.existsByQuery(RegionQuery.builder().parentCode("REGION_CODE_100").build())).isFalse();
     }
 
     @Test
-    void testSelectWithPageable() {
+    void countByQuery_shouldWorkAsExpected() {
+        assertThat(dao.countByQuery(RegionQuery.builder().id(1L).build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(RegionQuery.builder().code("REGION_CODE_01").build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(RegionQuery.builder().name("REGION NAME 01").build())).isEqualTo(1L);
+        assertThat(dao.countByQuery(RegionQuery.builder().parentCode("REGION_CODE_01").build())).isEqualTo(4L);
+    }
+
+    @Test
+    void paginateByQuery_shouldWorkAsExpected() {
         RegionQuery query = RegionQuery.builder()
                 .parentCode("REGION_CODE_01")
                 .build();
@@ -123,7 +136,7 @@ class RegionDaoTest {
                 .set(PageRequest::setPageSize, 5)
                 .set(PageRequest::setSort, Sort.by(Sort.Direction.DESC, "id"))
                 .build();
-        assertThat(dao.selectWithPageable(query, pageRequest))
+        assertThat(dao.paginateByQuery(query, pageRequest))
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
                 .containsExactlyInAnyOrder(
@@ -135,20 +148,20 @@ class RegionDaoTest {
     }
 
     @Test
-    void testSelectOne() {
-        assertThat(dao.selectOne(RegionQuery.builder().id(1L).build()))
+    void selectByQuery_shouldWorkAsExpected() {
+        assertThat(dao.selectByQuery(RegionQuery.builder().id(1L).build()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentCode")
                 .isEqualTo(
                         GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build()
                 );
-        assertThat(dao.selectOne(RegionQuery.builder().code("REGION_CODE_01").build()))
+        assertThat(dao.selectByQuery(RegionQuery.builder().code("REGION_CODE_01").build()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentCode")
                 .isEqualTo(
                         GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build()
                 );
-        assertThat(dao.selectOne(RegionQuery.builder().name("REGION NAME 01").build()))
+        assertThat(dao.selectByQuery(RegionQuery.builder().name("REGION NAME 01").build()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentCode")
                 .isEqualTo(
@@ -157,25 +170,43 @@ class RegionDaoTest {
     }
 
     @Test
-    void testSelectOneById() {
-        assertThat(dao.selectOneById(1L))
+    void selectById_shouldWorkAsExpected() {
+        assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentCode")
                 .isEqualTo(
                         GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build()
                 );
+    }
+
+    @Test
+    void existsById_shouldWorkAsExpected() {
+        assertThat(dao.existsById(1L)).isTrue();
+        assertThat(dao.existsById(100L)).isFalse();
+    }
+
+    @Test
+    void existsByCode_shouldWorkAsExpected() {
+        assertThat(dao.existsByCode("REGION_CODE_01")).isTrue();
+        assertThat(dao.existsByCode("REGION_CODE_100")).isFalse();
+    }
+
+    @Test
+    void existsByParentCode_shouldWorkAsExpected() {
+        assertThat(dao.existsByParentCode("REGION_CODE_01")).isTrue();
+        assertThat(dao.existsByParentCode("REGION_CODE_100")).isFalse();
     }
 
     @Test
     @Transactional
-    void testInsert() {
+    void insert_shouldWorkAsExpected() {
         Region entity = GenericBuilder.of(Region::new)
                 .set(Region::setId, 11L)
                 .set(Region::setCode, "REGION_CODE_11")
                 .set(Region::setName, "REGION NAME 11")
                 .build();
         assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(dao.selectOneById(11L))
+        assertThat(dao.selectById(11L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentCode")
                 .isEqualTo(entity);
@@ -183,14 +214,14 @@ class RegionDaoTest {
 
     @Test
     @Transactional
-    void testUpdateById() {
+    void updateById_shouldWorkAsExpected() {
         Region entity = GenericBuilder.of(Region::new)
                 .set(Region::setId, 1L)
                 .set(Region::setCode, "REGION_CODE_12")
                 .set(Region::setName, "REGION NAME 12")
                 .build();
         assertThat(dao.updateById(entity)).isEqualTo(1);
-        assertThat(dao.selectOneById(1L))
+        assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentCode")
                 .isEqualTo(entity);
@@ -198,9 +229,9 @@ class RegionDaoTest {
 
     @Test
     @Transactional
-    void testDeleteById() {
+    void deleteById_shouldWorkAsExpected() {
         assertThat(dao.deleteById(2L)).isEqualTo(1);
-        assertThat(dao.selectOneById(2L))
+        assertThat(dao.selectById(2L))
                 .isNull();
     }
 }

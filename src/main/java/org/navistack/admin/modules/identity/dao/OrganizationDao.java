@@ -10,15 +10,23 @@ import java.util.List;
 @Mapper
 public interface OrganizationDao {
 
-    List<Organization> select(OrganizationQuery query);
+    List<Organization> selectAllByQuery(OrganizationQuery query);
 
-    long count(OrganizationQuery query);
+    boolean existsByQuery(OrganizationQuery query);
 
-    List<Organization> selectWithPageable(OrganizationQuery query, Pageable pageable);
+    long countByQuery(OrganizationQuery query);
 
-    Organization selectOne(OrganizationQuery query);
+    List<Organization> paginateByQuery(OrganizationQuery query, Pageable pageable);
 
-    Organization selectOneById(Long id);
+    Organization selectByQuery(OrganizationQuery query);
+
+    Organization selectById(Long id);
+
+    Long selectIdByCode(String code);
+
+    boolean existsById(Long id);
+
+    boolean existsBySuperId(Long superId);
 
     int insert(Organization entity);
 

@@ -39,8 +39,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public Page<DictionaryDto> paginate(DictionaryQuery query, Pageable pageable) {
-        long totalRecords = dao.count(query);
-        List<Dictionary> entities = dao.selectWithPageable(query, pageable);
+        long totalRecords = dao.countByQuery(query);
+        List<Dictionary> entities = dao.paginateByQuery(query, pageable);
         Collection<DictionaryDto> dtos = DictionaryConverter.INSTANCE.toDtos(entities);
         return new PageImpl<>(dtos, pageable, totalRecords);
     }
@@ -73,8 +73,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public Page<DictionaryItemDto> paginateItem(DictionaryItemQuery query, Pageable pageable) {
-        long totalRecords = itemDao.count(query);
-        List<DictionaryItem> entities = itemDao.selectWithPageable(query, pageable);
+        long totalRecords = itemDao.countByQuery(query);
+        List<DictionaryItem> entities = itemDao.paginateByQuery(query, pageable);
         Collection<DictionaryItemDto> dtos = DictionaryItemConverter.INSTANCE.toDtos(entities);
         return new PageImpl<>(dtos, pageable, totalRecords);
     }
@@ -106,58 +106,28 @@ public class DictionaryServiceImpl implements DictionaryService {
         itemDao.deleteById(id);
     }
 
-
     // region Validation methods
 
     protected boolean validateExistenceById(Long id) {
-        return id != null && dao.selectOneById(id) != null;
+        return id != null && dao.existsById(id);
     }
 
     protected boolean validateAvailabilityOfCode(String code, Long modifiedId) {
-        DictionaryQuery query = DictionaryQuery.builder().code(code).build();
-        Dictionary existingOne = dao.selectOne(query);
-
-        if (existingOne == null) {
-            return true;
-        }
-
-        if (!existingOne.getCode().equals(code)) {
-            return true;
-        }
-
-        if (existingOne.getId().equals(modifiedId)) {
-            return true;
-        }
-
-        return false;
+        Long currentId = dao.selectIdByCode(code);
+        return currentId == null || currentId.equals(modifiedId);
     }
 
     protected boolean validateItemExistenceById(Long id) {
-        return id != null && itemDao.selectOneById(id) != null;
+        return id != null && itemDao.existsById(id);
     }
 
     protected boolean validateItemAvailabilityOfCode(String itemCode, Long dictionaryId, Long modifiedId) {
-        DictionaryItemQuery query = DictionaryItemQuery.builder().code(itemCode).dictionaryId(dictionaryId).build();
-        DictionaryItem existingOne = itemDao.selectOne(query);
-
-        if (existingOne == null) {
-            return true;
-        }
-
-        if (!existingOne.getCode().equals(itemCode)) {
-            return true;
-        }
-
-        if (existingOne.getId().equals(modifiedId)) {
-            return true;
-        }
-
-        return false;
+        Long currentId = itemDao.selectIdByCodeAndDictionaryId(itemCode, dictionaryId);
+        return currentId == null || currentId.equals(modifiedId);
     }
 
     protected boolean validateAbsenceOfItem(Long dictionaryId) {
-        DictionaryItemQuery query = DictionaryItemQuery.builder().dictionaryId(dictionaryId).build();
-        return itemDao.count(query) <= 0;
+        return dictionaryId == null || !itemDao.existsByDictionaryId(dictionaryId);
     }
 
     // endregion
