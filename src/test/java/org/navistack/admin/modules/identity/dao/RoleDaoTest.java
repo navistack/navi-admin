@@ -156,12 +156,12 @@ class RoleDaoTest {
     @Transactional
     void insert_shouldWorkAsExpected() {
         Role entity = GenericBuilder.of(Role::new)
-                .set(Role::setId, 11L)
                 .set(Role::setCode, "ROLE_CODE_11")
                 .set(Role::setName, "ROLE NAME 11")
                 .build();
         assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(dao.selectById(11L))
+        assertThat(entity.getId()).isNotNull();
+        assertThat(dao.selectById(entity.getId()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name")
                 .isEqualTo(entity);

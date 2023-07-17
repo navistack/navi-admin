@@ -144,12 +144,12 @@ class UserRoleDaoTest {
     @Transactional
     void insert_shouldWorkAsExpected() {
         UserRole entity = GenericBuilder.of(UserRole::new)
-                .set(UserRole::setId, 11L)
                 .set(UserRole::setRoleId, 3L)
                 .set(UserRole::setUserId, 1L)
                 .build();
         assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(dao.selectById(11L))
+        assertThat(entity.getId()).isNotNull();
+        assertThat(dao.selectById(entity.getId()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "roleId", "privilegeId")
                 .isEqualTo(entity);
@@ -160,18 +160,17 @@ class UserRoleDaoTest {
     void insertAll_shouldWorkAsExpected() {
         List<UserRole> entities = Arrays.asList(
                 GenericBuilder.of(UserRole::new)
-                        .set(UserRole::setId, 11L)
                         .set(UserRole::setRoleId, 3L)
                         .set(UserRole::setUserId, 1L)
                         .build(),
                 GenericBuilder.of(UserRole::new)
-                        .set(UserRole::setId, 12L)
                         .set(UserRole::setRoleId, 3L)
                         .set(UserRole::setUserId, 2L)
                         .build()
         );
         assertThat(dao.insertAll(entities)).isEqualTo(2);
         for (UserRole entity : entities) {
+            assertThat(entity.getId()).isNotNull();
             assertThat(dao.selectById(entity.getId()))
                     .usingRecursiveComparison()
                     .comparingOnlyFields("id", "roleId", "privilegeId")

@@ -185,12 +185,12 @@ class PrivilegeDaoTest {
     @Transactional
     void insert_shouldWorkAsExpected() {
         Privilege entity = GenericBuilder.of(Privilege::new)
-                .set(Privilege::setId, 11L)
                 .set(Privilege::setCode, "PRIVILEGE_CODE_11")
                 .set(Privilege::setName, "PRIVILEGE NAME 11")
                 .build();
         assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(dao.selectById(11L))
+        assertThat(entity.getId()).isNotNull();
+        assertThat(dao.selectById(entity.getId()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentId")
                 .isEqualTo(entity);

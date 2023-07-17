@@ -167,12 +167,12 @@ class OrganizationDaoTest {
     @Transactional
     void insert_shouldWorkAsExpected() {
         Organization entity = GenericBuilder.of(Organization::new)
-                .set(Organization::setId, 11L)
                 .set(Organization::setCode, "ORG_CODE_11")
                 .set(Organization::setName, "ORG NAME 11")
                 .build();
         assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(dao.selectById(11L))
+        assertThat(entity.getId()).isNotNull();
+        assertThat(dao.selectById(entity.getId()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "superId")
                 .isEqualTo(entity);

@@ -193,13 +193,13 @@ class DictionaryItemDaoTest {
     @Transactional
     void insert_shouldWorkAsExpected() {
         DictionaryItem entity = GenericBuilder.of(DictionaryItem::new)
-                .set(DictionaryItem::setId, 11L)
                 .set(DictionaryItem::setName, "DICT ITEM NAME 11")
                 .set(DictionaryItem::setCode, "DICT_ITEM_CODE_11")
                 .set(DictionaryItem::setDictionaryId, 3L)
                 .build();
         assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(dao.selectById(11L))
+        assertThat(entity.getId()).isNotNull();
+        assertThat(dao.selectById(entity.getId()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "name", "code", "dictionary_id")
                 .isEqualTo(entity);

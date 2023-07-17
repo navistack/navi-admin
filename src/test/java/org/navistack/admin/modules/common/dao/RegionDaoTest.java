@@ -201,12 +201,12 @@ class RegionDaoTest {
     @Transactional
     void insert_shouldWorkAsExpected() {
         Region entity = GenericBuilder.of(Region::new)
-                .set(Region::setId, 11L)
                 .set(Region::setCode, "REGION_CODE_11")
                 .set(Region::setName, "REGION NAME 11")
                 .build();
         assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(dao.selectById(11L))
+        assertThat(entity.getId()).isNotNull();
+        assertThat(dao.selectById(entity.getId()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentCode")
                 .isEqualTo(entity);

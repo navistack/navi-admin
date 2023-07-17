@@ -100,7 +100,7 @@
          WHERE id = #{id}
     </select>
 
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO role_privilege
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -118,7 +118,7 @@
         </trim>
     </insert>
 
-    <insert id="insertAll">
+    <insert id="insertAll" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO role_privilege
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,

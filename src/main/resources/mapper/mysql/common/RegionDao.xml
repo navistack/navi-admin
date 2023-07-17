@@ -138,7 +138,7 @@
     </select>
 
 
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO region
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>

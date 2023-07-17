@@ -206,7 +206,6 @@ class UserDaoTest {
     @Transactional
     void insert_shouldWorkAsExpected() {
         User entity = GenericBuilder.of(User::new)
-                .set(User::setId, 11L)
                 .set(User::setNickName, "Test User 11")
                 .set(User::setAvatarUrl, "avatar:/87/87c4622c26edaacf3e076241d50d119a/avatar.jpg")
                 .set(User::setGender, Gender.MALE)
@@ -218,7 +217,8 @@ class UserDaoTest {
                 .set(User::setStatus, UserStatus.FORBIDDEN)
                 .build();
         assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(dao.selectById(11L))
+        assertThat(entity.getId()).isNotNull();
+        assertThat(dao.selectById(entity.getId()))
                 .usingRecursiveComparison().comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
                 .isEqualTo(entity);
     }

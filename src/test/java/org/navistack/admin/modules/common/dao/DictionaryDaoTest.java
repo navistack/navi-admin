@@ -169,12 +169,12 @@ class DictionaryDaoTest {
     @Transactional
     void insert_shouldWorkAsExpected() {
         Dictionary entity = GenericBuilder.of(Dictionary::new)
-                .set(Dictionary::setId, 11L)
                 .set(Dictionary::setCode, "DICT_CODE_11")
                 .set(Dictionary::setName, "DICT NAME 11")
                 .build();
         assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(dao.selectById(11L))
+        assertThat(entity.getId()).isNotNull();
+        assertThat(dao.selectById(entity.getId()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name")
                 .isEqualTo(entity);

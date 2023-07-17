@@ -102,7 +102,7 @@
         )
     </select>
 
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO dictionary
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
