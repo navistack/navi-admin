@@ -7,19 +7,16 @@ import org.navistack.admin.modules.common.service.RegionService;
 import org.navistack.admin.modules.common.service.convert.RegionConverter;
 import org.navistack.admin.modules.common.service.convert.RegionDtoConverter;
 import org.navistack.admin.modules.common.service.dto.RegionDto;
-import org.navistack.admin.support.mybatis.AuditingEntitySupport;
+import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
 import org.navistack.framework.data.Page;
-import org.navistack.framework.data.PageImpl;
+import org.navistack.framework.data.PageBuilder;
 import org.navistack.framework.data.Pageable;
 import org.navistack.framework.utils.Asserts;
 import org.navistack.framework.utils.Strings;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.List;
 
 @Service
 public class RegionServiceImpl implements RegionService {
@@ -32,9 +29,13 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public Page<RegionDto> paginate(RegionQuery query, Pageable pageable) {
         long totalRecords = dao.countByQuery(query);
-        List<Region> entities = dao.paginateByQuery(query, pageable);
-        Collection<RegionDto> dtos = RegionConverter.INSTANCE.toDtos(entities);
-        return new PageImpl<>(dtos, pageable, totalRecords);
+        if (totalRecords <= 0) {
+            return PageBuilder.emptyPage();
+        }
+        return dao.paginateByQuery(query, pageable)
+                .stream()
+                .map(RegionConverter.INSTANCE::toDto)
+                .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
     @Override
@@ -43,7 +44,7 @@ public class RegionServiceImpl implements RegionService {
         Asserts.state(dto.getParentCode(), this::validateExistenceByCode, () -> new NoSuchEntityException("Parent does not exist"));
 
         Region entity = RegionDtoConverter.INSTANCE.toEntity(dto);
-        AuditingEntitySupport.insertAuditingProperties(entity);
+        AuditingPropertiesSupport.created(entity);
         dao.insert(entity);
     }
 
@@ -54,7 +55,7 @@ public class RegionServiceImpl implements RegionService {
         Asserts.state(dto.getParentCode(), this::validateExistenceByCode, () -> new NoSuchEntityException("Parent does not exist"));
 
         Region entity = RegionDtoConverter.INSTANCE.toEntity(dto);
-        AuditingEntitySupport.updateAuditingProperties(entity);
+        AuditingPropertiesSupport.updated(entity);
         dao.updateById(entity);
     }
 

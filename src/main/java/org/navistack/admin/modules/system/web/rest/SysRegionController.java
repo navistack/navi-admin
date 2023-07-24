@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.common.dao.RegionDao;
 import org.navistack.admin.modules.common.entity.Region;
-import org.navistack.admin.modules.common.query.RegionQuery;
 import org.navistack.admin.modules.system.web.rest.convert.RegionVmConverter;
 import org.navistack.admin.modules.system.web.rest.vm.RegionVm;
 import org.navistack.framework.data.TreeBuilder;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/sys/regions")
@@ -28,10 +28,9 @@ public class SysRegionController {
     @Operation(summary = "Get regions and their sub-regions recursively")
     public Collection<RegionVm> get() {
         List<Region> regions = regionDao.selectAll();
-        Collection<RegionVm> vms = regions.stream()
+        return regions.stream()
                 .map(RegionVmConverter.INSTANCE::fromEntity)
-                .collect(TreeBuilder.collector());
-        return vms;
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{region}")
@@ -40,26 +39,15 @@ public class SysRegionController {
             @PathVariable("region") String regionCode,
             @RequestParam(defaultValue = "true") boolean recursive
     ) {
-        List<Region> regions;
-        if (recursive) {
-            RegionQuery regionQuery = RegionQuery.builder()
-                    .code(regionCode)
-                    .build();
-            regions = regionDao.selectAllByQueryRecursively(regionQuery);
-        } else {
-            RegionQuery regionQuery = RegionQuery.builder()
-                    .parentCode(regionCode)
-                    .build();
-            regions = regionDao.selectAllByQuery(regionQuery);
-        }
-
+        List<Region> regions = recursive
+                ? regionDao.selectAllHierarchicalByCode(regionCode)
+                : regionDao.selectAllByParentCode(regionCode);
         if (regions.isEmpty()) {
             return Collections.emptyList();
         }
 
-        Collection<RegionVm> vms = regions.stream()
+        return regions.stream()
                 .map(RegionVmConverter.INSTANCE::fromEntity)
                 .collect(TreeBuilder.<RegionVm>of().orphanAsRoot(true).toCollector());
-        return vms;
     }
 }

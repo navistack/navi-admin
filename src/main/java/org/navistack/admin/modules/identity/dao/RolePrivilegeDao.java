@@ -15,6 +15,10 @@ public interface RolePrivilegeDao {
 
     List<RolePrivilege> selectAllByRoleIds(Collection<Long> roleIds);
 
+    List<Long> selectAllPrivilegeIdsByRoleId(Long roleId);
+
+    List<Long> selectAllPrivilegeIdsByRoleIds(List<Long> roleIds);
+
     boolean existsByQuery(RolePrivilegeQuery query);
 
     long countByQuery(RolePrivilegeQuery query);

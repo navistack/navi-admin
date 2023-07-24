@@ -15,6 +15,10 @@ public interface RegionDao {
 
     List<Region> selectAllByQueryRecursively(RegionQuery query);
 
+    List<Region> selectAllHierarchicalByCode(String code);
+
+    List<Region> selectAllByParentCode(String parentCode);
+
     boolean existsByQuery(RegionQuery query);
 
     long countByQuery(RegionQuery query);

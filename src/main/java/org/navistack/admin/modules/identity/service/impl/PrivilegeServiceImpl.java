@@ -7,18 +7,15 @@ import org.navistack.admin.modules.identity.service.PrivilegeService;
 import org.navistack.admin.modules.identity.service.convert.PrivilegeConverter;
 import org.navistack.admin.modules.identity.service.convert.PrivilegeDtoConverter;
 import org.navistack.admin.modules.identity.service.dto.PrivilegeDto;
-import org.navistack.admin.support.mybatis.AuditingEntitySupport;
+import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
 import org.navistack.framework.data.Page;
-import org.navistack.framework.data.PageImpl;
+import org.navistack.framework.data.PageBuilder;
 import org.navistack.framework.data.Pageable;
 import org.navistack.framework.utils.Asserts;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.List;
 
 @Service
 public class PrivilegeServiceImpl implements PrivilegeService {
@@ -31,9 +28,13 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     @Override
     public Page<PrivilegeDto> paginate(PrivilegeQuery query, Pageable pageable) {
         long totalRecords = dao.countByQuery(query);
-        List<Privilege> entities = dao.paginateByQuery(query, pageable);
-        Collection<PrivilegeDto> dtos = PrivilegeConverter.INSTANCE.toDtos(entities);
-        return new PageImpl<>(dtos, pageable, totalRecords);
+        if (totalRecords <= 0) {
+            return PageBuilder.emptyPage();
+        }
+        return dao.paginateByQuery(query, pageable)
+                .stream()
+                .map(PrivilegeConverter.INSTANCE::toDto)
+                .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
     @Override
@@ -42,7 +43,7 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         Asserts.state(dto.getParentId(), this::validateExistenceById, () -> new NoSuchEntityException("Parent does not exist"));
 
         Privilege entity = PrivilegeDtoConverter.INSTANCE.toEntity(dto);
-        AuditingEntitySupport.insertAuditingProperties(entity);
+        AuditingPropertiesSupport.created(entity);
         dao.insert(entity);
     }
 
@@ -53,7 +54,7 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         Asserts.state(dto.getParentId(), this::validateExistenceById, () -> new NoSuchEntityException("Parent does not exist"));
 
         Privilege entity = PrivilegeDtoConverter.INSTANCE.toEntity(dto);
-        AuditingEntitySupport.updateAuditingProperties(entity);
+        AuditingPropertiesSupport.updated(entity);
         dao.updateById(entity);
     }
 

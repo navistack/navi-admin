@@ -6,8 +6,6 @@ import org.navistack.admin.modules.common.dao.DictionaryDao;
 import org.navistack.admin.modules.common.dao.DictionaryItemDao;
 import org.navistack.admin.modules.common.entity.Dictionary;
 import org.navistack.admin.modules.common.entity.DictionaryItem;
-import org.navistack.admin.modules.common.query.DictionaryItemQuery;
-import org.navistack.admin.modules.common.query.DictionaryQuery;
 import org.navistack.admin.modules.system.web.rest.convert.DictionaryItemVmConverter;
 import org.navistack.admin.modules.system.web.rest.convert.DictionaryVmConverter;
 import org.navistack.admin.modules.system.web.rest.vm.DictionaryItemVm;
@@ -42,10 +40,9 @@ public class SysDictionaryController {
 
         List<DictionaryItem> items = dictionaryItemDao.selectAll();
         if (items.isEmpty()) {
-            Collection<DictionaryVm> dictionaryVms = dictionaries.stream()
+            return dictionaries.stream()
                     .map(DictionaryVmConverter.INSTANCE::fromEntity)
                     .collect(Collectors.toList());
-            return dictionaryVms;
         }
 
         Collection<DictionaryVm> dictionaryVms = new ArrayList<>(dictionaries.size());
@@ -56,13 +53,17 @@ public class SysDictionaryController {
         }
 
         for (DictionaryItem item : items) {
-            DictionaryItemVm itemVm = DictionaryItemVmConverter.INSTANCE.fromEntity(item);
-
             DictionaryVm dictionaryVm = dictVmMap.get(item.getDictionaryId());
-
-            if (dictionaryVm != null) {
-                dictionaryVm.getItems().add(itemVm);
+            if (dictionaryVm == null) {
+                continue;
             }
+            Collection<DictionaryItemVm> vmItems = dictionaryVm.getItems();
+            if (vmItems == null) {
+                vmItems = new ArrayList<>();
+                dictionaryVm.setItems(vmItems);
+            }
+            DictionaryItemVm itemVm = DictionaryItemVmConverter.INSTANCE.fromEntity(item);
+            vmItems.add(itemVm);
         }
 
         return dictionaryVms;
@@ -71,21 +72,13 @@ public class SysDictionaryController {
     @GetMapping("/{dictionary:[A-Za-z0-9$_]{1,48}}")
     @Operation(summary = "Get directory and its items")
     public DictionaryVm get(@PathVariable("dictionary") String dictionaryCode) {
-        DictionaryQuery dictionaryQuery = DictionaryQuery.builder()
-                .code(dictionaryCode)
-                .build();
-
-        Dictionary dictionary = dictionaryDao.selectByQuery(dictionaryQuery);
+        Dictionary dictionary = dictionaryDao.selectByCode(dictionaryCode);
         if (dictionary == null) {
             return null;
         }
 
         DictionaryVm dictionaryVm = DictionaryVmConverter.INSTANCE.fromEntity(dictionary);
-
-        DictionaryItemQuery itemQuery = DictionaryItemQuery.builder()
-                .dictionaryId(dictionary.getId())
-                .build();
-        List<DictionaryItem> items = dictionaryItemDao.selectAllByQuery(itemQuery);
+        List<DictionaryItem> items = dictionaryItemDao.selectAllByDictionaryId(dictionary.getId());
         if (items.isEmpty()) {
             return dictionaryVm;
         }
@@ -94,33 +87,24 @@ public class SysDictionaryController {
                 .map(DictionaryItemVmConverter.INSTANCE::fromEntity)
                 .collect(Collectors.toList());
         dictionaryVm.setItems(dictionaryItemVms);
-
         return dictionaryVm;
     }
 
     @GetMapping("/{dictionary:[A-Za-z0-9$_]{1,48}}/items")
     @Operation(summary = "Get items of directory")
     public Collection<DictionaryItemVm> getItem(@PathVariable("dictionary") String dictionaryCode) {
-        DictionaryQuery dictionaryQuery = DictionaryQuery.builder()
-                .code(dictionaryCode)
-                .build();
-        Dictionary dictionary = dictionaryDao.selectByQuery(dictionaryQuery);
-        if (dictionary == null) {
+        Long dictionaryId = dictionaryDao.selectIdByCode(dictionaryCode);
+        if (dictionaryId == null) {
             return Collections.emptyList();
         }
 
-        DictionaryItemQuery dictionaryItemQuery = DictionaryItemQuery.builder()
-                .dictionaryId(dictionary.getId())
-                .build();
-        List<DictionaryItem> items = dictionaryItemDao.selectAllByQuery(dictionaryItemQuery);
+        List<DictionaryItem> items = dictionaryItemDao.selectAllByDictionaryId(dictionaryId);
         if (items.isEmpty()) {
             return Collections.emptyList();
         }
 
-        Collection<DictionaryItemVm> dictionaryItemVms = items.stream()
+        return items.stream()
                 .map(DictionaryItemVmConverter.INSTANCE::fromEntity)
                 .collect(Collectors.toList());
-
-        return dictionaryItemVms;
     }
 }

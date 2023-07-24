@@ -6,27 +6,26 @@ import org.navistack.admin.modules.identity.dao.RolePrivilegeDao;
 import org.navistack.admin.modules.identity.dao.UserRoleDao;
 import org.navistack.admin.modules.identity.entity.Role;
 import org.navistack.admin.modules.identity.entity.RolePrivilege;
-import org.navistack.admin.modules.identity.query.RolePrivilegeQuery;
 import org.navistack.admin.modules.identity.query.RoleQuery;
 import org.navistack.admin.modules.identity.service.RoleService;
 import org.navistack.admin.modules.identity.service.convert.RoleConverter;
+import org.navistack.admin.modules.identity.service.convert.RoleDetailVmConverter;
 import org.navistack.admin.modules.identity.service.convert.RoleDtoConverter;
 import org.navistack.admin.modules.identity.service.dto.RoleDto;
 import org.navistack.admin.modules.identity.service.vm.RoleDetailVm;
-import org.navistack.admin.support.mybatis.AuditingEntitySupport;
+import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
 import org.navistack.framework.data.Page;
-import org.navistack.framework.data.PageImpl;
+import org.navistack.framework.data.PageBuilder;
 import org.navistack.framework.data.Pageable;
 import org.navistack.framework.utils.Asserts;
-import org.navistack.framework.utils.ModelMappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,26 +49,22 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Page<RoleDto> paginate(RoleQuery query, Pageable pageable) {
         long totalRecords = dao.countByQuery(query);
-        List<Role> entities = dao.paginateByQuery(query, pageable);
-        Collection<RoleDto> dtos = RoleConverter.INSTANCE.toDtos(entities);
-        return new PageImpl<>(dtos, pageable, totalRecords);
+        if (totalRecords <= 0) {
+            return PageBuilder.emptyPage();
+        }
+        return dao.paginateByQuery(query, pageable)
+                .stream()
+                .map(RoleConverter.INSTANCE::toDto)
+                .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
     @Override
     public RoleDetailVm queryDetailById(Long id) {
-        Role role = dao.selectById(id);
-
-        RoleDetailVm vm = ModelMappers.map(role, RoleDetailVm.class);
-
-        RolePrivilegeQuery rpq = new RolePrivilegeQuery();
-        rpq.setRoleId(id);
-        List<Long> privilegeIds = rolePrivilegeDao.selectAllByQuery(rpq)
-                .stream()
-                .map(RolePrivilege::getPrivilegeId)
-                .collect(Collectors.toList());
-
+        Role role = Optional.ofNullable(dao.selectById(id))
+                .orElseThrow(() -> new NoSuchEntityException("Role does not exist"));
+        List<Long> privilegeIds = rolePrivilegeDao.selectAllPrivilegeIdsByRoleId(id);
+        RoleDetailVm vm = RoleDetailVmConverter.INSTANCE.fromEntity(role);
         vm.setPrivilegeIds(privilegeIds);
-
         return vm;
     }
 
@@ -79,7 +74,7 @@ public class RoleServiceImpl implements RoleService {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Role code has been taken already"));
 
         Role entity = RoleDtoConverter.INSTANCE.toEntity(dto);
-        AuditingEntitySupport.insertAuditingProperties(entity);
+        AuditingPropertiesSupport.created(entity);
         dao.insert(entity);
         replacePrivilegesOf(entity.getId(), dto.getPrivilegeIds());
     }
@@ -91,7 +86,7 @@ public class RoleServiceImpl implements RoleService {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Role code has been taken already"));
 
         Role entity = RoleDtoConverter.INSTANCE.toEntity(dto);
-        AuditingEntitySupport.updateAuditingProperties(entity);
+        AuditingPropertiesSupport.updated(entity);
         dao.updateById(entity);
         replacePrivilegesOf(entity.getId(), dto.getPrivilegeIds());
     }
@@ -116,7 +111,7 @@ public class RoleServiceImpl implements RoleService {
         privilegeIds = privilegeDao.selectAllIdsByIds(privilegeIds);
         List<RolePrivilege> rolePrivileges = privilegeIds.stream()
                 .map(privilegeId -> RolePrivilege.of(roleId, privilegeId))
-                .toList();
+                .collect(Collectors.toList());
         rolePrivilegeDao.insertAll(rolePrivileges);
     }
 

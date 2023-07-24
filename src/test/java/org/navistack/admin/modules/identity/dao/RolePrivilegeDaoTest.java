@@ -150,6 +150,24 @@ class RolePrivilegeDaoTest {
     }
 
     @Test
+    void selectAllPrivilegeIdsByRoleId_shouldWorkAsExpected() {
+        assertThat(dao.selectAllPrivilegeIdsByRoleId(1L))
+                .containsExactlyInAnyOrder(1L, 2L, 3L, 4L, 5L);
+        assertThat(dao.selectAllPrivilegeIdsByRoleId(100L))
+                .isEmpty();
+    }
+
+    @Test
+    void selectAllPrivilegeIdsByRoleIds_shouldWorkAsExpected() {
+        assertThat(dao.selectAllPrivilegeIdsByRoleIds(Arrays.asList(1L, 2L)))
+                .containsExactlyInAnyOrder(1L, 2L, 3L, 4L, 5L, 4L, 5L, 6L, 7L, 8L);
+        assertThat(dao.selectAllPrivilegeIdsByRoleIds(Arrays.asList(100L, 200L)))
+                .isEmpty();
+        assertThat(dao.selectAllPrivilegeIdsByRoleIds(Collections.emptyList()))
+                .isEmpty();
+    }
+
+    @Test
     @Transactional
     void insert_shouldWorkAsExpected() {
         RolePrivilege entity = GenericBuilder.of(RolePrivilege::new)

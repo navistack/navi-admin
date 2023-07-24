@@ -23,6 +23,8 @@ public interface DictionaryDao {
 
     Dictionary selectById(Long id);
 
+    Dictionary selectByCode(String code);
+
     Long selectIdByCode(String code);
 
     boolean existsById(Long id);

@@ -13,6 +13,12 @@
         </where>
     </select>
 
+    <select id="selectAllRoleIdsByUserId" resultType="java.lang.Long">
+        SELECT role_id
+          FROM user_role
+         WHERE user_id = #{userId}
+    </select>
+
     <select id="existsByQuery" resultType="java.lang.Boolean">
         SELECT EXISTS(
             SELECT *

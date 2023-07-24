@@ -19,6 +19,12 @@
         </where>
     </select>
 
+    <select id="selectAllByDictionaryId" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
+        SELECT *
+          FROM dictionary_item
+         WHERE dictionary_id = #{dictionaryId}
+    </select>
+
     <select id="existsByQuery" resultType="java.lang.Boolean">
         SELECT EXISTS(
             SELECT *

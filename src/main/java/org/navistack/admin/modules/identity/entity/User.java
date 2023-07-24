@@ -4,15 +4,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.navistack.admin.modules.identity.enums.Gender;
 import org.navistack.admin.modules.identity.enums.UserStatus;
-import org.navistack.framework.batis.entity.IdEntity;
+import org.navistack.framework.batis.entity.IdentifyingEntity;
 
 import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class User extends IdEntity<Long> {
-    private Long id;
-
+public class User extends IdentifyingEntity<Long> {
     private String nickName;
 
     private String avatarUrl;

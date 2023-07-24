@@ -12,6 +12,8 @@ public interface UserRoleDao {
 
     List<UserRole> selectAllByQuery(UserRoleQuery query);
 
+    List<Long> selectAllRoleIdsByUserId(Long userId);
+
     boolean existsByQuery(UserRoleQuery query);
 
     long countByQuery(UserRoleQuery query);

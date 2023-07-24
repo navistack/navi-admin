@@ -5,13 +5,9 @@ import org.mapstruct.factory.Mappers;
 import org.navistack.admin.modules.common.entity.DictionaryItem;
 import org.navistack.admin.modules.common.service.dto.DictionaryItemDto;
 
-import java.util.Collection;
-
 @Mapper
 public interface DictionaryItemConverter {
     DictionaryItemConverter INSTANCE = Mappers.getMapper(DictionaryItemConverter.class);
 
     DictionaryItemDto toDto(DictionaryItem entity);
-
-    Collection<DictionaryItemDto> toDtos(Collection<DictionaryItem> entities);
 }

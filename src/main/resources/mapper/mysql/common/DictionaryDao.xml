@@ -88,6 +88,12 @@
          WHERE id = #{id}
     </select>
 
+    <select id="selectByCode" resultType="org.navistack.admin.modules.common.entity.Dictionary">
+        SELECT *
+          FROM dictionary
+         WHERE code = #{code}
+    </select>
+
     <select id="selectIdByCode" resultType="java.lang.Long">
         SELECT id
           FROM dictionary

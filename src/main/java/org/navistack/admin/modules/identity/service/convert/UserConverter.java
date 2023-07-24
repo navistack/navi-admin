@@ -5,13 +5,9 @@ import org.mapstruct.factory.Mappers;
 import org.navistack.admin.modules.identity.entity.User;
 import org.navistack.admin.modules.identity.service.dto.UserDto;
 
-import java.util.Collection;
-
 @Mapper
 public interface UserConverter {
     UserConverter INSTANCE = Mappers.getMapper(UserConverter.class);
 
     UserDto toDto(User entity);
-
-    Collection<UserDto> toDtos(Collection<User> entities);
 }

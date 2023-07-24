@@ -38,6 +38,26 @@
         FROM t
     </select>
 
+    <select id="selectAllHierarchicalByCode" resultType="org.navistack.admin.modules.common.entity.Region">
+        WITH RECURSIVE t AS (
+            SELECT *
+            FROM region r
+            where code = #{code}
+            UNION
+            SELECT r.*
+            FROM t
+            CROSS JOIN region r ON t.code = r.parent_code
+        )
+        SELECT *
+        FROM t
+    </select>
+
+    <select id="selectAllByParentCode" resultType="org.navistack.admin.modules.common.entity.Region">
+        SELECT *
+        FROM region
+        WHERE parent_code = #{parentCode}
+    </select>
+
     <select id="existsByQuery" resultType="java.lang.Boolean">
         SELECT EXISTS(
             SELECT *

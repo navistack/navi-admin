@@ -4,16 +4,12 @@ import org.navistack.admin.modules.identity.dao.PrivilegeDao;
 import org.navistack.admin.modules.identity.dao.RolePrivilegeDao;
 import org.navistack.admin.modules.identity.dao.UserRoleDao;
 import org.navistack.admin.modules.identity.entity.Privilege;
-import org.navistack.admin.modules.identity.entity.RolePrivilege;
 import org.navistack.admin.modules.identity.entity.User;
-import org.navistack.admin.modules.identity.entity.UserRole;
-import org.navistack.admin.modules.identity.query.UserRoleQuery;
 import org.navistack.admin.modules.system.service.AuthorityService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthorityServiceImpl implements AuthorityService {
@@ -31,27 +27,16 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     public List<Privilege> listGrantedPrivilegesOf(User user) {
-        List<UserRole> userRoles = userRoleDao.selectAllByQuery(
-                UserRoleQuery.builder()
-                        .userId(user.getId())
-                        .build()
-        );
+        List<Long> userRoleIds = userRoleDao.selectAllRoleIdsByUserId(user.getId());
+        if (userRoleIds.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-        List<Long> userRoleIds = userRoles.stream()
-                .map(UserRole::getRoleId)
-                .collect(Collectors.toList());
+        List<Long> privilegeIds = rolePrivilegeDao.selectAllPrivilegeIdsByRoleIds(userRoleIds);
+        if (privilegeIds.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-        List<RolePrivilege> rolePrivileges = userRoles.isEmpty()
-                ? Collections.emptyList()
-                : rolePrivilegeDao.selectAllByRoleIds(userRoleIds);
-
-        List<Long> privilegeIds = rolePrivileges.stream()
-                .map(RolePrivilege::getPrivilegeId)
-                .collect(Collectors.toList());
-
-        return privilegeIds.isEmpty()
-                ? Collections.emptyList()
-                : privilegeDao.selectAllByIds(privilegeIds)
-                ;
+        return privilegeDao.selectAllByIds(privilegeIds);
     }
 }

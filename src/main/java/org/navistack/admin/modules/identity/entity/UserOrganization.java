@@ -4,25 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.navistack.framework.batis.entity.AuditingEntity;
+import org.navistack.framework.batis.entity.IdentifyingEntity;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
-public class UserOrganization extends AuditingEntity<Long> {
-    private Long id;
-
+public class UserOrganization extends IdentifyingEntity<Long> {
     private Long userId;
 
     private Long organizationId;
-
-    public UserOrganization(Long userId, Long organizationId) {
-        this.userId = userId;
-        this.organizationId = organizationId;
-    }
-
-    public static UserOrganization of(Long userId, Long organizationId) {
-        return new UserOrganization(userId, organizationId);
-    }
 }

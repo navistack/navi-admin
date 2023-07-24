@@ -29,6 +29,28 @@
         </where>
     </select>
 
+    <select id="selectAllPrivilegeIdsByRoleId" resultType="java.lang.Long">
+        SELECT privilege_id
+        FROM role_privilege
+        WHERE role_id = #{roleId}
+    </select>
+
+    <select id="selectAllPrivilegeIdsByRoleIds" resultType="java.lang.Long">
+        SELECT privilege_id
+        FROM role_privilege
+        <where>
+            <choose>
+                <when test="roleIds != null and !roleIds.isEmpty()">
+                    role_id IN
+                    <foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+                        #{roleId}
+                    </foreach>
+                </when>
+                <otherwise>1 = 0</otherwise>
+            </choose>
+        </where>
+    </select>
+
     <select id="existsByQuery" resultType="java.lang.Boolean">
         SELECT EXISTS(
             SELECT *

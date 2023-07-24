@@ -70,6 +70,14 @@ class UserRoleDaoTest {
     }
 
     @Test
+    void selectAllRoleIdsByUserId_shouldWorkAsExpected() {
+        assertThat(dao.selectAllRoleIdsByUserId(4L))
+                .containsExactlyInAnyOrder(1L, 2L);
+        assertThat(dao.selectAllRoleIdsByUserId(100L))
+                .isEmpty();
+    }
+
+    @Test
     void existsByQuery_shouldWorkAsExpected() {
         assertThat(dao.existsByQuery(UserRoleQuery.builder().id(1L).build())).isTrue();
         assertThat(dao.existsByQuery(UserRoleQuery.builder().roleId(1L).build())).isTrue();

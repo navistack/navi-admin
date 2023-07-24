@@ -160,6 +160,16 @@ class DictionaryDaoTest {
     }
 
     @Test
+    void selectByCode_shouldWorkAsExpected() {
+        assertThat(dao.selectByCode("DICT_CODE_01"))
+                .usingRecursiveComparison()
+                .comparingOnlyFields("id", "code", "name")
+                .isEqualTo(
+                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
+                );
+    }
+
+    @Test
     void existsById_shouldWorkAsExpected() {
         assertThat(dao.existsById(1L)).isTrue();
         assertThat(dao.existsById(100L)).isFalse();

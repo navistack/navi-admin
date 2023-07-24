@@ -7,18 +7,15 @@ import org.navistack.admin.modules.identity.service.OrganizationService;
 import org.navistack.admin.modules.identity.service.convert.OrganizationConverter;
 import org.navistack.admin.modules.identity.service.convert.OrganizationDtoConverter;
 import org.navistack.admin.modules.identity.service.dto.OrganizationDto;
-import org.navistack.admin.support.mybatis.AuditingEntitySupport;
+import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
 import org.navistack.framework.data.Page;
-import org.navistack.framework.data.PageImpl;
+import org.navistack.framework.data.PageBuilder;
 import org.navistack.framework.data.Pageable;
 import org.navistack.framework.utils.Asserts;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.List;
 
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
@@ -31,9 +28,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Page<OrganizationDto> paginate(OrganizationQuery query, Pageable pageable) {
         long totalRecords = dao.countByQuery(query);
-        List<Organization> entities = dao.paginateByQuery(query, pageable);
-        Collection<OrganizationDto> dtos = OrganizationConverter.INSTANCE.toDtos(entities);
-        return new PageImpl<>(dtos, pageable, totalRecords);
+        if (totalRecords <= 0) {
+            return PageBuilder.emptyPage();
+        }
+        return dao.paginateByQuery(query, pageable)
+                .stream()
+                .map(OrganizationConverter.INSTANCE::toDto)
+                .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
     @Override
@@ -42,7 +43,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Asserts.state(dto.getSuperId(), this::validateExistenceById, () -> new NoSuchEntityException("Superior does not exist"));
 
         Organization entity = OrganizationDtoConverter.INSTANCE.toEntity(dto);
-        AuditingEntitySupport.insertAuditingProperties(entity);
+        AuditingPropertiesSupport.created(entity);
         dao.insert(entity);
     }
 
@@ -53,7 +54,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Asserts.state(dto.getSuperId(), this::validateExistenceById, () -> new NoSuchEntityException("Superior does not exist"));
 
         Organization entity = OrganizationDtoConverter.INSTANCE.toEntity(dto);
-        AuditingEntitySupport.updateAuditingProperties(entity);
+        AuditingPropertiesSupport.updated(entity);
         dao.updateById(entity);
     }
 

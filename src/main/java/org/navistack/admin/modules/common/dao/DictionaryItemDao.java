@@ -13,6 +13,8 @@ public interface DictionaryItemDao {
 
     List<DictionaryItem> selectAllByQuery(DictionaryItemQuery query);
 
+    List<DictionaryItem> selectAllByDictionaryId(Long dictionaryId);
+
     boolean existsByQuery(DictionaryItemQuery query);
 
     long countByQuery(DictionaryItemQuery query);
