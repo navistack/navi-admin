@@ -1,7 +1,7 @@
 package org.navistack.admin.support.security;
 
-import org.navistack.admin.modules.identity.entity.Privilege;
-import org.navistack.admin.modules.identity.entity.User;
+import org.navistack.admin.modules.identity.dtobj.PrivilegeDo;
+import org.navistack.admin.modules.identity.dtobj.UserDo;
 import org.navistack.admin.modules.system.service.AuthenticationService;
 import org.navistack.admin.modules.system.service.AuthorityService;
 import org.navistack.framework.security.TokenAuthentication;
@@ -39,16 +39,16 @@ public class JwtPayloadResolver implements org.navistack.framework.security.jwt.
 
     @Override
     public Authentication getAuthentication(JwtClaims claims) {
-        Optional<User> user = authenticationService.findUserByLoginName(claims.getSubject());
+        Optional<UserDo> user = authenticationService.findUserByLoginName(claims.getSubject());
 
         if (!user.isPresent()) {
             throw new UserNotFoundException("No such user found");
         }
 
-        List<Privilege> privileges = authorityService.listGrantedPrivilegesOf(user.get());
+        List<PrivilegeDo> privileges = authorityService.listGrantedPrivilegesOf(user.get());
 
         Set<? extends GrantedAuthority> authorities = privileges.stream()
-                .map(Privilege::getCode)
+                .map(PrivilegeDo::getCode)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toSet());
 

@@ -11,6 +11,7 @@ import org.navistack.admin.modules.identity.enums.Gender;
 import org.navistack.admin.modules.identity.service.dto.UserDto;
 import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 
@@ -28,6 +29,9 @@ class UserServiceImplTest {
 
     @Mock
     private UserRoleDao userRoleDao;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Test
     void create_shouldCreateSuccessfully() {

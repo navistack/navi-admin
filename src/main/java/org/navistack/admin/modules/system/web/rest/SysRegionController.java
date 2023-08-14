@@ -3,7 +3,7 @@ package org.navistack.admin.modules.system.web.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.common.dao.RegionDao;
-import org.navistack.admin.modules.common.entity.Region;
+import org.navistack.admin.modules.common.dtobj.RegionDo;
 import org.navistack.admin.modules.system.web.rest.convert.RegionVmConverter;
 import org.navistack.admin.modules.system.web.rest.vm.RegionVm;
 import org.navistack.framework.data.TreeBuilder;
@@ -27,9 +27,9 @@ public class SysRegionController {
     @GetMapping
     @Operation(summary = "Get regions and their sub-regions recursively")
     public Collection<RegionVm> get() {
-        List<Region> regions = regionDao.selectAll();
+        List<RegionDo> regions = regionDao.selectAll();
         return regions.stream()
-                .map(RegionVmConverter.INSTANCE::fromEntity)
+                .map(RegionVmConverter.INSTANCE::from)
                 .collect(Collectors.toList());
     }
 
@@ -39,7 +39,7 @@ public class SysRegionController {
             @PathVariable("region") String regionCode,
             @RequestParam(defaultValue = "true") boolean recursive
     ) {
-        List<Region> regions = recursive
+        List<RegionDo> regions = recursive
                 ? regionDao.selectAllHierarchicalByCode(regionCode)
                 : regionDao.selectAllByParentCode(regionCode);
         if (regions.isEmpty()) {
@@ -47,7 +47,7 @@ public class SysRegionController {
         }
 
         return regions.stream()
-                .map(RegionVmConverter.INSTANCE::fromEntity)
+                .map(RegionVmConverter.INSTANCE::from)
                 .collect(TreeBuilder.<RegionVm>of().orphanAsRoot(true).toCollector());
     }
 }

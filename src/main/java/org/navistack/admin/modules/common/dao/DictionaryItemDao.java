@@ -1,7 +1,7 @@
 package org.navistack.admin.modules.common.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.navistack.admin.modules.common.entity.DictionaryItem;
+import org.navistack.admin.modules.common.dtobj.DictionaryItemDo;
 import org.navistack.admin.modules.common.query.DictionaryItemQuery;
 import org.navistack.framework.data.Pageable;
 
@@ -9,21 +9,15 @@ import java.util.List;
 
 @Mapper
 public interface DictionaryItemDao {
-    List<DictionaryItem> selectAll();
+    List<DictionaryItemDo> selectAll();
 
-    List<DictionaryItem> selectAllByQuery(DictionaryItemQuery query);
-
-    List<DictionaryItem> selectAllByDictionaryId(Long dictionaryId);
-
-    boolean existsByQuery(DictionaryItemQuery query);
+    List<DictionaryItemDo> selectAllByDictionaryId(Long dictionaryId);
 
     long countByQuery(DictionaryItemQuery query);
 
-    List<DictionaryItem> paginateByQuery(DictionaryItemQuery query, Pageable pageable);
+    List<DictionaryItemDo> paginateByQuery(DictionaryItemQuery query, Pageable pageable);
 
-    DictionaryItem selectByQuery(DictionaryItemQuery query);
-
-    DictionaryItem selectById(Long id);
+    DictionaryItemDo selectById(Long id);
 
     Long selectIdByCodeAndDictionaryId(String code, Long dictionaryId);
 
@@ -31,9 +25,9 @@ public interface DictionaryItemDao {
 
     boolean existsByDictionaryId(Long dictionaryId);
 
-    int insert(DictionaryItem entity);
+    int insert(DictionaryItemDo dtObj);
 
-    int updateById(DictionaryItem entity);
+    int updateById(DictionaryItemDo dtObj);
 
     int deleteById(Long id);
 }

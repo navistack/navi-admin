@@ -1,16 +1,16 @@
-package org.navistack.admin.modules.identity.entity;
+package org.navistack.admin.modules.identity.dtobj;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.navistack.admin.modules.identity.enums.Gender;
 import org.navistack.admin.modules.identity.enums.UserStatus;
-import org.navistack.framework.batis.entity.IdentifyingEntity;
+import org.navistack.admin.support.mybatis.IdentifyingDataObject;
 
 import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class User extends IdentifyingEntity<Long> {
+public class UserDo extends IdentifyingDataObject<Long> {
     private String nickName;
 
     private String avatarUrl;

@@ -1,11 +1,11 @@
 package org.navistack.admin.modules.common.service.impl;
 
 import org.navistack.admin.modules.common.dao.RegionDao;
-import org.navistack.admin.modules.common.entity.Region;
+import org.navistack.admin.modules.common.dtobj.RegionDo;
 import org.navistack.admin.modules.common.query.RegionQuery;
 import org.navistack.admin.modules.common.service.RegionService;
-import org.navistack.admin.modules.common.service.convert.RegionConverter;
-import org.navistack.admin.modules.common.service.convert.RegionDtoConverter;
+import org.navistack.admin.modules.common.service.convert.RegionDoConvert;
+import org.navistack.admin.modules.common.service.convert.RegionDtoConvert;
 import org.navistack.admin.modules.common.service.dto.RegionDto;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
 import org.navistack.framework.core.error.ConstraintViolationException;
@@ -34,7 +34,7 @@ public class RegionServiceImpl implements RegionService {
         }
         return dao.paginateByQuery(query, pageable)
                 .stream()
-                .map(RegionConverter.INSTANCE::toDto)
+                .map(RegionDtoConvert.INSTANCE::from)
                 .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
@@ -43,9 +43,9 @@ public class RegionServiceImpl implements RegionService {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Region code has been taken already"));
         Asserts.state(dto.getParentCode(), this::validateExistenceByCode, () -> new NoSuchEntityException("Parent does not exist"));
 
-        Region entity = RegionDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.created(entity);
-        dao.insert(entity);
+        RegionDo dtObj = RegionDoConvert.INSTANCE.from(dto);
+        AuditingPropertiesSupport.created(dtObj);
+        dao.insert(dtObj);
     }
 
     @Override
@@ -54,9 +54,9 @@ public class RegionServiceImpl implements RegionService {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Region code has been taken already"));
         Asserts.state(dto.getParentCode(), this::validateExistenceByCode, () -> new NoSuchEntityException("Parent does not exist"));
 
-        Region entity = RegionDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.updated(entity);
-        dao.updateById(entity);
+        RegionDo dtObj = RegionDoConvert.INSTANCE.from(dto);
+        AuditingPropertiesSupport.updated(dtObj);
+        dao.updateById(dtObj);
     }
 
     @Override

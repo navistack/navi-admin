@@ -1,7 +1,7 @@
 package org.navistack.admin.modules.identity.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.navistack.admin.modules.identity.entity.Privilege;
+import org.navistack.admin.modules.identity.dtobj.PrivilegeDo;
 import org.navistack.admin.modules.identity.query.PrivilegeQuery;
 import org.navistack.framework.data.Pageable;
 
@@ -10,20 +10,13 @@ import java.util.List;
 
 @Mapper
 public interface PrivilegeDao {
-
-    List<Privilege> selectAllByQuery(PrivilegeQuery query);
-
-    List<Privilege> selectAllByIds(Collection<Long> ids);
-
-    boolean existsByQuery(PrivilegeQuery query);
+    List<PrivilegeDo> selectAllByIds(Collection<Long> ids);
 
     long countByQuery(PrivilegeQuery query);
 
-    List<Privilege> paginateByQuery(PrivilegeQuery query, Pageable pageable);
+    List<PrivilegeDo> paginateByQuery(PrivilegeQuery query, Pageable pageable);
 
-    Privilege selectByQuery(PrivilegeQuery query);
-
-    Privilege selectById(Long id);
+    PrivilegeDo selectById(Long id);
 
     Long selectIdByCode(String code);
 
@@ -33,9 +26,9 @@ public interface PrivilegeDao {
 
     boolean existsByParentId(Long id);
 
-    int insert(Privilege entity);
+    int insert(PrivilegeDo dtObj);
 
-    int updateById(Privilege entity);
+    int updateById(PrivilegeDo dtObj);
 
     int deleteById(Long id);
 }

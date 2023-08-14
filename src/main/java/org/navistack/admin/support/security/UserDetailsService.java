@@ -1,7 +1,7 @@
 package org.navistack.admin.support.security;
 
-import org.navistack.admin.modules.identity.entity.Privilege;
-import org.navistack.admin.modules.identity.entity.User;
+import org.navistack.admin.modules.identity.dtobj.PrivilegeDo;
+import org.navistack.admin.modules.identity.dtobj.UserDo;
 import org.navistack.admin.modules.system.service.AuthenticationService;
 import org.navistack.admin.modules.system.service.AuthorityService;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,11 +30,11 @@ public class UserDetailsService implements org.springframework.security.core.use
                 .orElseThrow(() -> new UsernameNotFoundException("Username Or Password Incorrect"));
     }
 
-    protected UserDetails createUserDetails(User user) {
-        List<Privilege> userPrivileges = authorityService.listGrantedPrivilegesOf(user);
+    protected UserDetails createUserDetails(UserDo user) {
+        List<PrivilegeDo> userPrivileges = authorityService.listGrantedPrivilegesOf(user);
 
         List<GrantedAuthority> authorities = userPrivileges.stream()
-                .map(Privilege::getCode)
+                .map(PrivilegeDo::getCode)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 

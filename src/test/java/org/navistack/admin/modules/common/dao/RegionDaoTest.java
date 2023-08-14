@@ -3,7 +3,7 @@ package org.navistack.admin.modules.common.dao;
 import lombok.Setter;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
-import org.navistack.admin.modules.common.entity.Region;
+import org.navistack.admin.modules.common.dtobj.RegionDo;
 import org.navistack.admin.modules.common.query.RegionQuery;
 import org.navistack.boot.testsupport.testcontainers.MysqlContainer;
 import org.navistack.framework.data.PageRequest;
@@ -46,62 +46,16 @@ class RegionDaoTest {
                 .hasSize(10)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
                 .containsExactlyInAnyOrder(
-                        GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 2L).set(Region::setCode, "REGION_CODE_02").set(Region::setName, "REGION NAME 02").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 3L).set(Region::setCode, "REGION_CODE_03").set(Region::setName, "REGION NAME 03").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 4L).set(Region::setCode, "REGION_CODE_04").set(Region::setName, "REGION NAME 04").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 5L).set(Region::setCode, "REGION_CODE_05").set(Region::setName, "REGION NAME 05").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 6L).set(Region::setCode, "REGION_CODE_06").set(Region::setName, "REGION NAME 06").set(Region::setParentCode, "REGION_CODE_05").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 7L).set(Region::setCode, "REGION_CODE_07").set(Region::setName, "REGION NAME 07").set(Region::setParentCode, "REGION_CODE_05").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 8L).set(Region::setCode, "REGION_CODE_08").set(Region::setName, "REGION NAME 08").set(Region::setParentCode, "REGION_CODE_06").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 9L).set(Region::setCode, "REGION_CODE_09").set(Region::setName, "REGION NAME 09").set(Region::setParentCode, "REGION_CODE_06").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 10L).set(Region::setCode, "REGION_CODE_10").set(Region::setName, "REGION NAME 10").set(Region::setParentCode, "REGION_CODE_08").build()
-                );
-    }
-
-    @Test
-    void selectAllByQuery_shouldWorkAsExpected() {
-        assertThat(dao.selectAllByQuery(RegionQuery.builder().id(1L).build()))
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
-                .containsExactly(
-                        GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build()
-                );
-        assertThat(dao.selectAllByQuery(RegionQuery.builder().code("REGION_CODE_01").build()))
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
-                .containsExactly(
-                        GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build()
-                );
-        assertThat(dao.selectAllByQuery(RegionQuery.builder().name("REGION NAME 01").build()))
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
-                .containsExactly(
-                        GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build()
-                );
-        assertThat(dao.selectAllByQuery(RegionQuery.builder().parentCode("REGION_CODE_01").build()))
-                .hasSize(4)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
-                .containsExactly(
-                        GenericBuilder.of(Region::new).set(Region::setId, 2L).set(Region::setCode, "REGION_CODE_02").set(Region::setName, "REGION NAME 02").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 3L).set(Region::setCode, "REGION_CODE_03").set(Region::setName, "REGION NAME 03").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 4L).set(Region::setCode, "REGION_CODE_04").set(Region::setName, "REGION NAME 04").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 5L).set(Region::setCode, "REGION_CODE_05").set(Region::setName, "REGION NAME 05").set(Region::setParentCode, "REGION_CODE_01").build()
-                );
-    }
-
-    @Test
-    void selectAllByQueryRecursively_shouldWorkAsExpected() {
-        assertThat(dao.selectAllByQueryRecursively(RegionQuery.builder().code("REGION_CODE_05").build()))
-                .hasSize(6)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
-                .containsExactlyInAnyOrder(
-                        GenericBuilder.of(Region::new).set(Region::setId, 5L).set(Region::setCode, "REGION_CODE_05").set(Region::setName, "REGION NAME 05").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 6L).set(Region::setCode, "REGION_CODE_06").set(Region::setName, "REGION NAME 06").set(Region::setParentCode, "REGION_CODE_05").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 7L).set(Region::setCode, "REGION_CODE_07").set(Region::setName, "REGION NAME 07").set(Region::setParentCode, "REGION_CODE_05").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 8L).set(Region::setCode, "REGION_CODE_08").set(Region::setName, "REGION NAME 08").set(Region::setParentCode, "REGION_CODE_06").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 9L).set(Region::setCode, "REGION_CODE_09").set(Region::setName, "REGION NAME 09").set(Region::setParentCode, "REGION_CODE_06").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 10L).set(Region::setCode, "REGION_CODE_10").set(Region::setName, "REGION NAME 10").set(Region::setParentCode, "REGION_CODE_08").build()
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 1L).set(RegionDo::setCode, "REGION_CODE_01").set(RegionDo::setName, "REGION NAME 01").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 2L).set(RegionDo::setCode, "REGION_CODE_02").set(RegionDo::setName, "REGION NAME 02").set(RegionDo::setParentCode, "REGION_CODE_01").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 3L).set(RegionDo::setCode, "REGION_CODE_03").set(RegionDo::setName, "REGION NAME 03").set(RegionDo::setParentCode, "REGION_CODE_01").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 4L).set(RegionDo::setCode, "REGION_CODE_04").set(RegionDo::setName, "REGION NAME 04").set(RegionDo::setParentCode, "REGION_CODE_01").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 5L).set(RegionDo::setCode, "REGION_CODE_05").set(RegionDo::setName, "REGION NAME 05").set(RegionDo::setParentCode, "REGION_CODE_01").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 6L).set(RegionDo::setCode, "REGION_CODE_06").set(RegionDo::setName, "REGION NAME 06").set(RegionDo::setParentCode, "REGION_CODE_05").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 7L).set(RegionDo::setCode, "REGION_CODE_07").set(RegionDo::setName, "REGION NAME 07").set(RegionDo::setParentCode, "REGION_CODE_05").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 8L).set(RegionDo::setCode, "REGION_CODE_08").set(RegionDo::setName, "REGION NAME 08").set(RegionDo::setParentCode, "REGION_CODE_06").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 9L).set(RegionDo::setCode, "REGION_CODE_09").set(RegionDo::setName, "REGION NAME 09").set(RegionDo::setParentCode, "REGION_CODE_06").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 10L).set(RegionDo::setCode, "REGION_CODE_10").set(RegionDo::setName, "REGION NAME 10").set(RegionDo::setParentCode, "REGION_CODE_08").build()
                 );
     }
 
@@ -111,12 +65,12 @@ class RegionDaoTest {
                 .hasSize(6)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
                 .containsExactlyInAnyOrder(
-                        GenericBuilder.of(Region::new).set(Region::setId, 5L).set(Region::setCode, "REGION_CODE_05").set(Region::setName, "REGION NAME 05").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 6L).set(Region::setCode, "REGION_CODE_06").set(Region::setName, "REGION NAME 06").set(Region::setParentCode, "REGION_CODE_05").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 7L).set(Region::setCode, "REGION_CODE_07").set(Region::setName, "REGION NAME 07").set(Region::setParentCode, "REGION_CODE_05").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 8L).set(Region::setCode, "REGION_CODE_08").set(Region::setName, "REGION NAME 08").set(Region::setParentCode, "REGION_CODE_06").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 9L).set(Region::setCode, "REGION_CODE_09").set(Region::setName, "REGION NAME 09").set(Region::setParentCode, "REGION_CODE_06").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 10L).set(Region::setCode, "REGION_CODE_10").set(Region::setName, "REGION NAME 10").set(Region::setParentCode, "REGION_CODE_08").build()
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 5L).set(RegionDo::setCode, "REGION_CODE_05").set(RegionDo::setName, "REGION NAME 05").set(RegionDo::setParentCode, "REGION_CODE_01").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 6L).set(RegionDo::setCode, "REGION_CODE_06").set(RegionDo::setName, "REGION NAME 06").set(RegionDo::setParentCode, "REGION_CODE_05").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 7L).set(RegionDo::setCode, "REGION_CODE_07").set(RegionDo::setName, "REGION NAME 07").set(RegionDo::setParentCode, "REGION_CODE_05").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 8L).set(RegionDo::setCode, "REGION_CODE_08").set(RegionDo::setName, "REGION NAME 08").set(RegionDo::setParentCode, "REGION_CODE_06").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 9L).set(RegionDo::setCode, "REGION_CODE_09").set(RegionDo::setName, "REGION NAME 09").set(RegionDo::setParentCode, "REGION_CODE_06").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 10L).set(RegionDo::setCode, "REGION_CODE_10").set(RegionDo::setName, "REGION NAME 10").set(RegionDo::setParentCode, "REGION_CODE_08").build()
                 );
     }
 
@@ -126,24 +80,11 @@ class RegionDaoTest {
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
                 .containsExactly(
-                        GenericBuilder.of(Region::new).set(Region::setId, 2L).set(Region::setCode, "REGION_CODE_02").set(Region::setName, "REGION NAME 02").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 3L).set(Region::setCode, "REGION_CODE_03").set(Region::setName, "REGION NAME 03").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 4L).set(Region::setCode, "REGION_CODE_04").set(Region::setName, "REGION NAME 04").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 5L).set(Region::setCode, "REGION_CODE_05").set(Region::setName, "REGION NAME 05").set(Region::setParentCode, "REGION_CODE_01").build()
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 2L).set(RegionDo::setCode, "REGION_CODE_02").set(RegionDo::setName, "REGION NAME 02").set(RegionDo::setParentCode, "REGION_CODE_01").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 3L).set(RegionDo::setCode, "REGION_CODE_03").set(RegionDo::setName, "REGION NAME 03").set(RegionDo::setParentCode, "REGION_CODE_01").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 4L).set(RegionDo::setCode, "REGION_CODE_04").set(RegionDo::setName, "REGION NAME 04").set(RegionDo::setParentCode, "REGION_CODE_01").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 5L).set(RegionDo::setCode, "REGION_CODE_05").set(RegionDo::setName, "REGION NAME 05").set(RegionDo::setParentCode, "REGION_CODE_01").build()
                 );
-    }
-
-    @Test
-    void existsByQuery_shouldWorkAsExpected() {
-        assertThat(dao.existsByQuery(RegionQuery.builder().id(1L).build())).isTrue();
-        assertThat(dao.existsByQuery(RegionQuery.builder().code("REGION_CODE_01").build())).isTrue();
-        assertThat(dao.existsByQuery(RegionQuery.builder().name("REGION NAME 01").build())).isTrue();
-        assertThat(dao.existsByQuery(RegionQuery.builder().parentCode("REGION_CODE_01").build())).isTrue();
-
-        assertThat(dao.existsByQuery(RegionQuery.builder().id(100L).build())).isFalse();
-        assertThat(dao.existsByQuery(RegionQuery.builder().code("REGION_CODE_100").build())).isFalse();
-        assertThat(dao.existsByQuery(RegionQuery.builder().name("REGION NAME 100").build())).isFalse();
-        assertThat(dao.existsByQuery(RegionQuery.builder().parentCode("REGION_CODE_100").build())).isFalse();
     }
 
     @Test
@@ -168,33 +109,11 @@ class RegionDaoTest {
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "parentCode")
                 .containsExactlyInAnyOrder(
-                        GenericBuilder.of(Region::new).set(Region::setId, 2L).set(Region::setCode, "REGION_CODE_02").set(Region::setName, "REGION NAME 02").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 3L).set(Region::setCode, "REGION_CODE_03").set(Region::setName, "REGION NAME 03").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 4L).set(Region::setCode, "REGION_CODE_04").set(Region::setName, "REGION NAME 04").set(Region::setParentCode, "REGION_CODE_01").build(),
-                        GenericBuilder.of(Region::new).set(Region::setId, 5L).set(Region::setCode, "REGION_CODE_05").set(Region::setName, "REGION NAME 05").set(Region::setParentCode, "REGION_CODE_01").build()
-                ).isSortedAccordingTo(Comparator.comparingLong(Region::getId).reversed());
-    }
-
-    @Test
-    void selectByQuery_shouldWorkAsExpected() {
-        assertThat(dao.selectByQuery(RegionQuery.builder().id(1L).build()))
-                .usingRecursiveComparison()
-                .comparingOnlyFields("id", "code", "name", "parentCode")
-                .isEqualTo(
-                        GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build()
-                );
-        assertThat(dao.selectByQuery(RegionQuery.builder().code("REGION_CODE_01").build()))
-                .usingRecursiveComparison()
-                .comparingOnlyFields("id", "code", "name", "parentCode")
-                .isEqualTo(
-                        GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build()
-                );
-        assertThat(dao.selectByQuery(RegionQuery.builder().name("REGION NAME 01").build()))
-                .usingRecursiveComparison()
-                .comparingOnlyFields("id", "code", "name", "parentCode")
-                .isEqualTo(
-                        GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build()
-                );
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 2L).set(RegionDo::setCode, "REGION_CODE_02").set(RegionDo::setName, "REGION NAME 02").set(RegionDo::setParentCode, "REGION_CODE_01").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 3L).set(RegionDo::setCode, "REGION_CODE_03").set(RegionDo::setName, "REGION NAME 03").set(RegionDo::setParentCode, "REGION_CODE_01").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 4L).set(RegionDo::setCode, "REGION_CODE_04").set(RegionDo::setName, "REGION NAME 04").set(RegionDo::setParentCode, "REGION_CODE_01").build(),
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 5L).set(RegionDo::setCode, "REGION_CODE_05").set(RegionDo::setName, "REGION NAME 05").set(RegionDo::setParentCode, "REGION_CODE_01").build()
+                ).isSortedAccordingTo(Comparator.comparingLong(RegionDo::getId).reversed());
     }
 
     @Test
@@ -203,7 +122,7 @@ class RegionDaoTest {
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentCode")
                 .isEqualTo(
-                        GenericBuilder.of(Region::new).set(Region::setId, 1L).set(Region::setCode, "REGION_CODE_01").set(Region::setName, "REGION NAME 01").build()
+                        GenericBuilder.of(RegionDo::new).set(RegionDo::setId, 1L).set(RegionDo::setCode, "REGION_CODE_01").set(RegionDo::setName, "REGION NAME 01").build()
                 );
     }
 
@@ -228,31 +147,31 @@ class RegionDaoTest {
     @Test
     @Transactional
     void insert_shouldWorkAsExpected() {
-        Region entity = GenericBuilder.of(Region::new)
-                .set(Region::setCode, "REGION_CODE_11")
-                .set(Region::setName, "REGION NAME 11")
+        RegionDo dtObj = GenericBuilder.of(RegionDo::new)
+                .set(RegionDo::setCode, "REGION_CODE_11")
+                .set(RegionDo::setName, "REGION NAME 11")
                 .build();
-        assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(entity.getId()).isNotNull();
-        assertThat(dao.selectById(entity.getId()))
+        assertThat(dao.insert(dtObj)).isEqualTo(1);
+        assertThat(dtObj.getId()).isNotNull();
+        assertThat(dao.selectById(dtObj.getId()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentCode")
-                .isEqualTo(entity);
+                .isEqualTo(dtObj);
     }
 
     @Test
     @Transactional
     void updateById_shouldWorkAsExpected() {
-        Region entity = GenericBuilder.of(Region::new)
-                .set(Region::setId, 1L)
-                .set(Region::setCode, "REGION_CODE_12")
-                .set(Region::setName, "REGION NAME 12")
+        RegionDo dtObj = GenericBuilder.of(RegionDo::new)
+                .set(RegionDo::setId, 1L)
+                .set(RegionDo::setCode, "REGION_CODE_12")
+                .set(RegionDo::setName, "REGION NAME 12")
                 .build();
-        assertThat(dao.updateById(entity)).isEqualTo(1);
+        assertThat(dao.updateById(dtObj)).isEqualTo(1);
         assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "parentCode")
-                .isEqualTo(entity);
+                .isEqualTo(dtObj);
     }
 
     @Test

@@ -1,12 +1,12 @@
-package org.navistack.admin.modules.identity.entity;
+package org.navistack.admin.modules.common.dtobj;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.navistack.framework.batis.entity.IdentifyingEntity;
+import org.navistack.admin.support.mybatis.IdentifyingDataObject;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class Role extends IdentifyingEntity<Long> {
+public class DictionaryDo extends IdentifyingDataObject<Long> {
     private String code;
 
     private String name;

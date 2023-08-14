@@ -3,7 +3,7 @@ package org.navistack.admin.modules.common.dao;
 import lombok.Setter;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
-import org.navistack.admin.modules.common.entity.Dictionary;
+import org.navistack.admin.modules.common.dtobj.DictionaryDo;
 import org.navistack.admin.modules.common.query.DictionaryQuery;
 import org.navistack.boot.testsupport.testcontainers.MysqlContainer;
 import org.navistack.framework.data.PageRequest;
@@ -46,50 +46,17 @@ class DictionaryDaoTest {
                 .hasSize(10)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name")
                 .containsExactly(
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build(),
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 2L).set(Dictionary::setCode, "DICT_CODE_02").set(Dictionary::setName, "DICT NAME 02").build(),
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 3L).set(Dictionary::setCode, "DICT_CODE_03").set(Dictionary::setName, "DICT NAME 03").build(),
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 4L).set(Dictionary::setCode, "DICT_CODE_04").set(Dictionary::setName, "DICT NAME 04").build(),
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 5L).set(Dictionary::setCode, "DICT_CODE_05").set(Dictionary::setName, "DICT NAME 05").build(),
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 6L).set(Dictionary::setCode, "DICT_CODE_06").set(Dictionary::setName, "DICT NAME 06").build(),
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 7L).set(Dictionary::setCode, "DICT_CODE_07").set(Dictionary::setName, "DICT NAME 07").build(),
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 8L).set(Dictionary::setCode, "DICT_CODE_08").set(Dictionary::setName, "DICT NAME 08").build(),
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 9L).set(Dictionary::setCode, "DICT_CODE_09").set(Dictionary::setName, "DICT NAME 09").build(),
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 10L).set(Dictionary::setCode, "DICT_CODE_10").set(Dictionary::setName, "DICT NAME 10").build()
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 1L).set(DictionaryDo::setCode, "DICT_CODE_01").set(DictionaryDo::setName, "DICT NAME 01").build(),
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 2L).set(DictionaryDo::setCode, "DICT_CODE_02").set(DictionaryDo::setName, "DICT NAME 02").build(),
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 3L).set(DictionaryDo::setCode, "DICT_CODE_03").set(DictionaryDo::setName, "DICT NAME 03").build(),
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 4L).set(DictionaryDo::setCode, "DICT_CODE_04").set(DictionaryDo::setName, "DICT NAME 04").build(),
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 5L).set(DictionaryDo::setCode, "DICT_CODE_05").set(DictionaryDo::setName, "DICT NAME 05").build(),
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 6L).set(DictionaryDo::setCode, "DICT_CODE_06").set(DictionaryDo::setName, "DICT NAME 06").build(),
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 7L).set(DictionaryDo::setCode, "DICT_CODE_07").set(DictionaryDo::setName, "DICT NAME 07").build(),
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 8L).set(DictionaryDo::setCode, "DICT_CODE_08").set(DictionaryDo::setName, "DICT NAME 08").build(),
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 9L).set(DictionaryDo::setCode, "DICT_CODE_09").set(DictionaryDo::setName, "DICT NAME 09").build(),
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 10L).set(DictionaryDo::setCode, "DICT_CODE_10").set(DictionaryDo::setName, "DICT NAME 10").build()
                 );
-    }
-
-    @Test
-    void selectAllByQuery_shouldWorkAsExpected() {
-        assertThat(dao.selectAllByQuery(DictionaryQuery.builder().id(1L).build()))
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name")
-                .containsExactly(
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
-                );
-        assertThat(dao.selectAllByQuery(DictionaryQuery.builder().code("DICT_CODE_01").build()))
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name")
-                .containsExactly(
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
-                );
-        assertThat(dao.selectAllByQuery(DictionaryQuery.builder().name("DICT NAME 01").build()))
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name")
-                .containsExactly(
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
-                );
-    }
-
-    @Test
-    void existsByQuery_shouldWorkAsExpected() {
-        assertThat(dao.existsByQuery(DictionaryQuery.builder().id(1L).build())).isTrue();
-        assertThat(dao.existsByQuery(DictionaryQuery.builder().code("DICT_CODE_01").build())).isTrue();
-        assertThat(dao.existsByQuery(DictionaryQuery.builder().name("DICT NAME 01").build())).isTrue();
-
-        assertThat(dao.existsByQuery(DictionaryQuery.builder().id(100L).build())).isFalse();
-        assertThat(dao.existsByQuery(DictionaryQuery.builder().code("DICT_CODE_100").build())).isFalse();
-        assertThat(dao.existsByQuery(DictionaryQuery.builder().name("DICT NAME 100").build())).isFalse();
     }
 
     @Test
@@ -113,34 +80,12 @@ class DictionaryDaoTest {
                 .hasSize(5)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name")
                 .containsExactlyInAnyOrder(
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 6L).set(Dictionary::setCode, "DICT_CODE_06").set(Dictionary::setName, "DICT NAME 06").build(),
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 7L).set(Dictionary::setCode, "DICT_CODE_07").set(Dictionary::setName, "DICT NAME 07").build(),
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 8L).set(Dictionary::setCode, "DICT_CODE_08").set(Dictionary::setName, "DICT NAME 08").build(),
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 9L).set(Dictionary::setCode, "DICT_CODE_09").set(Dictionary::setName, "DICT NAME 09").build(),
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 10L).set(Dictionary::setCode, "DICT_CODE_10").set(Dictionary::setName, "DICT NAME 10").build()
-                ).isSortedAccordingTo(Comparator.comparingLong(Dictionary::getId).reversed());
-    }
-
-    @Test
-    void selectByQuery_shouldWorkAsExpected() {
-        assertThat(dao.selectByQuery(DictionaryQuery.builder().id(1L).build()))
-                .usingRecursiveComparison()
-                .comparingOnlyFields("id", "code", "name")
-                .isEqualTo(
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
-                );
-        assertThat(dao.selectByQuery(DictionaryQuery.builder().code("DICT_CODE_01").build()))
-                .usingRecursiveComparison()
-                .comparingOnlyFields("id", "code", "name")
-                .isEqualTo(
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
-                );
-        assertThat(dao.selectByQuery(DictionaryQuery.builder().name("DICT NAME 01").build()))
-                .usingRecursiveComparison()
-                .comparingOnlyFields("id", "code", "name")
-                .isEqualTo(
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
-                );
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 6L).set(DictionaryDo::setCode, "DICT_CODE_06").set(DictionaryDo::setName, "DICT NAME 06").build(),
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 7L).set(DictionaryDo::setCode, "DICT_CODE_07").set(DictionaryDo::setName, "DICT NAME 07").build(),
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 8L).set(DictionaryDo::setCode, "DICT_CODE_08").set(DictionaryDo::setName, "DICT NAME 08").build(),
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 9L).set(DictionaryDo::setCode, "DICT_CODE_09").set(DictionaryDo::setName, "DICT NAME 09").build(),
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 10L).set(DictionaryDo::setCode, "DICT_CODE_10").set(DictionaryDo::setName, "DICT NAME 10").build()
+                ).isSortedAccordingTo(Comparator.comparingLong(DictionaryDo::getId).reversed());
     }
 
     @Test
@@ -155,7 +100,7 @@ class DictionaryDaoTest {
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name")
                 .isEqualTo(
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 1L).set(DictionaryDo::setCode, "DICT_CODE_01").set(DictionaryDo::setName, "DICT NAME 01").build()
                 );
     }
 
@@ -165,7 +110,7 @@ class DictionaryDaoTest {
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name")
                 .isEqualTo(
-                        GenericBuilder.of(Dictionary::new).set(Dictionary::setId, 1L).set(Dictionary::setCode, "DICT_CODE_01").set(Dictionary::setName, "DICT NAME 01").build()
+                        GenericBuilder.of(DictionaryDo::new).set(DictionaryDo::setId, 1L).set(DictionaryDo::setCode, "DICT_CODE_01").set(DictionaryDo::setName, "DICT NAME 01").build()
                 );
     }
 
@@ -178,31 +123,31 @@ class DictionaryDaoTest {
     @Test
     @Transactional
     void insert_shouldWorkAsExpected() {
-        Dictionary entity = GenericBuilder.of(Dictionary::new)
-                .set(Dictionary::setCode, "DICT_CODE_11")
-                .set(Dictionary::setName, "DICT NAME 11")
+        DictionaryDo dtObj = GenericBuilder.of(DictionaryDo::new)
+                .set(DictionaryDo::setCode, "DICT_CODE_11")
+                .set(DictionaryDo::setName, "DICT NAME 11")
                 .build();
-        assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(entity.getId()).isNotNull();
-        assertThat(dao.selectById(entity.getId()))
+        assertThat(dao.insert(dtObj)).isEqualTo(1);
+        assertThat(dtObj.getId()).isNotNull();
+        assertThat(dao.selectById(dtObj.getId()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name")
-                .isEqualTo(entity);
+                .isEqualTo(dtObj);
     }
 
     @Test
     @Transactional
     void updateById_shouldWorkAsExpected() {
-        Dictionary entity = GenericBuilder.of(Dictionary::new)
-                .set(Dictionary::setId, 1L)
-                .set(Dictionary::setCode, "DICT_CODE_12")
-                .set(Dictionary::setName, "DICT NAME 12")
+        DictionaryDo dtObj = GenericBuilder.of(DictionaryDo::new)
+                .set(DictionaryDo::setId, 1L)
+                .set(DictionaryDo::setCode, "DICT_CODE_12")
+                .set(DictionaryDo::setName, "DICT NAME 12")
                 .build();
-        assertThat(dao.updateById(entity)).isEqualTo(1);
+        assertThat(dao.updateById(dtObj)).isEqualTo(1);
         assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name")
-                .isEqualTo(entity);
+                .isEqualTo(dtObj);
     }
 
     @Test

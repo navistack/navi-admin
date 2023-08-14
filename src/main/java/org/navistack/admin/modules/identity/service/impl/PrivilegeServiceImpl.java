@@ -1,11 +1,11 @@
 package org.navistack.admin.modules.identity.service.impl;
 
 import org.navistack.admin.modules.identity.dao.PrivilegeDao;
-import org.navistack.admin.modules.identity.entity.Privilege;
+import org.navistack.admin.modules.identity.dtobj.PrivilegeDo;
 import org.navistack.admin.modules.identity.query.PrivilegeQuery;
 import org.navistack.admin.modules.identity.service.PrivilegeService;
-import org.navistack.admin.modules.identity.service.convert.PrivilegeConverter;
-import org.navistack.admin.modules.identity.service.convert.PrivilegeDtoConverter;
+import org.navistack.admin.modules.identity.service.convert.PrivilegeDoConvert;
+import org.navistack.admin.modules.identity.service.convert.PrivilegeDtoConvert;
 import org.navistack.admin.modules.identity.service.dto.PrivilegeDto;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
 import org.navistack.framework.core.error.ConstraintViolationException;
@@ -33,7 +33,7 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         }
         return dao.paginateByQuery(query, pageable)
                 .stream()
-                .map(PrivilegeConverter.INSTANCE::toDto)
+                .map(PrivilegeDtoConvert.INSTANCE::from)
                 .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
@@ -42,9 +42,9 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Privilege code has been taken already"));
         Asserts.state(dto.getParentId(), this::validateExistenceById, () -> new NoSuchEntityException("Parent does not exist"));
 
-        Privilege entity = PrivilegeDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.created(entity);
-        dao.insert(entity);
+        PrivilegeDo dtObj = PrivilegeDoConvert.INSTANCE.from(dto);
+        AuditingPropertiesSupport.created(dtObj);
+        dao.insert(dtObj);
     }
 
     @Override
@@ -53,9 +53,9 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Privilege code has been taken already"));
         Asserts.state(dto.getParentId(), this::validateExistenceById, () -> new NoSuchEntityException("Parent does not exist"));
 
-        Privilege entity = PrivilegeDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.updated(entity);
-        dao.updateById(entity);
+        PrivilegeDo dtObj = PrivilegeDoConvert.INSTANCE.from(dto);
+        AuditingPropertiesSupport.updated(dtObj);
+        dao.updateById(dtObj);
     }
 
     @Override

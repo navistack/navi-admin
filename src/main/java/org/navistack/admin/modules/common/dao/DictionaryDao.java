@@ -1,7 +1,7 @@
 package org.navistack.admin.modules.common.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.navistack.admin.modules.common.entity.Dictionary;
+import org.navistack.admin.modules.common.dtobj.DictionaryDo;
 import org.navistack.admin.modules.common.query.DictionaryQuery;
 import org.navistack.framework.data.Pageable;
 
@@ -9,29 +9,23 @@ import java.util.List;
 
 @Mapper
 public interface DictionaryDao {
-    List<Dictionary> selectAll();
-
-    List<Dictionary> selectAllByQuery(DictionaryQuery query);
-
-    boolean existsByQuery(DictionaryQuery query);
+    List<DictionaryDo> selectAll();
 
     long countByQuery(DictionaryQuery query);
 
-    List<Dictionary> paginateByQuery(DictionaryQuery query, Pageable pageable);
+    List<DictionaryDo> paginateByQuery(DictionaryQuery query, Pageable pageable);
 
-    Dictionary selectByQuery(DictionaryQuery query);
+    DictionaryDo selectById(Long id);
 
-    Dictionary selectById(Long id);
-
-    Dictionary selectByCode(String code);
+    DictionaryDo selectByCode(String code);
 
     Long selectIdByCode(String code);
 
     boolean existsById(Long id);
 
-    int insert(Dictionary entity);
+    int insert(DictionaryDo dtObj);
 
-    int updateById(Dictionary entity);
+    int updateById(DictionaryDo dtObj);
 
     int deleteById(Long id);
 }

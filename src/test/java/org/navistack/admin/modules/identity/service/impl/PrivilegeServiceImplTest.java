@@ -32,7 +32,7 @@ class PrivilegeServiceImplTest {
                 .thenReturn(null);
         PrivilegeDto dto = new PrivilegeDto();
         dto.setCode("sys:privilege:create");
-        dto.setName("Create new entity of privilege");
+        dto.setName("Create new record of privilege");
         dto.setParentId(1L);
         service.create(dto);
         verify(dao, times(1))
@@ -62,14 +62,14 @@ class PrivilegeServiceImplTest {
         assertThatThrownBy(() -> {
             PrivilegeDto dto = new PrivilegeDto();
             dto.setCode("sys:privilege:create");
-            dto.setName("Create new entity of privilege");
+            dto.setName("Create new record of privilege");
             service.create(dto);
         })
                 .isInstanceOf(NoSuchEntityException.class);
         assertThatThrownBy(() -> {
             PrivilegeDto dto = new PrivilegeDto();
             dto.setCode("sys:privilege:create");
-            dto.setName("Create new entity of privilege");
+            dto.setName("Create new record of privilege");
             dto.setParentId(0L);
             service.create(dto);
         })

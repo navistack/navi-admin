@@ -3,8 +3,8 @@ package org.navistack.admin.modules.system.service.impl;
 import org.navistack.admin.modules.identity.dao.PrivilegeDao;
 import org.navistack.admin.modules.identity.dao.RolePrivilegeDao;
 import org.navistack.admin.modules.identity.dao.UserRoleDao;
-import org.navistack.admin.modules.identity.entity.Privilege;
-import org.navistack.admin.modules.identity.entity.User;
+import org.navistack.admin.modules.identity.dtobj.PrivilegeDo;
+import org.navistack.admin.modules.identity.dtobj.UserDo;
 import org.navistack.admin.modules.system.service.AuthorityService;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
-    public List<Privilege> listGrantedPrivilegesOf(User user) {
+    public List<PrivilegeDo> listGrantedPrivilegesOf(UserDo user) {
         List<Long> userRoleIds = userRoleDao.selectAllRoleIdsByUserId(user.getId());
         if (userRoleIds.isEmpty()) {
             return Collections.emptyList();

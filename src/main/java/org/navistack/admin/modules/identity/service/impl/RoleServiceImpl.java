@@ -4,13 +4,13 @@ import org.navistack.admin.modules.identity.dao.PrivilegeDao;
 import org.navistack.admin.modules.identity.dao.RoleDao;
 import org.navistack.admin.modules.identity.dao.RolePrivilegeDao;
 import org.navistack.admin.modules.identity.dao.UserRoleDao;
-import org.navistack.admin.modules.identity.entity.Role;
-import org.navistack.admin.modules.identity.entity.RolePrivilege;
+import org.navistack.admin.modules.identity.dtobj.RoleDo;
+import org.navistack.admin.modules.identity.dtobj.RolePrivilegeDo;
 import org.navistack.admin.modules.identity.query.RoleQuery;
 import org.navistack.admin.modules.identity.service.RoleService;
-import org.navistack.admin.modules.identity.service.convert.RoleConverter;
-import org.navistack.admin.modules.identity.service.convert.RoleDetailVmConverter;
-import org.navistack.admin.modules.identity.service.convert.RoleDtoConverter;
+import org.navistack.admin.modules.identity.service.convert.RoleDoConvert;
+import org.navistack.admin.modules.identity.service.convert.RoleDetailVmConvert;
+import org.navistack.admin.modules.identity.service.convert.RoleDtoConvert;
 import org.navistack.admin.modules.identity.service.dto.RoleDto;
 import org.navistack.admin.modules.identity.service.vm.RoleDetailVm;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
@@ -54,16 +54,16 @@ public class RoleServiceImpl implements RoleService {
         }
         return dao.paginateByQuery(query, pageable)
                 .stream()
-                .map(RoleConverter.INSTANCE::toDto)
+                .map(RoleDtoConvert.INSTANCE::from)
                 .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
     @Override
     public RoleDetailVm queryDetailById(Long id) {
-        Role role = Optional.ofNullable(dao.selectById(id))
+        RoleDo role = Optional.ofNullable(dao.selectById(id))
                 .orElseThrow(() -> new NoSuchEntityException("Role does not exist"));
         List<Long> privilegeIds = rolePrivilegeDao.selectAllPrivilegeIdsByRoleId(id);
-        RoleDetailVm vm = RoleDetailVmConverter.INSTANCE.fromEntity(role);
+        RoleDetailVm vm = RoleDetailVmConvert.INSTANCE.from(role);
         vm.setPrivilegeIds(privilegeIds);
         return vm;
     }
@@ -73,10 +73,10 @@ public class RoleServiceImpl implements RoleService {
     public void create(RoleDto dto) {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Role code has been taken already"));
 
-        Role entity = RoleDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.created(entity);
-        dao.insert(entity);
-        replacePrivilegesOf(entity.getId(), dto.getPrivilegeIds());
+        RoleDo dtObj = RoleDoConvert.INSTANCE.from(dto);
+        AuditingPropertiesSupport.created(dtObj);
+        dao.insert(dtObj);
+        replacePrivilegesOf(dtObj.getId(), dto.getPrivilegeIds());
     }
 
     @Override
@@ -85,10 +85,10 @@ public class RoleServiceImpl implements RoleService {
         Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Role does not exist"));
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Role code has been taken already"));
 
-        Role entity = RoleDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.updated(entity);
-        dao.updateById(entity);
-        replacePrivilegesOf(entity.getId(), dto.getPrivilegeIds());
+        RoleDo dtObj = RoleDoConvert.INSTANCE.from(dto);
+        AuditingPropertiesSupport.updated(dtObj);
+        dao.updateById(dtObj);
+        replacePrivilegesOf(dtObj.getId(), dto.getPrivilegeIds());
     }
 
     @Override
@@ -109,8 +109,8 @@ public class RoleServiceImpl implements RoleService {
         }
 
         privilegeIds = privilegeDao.selectAllIdsByIds(privilegeIds);
-        List<RolePrivilege> rolePrivileges = privilegeIds.stream()
-                .map(privilegeId -> RolePrivilege.of(roleId, privilegeId))
+        List<RolePrivilegeDo> rolePrivileges = privilegeIds.stream()
+                .map(privilegeId -> RolePrivilegeDo.of(roleId, privilegeId))
                 .collect(Collectors.toList());
         rolePrivilegeDao.insertAll(rolePrivileges);
     }

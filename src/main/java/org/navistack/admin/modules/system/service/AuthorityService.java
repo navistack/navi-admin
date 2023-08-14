@@ -1,10 +1,10 @@
 package org.navistack.admin.modules.system.service;
 
-import org.navistack.admin.modules.identity.entity.Privilege;
-import org.navistack.admin.modules.identity.entity.User;
+import org.navistack.admin.modules.identity.dtobj.PrivilegeDo;
+import org.navistack.admin.modules.identity.dtobj.UserDo;
 
 import java.util.List;
 
 public interface AuthorityService {
-    List<Privilege> listGrantedPrivilegesOf(User user);
+    List<PrivilegeDo> listGrantedPrivilegesOf(UserDo user);
 }

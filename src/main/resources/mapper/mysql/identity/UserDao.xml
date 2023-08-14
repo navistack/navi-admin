@@ -3,34 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.navistack.admin.modules.identity.dao.UserDao">
-    <select id="selectAllByQuery" resultType="org.navistack.admin.modules.identity.entity.User">
-        SELECT *
-          FROM user
-        <where>
-            <if test="id != null">AND id = #{id}</if>
-            <if test="nickName != null and !nickName.isEmpty()">AND nick_name LIKE #{nickName} '%'</if>
-            <if test="loginName != null and !loginName.isEmpty()">AND login_name = #{loginName}</if>
-            <if test="mobileNumber != null and !mobileNumber.isEmpty()">AND mobile_number = #{mobileNumber}</if>
-            <if test="emailAddress != null and !emailAddress.isEmpty()">AND email_address = #{emailAddress}</if>
-            <if test="status != null">AND status = #{status}</if>
-        </where>
-    </select>
-
-    <select id="existsByQuery" resultType="java.lang.Boolean">
-        SELECT EXISTS(
-            SELECT *
-              FROM user
-            <where>
-                <if test="id != null">AND id = #{id}</if>
-                <if test="nickName != null and !nickName.isEmpty()">AND nick_name LIKE #{nickName} '%'</if>
-                <if test="loginName != null and !loginName.isEmpty()">AND login_name = #{loginName}</if>
-                <if test="mobileNumber != null and !mobileNumber.isEmpty()">AND mobile_number = #{mobileNumber}</if>
-                <if test="emailAddress != null and !emailAddress.isEmpty()">AND email_address = #{emailAddress}</if>
-                <if test="status != null">AND status = #{status}</if>
-            </where>
-        )
-    </select>
-
     <select id="countByQuery" resultType="java.lang.Long">
         SELECT COUNT(*)
         FROM user
@@ -44,7 +16,7 @@
         </where>
     </select>
 
-    <select id="paginateByQuery" resultType="org.navistack.admin.modules.identity.entity.User">
+    <select id="paginateByQuery" resultType="org.navistack.admin.modules.identity.dtobj.UserDo">
         SELECT *
           FROM user
         <where>
@@ -78,20 +50,7 @@
         </if>
     </select>
 
-    <select id="selectByQuery" resultType="org.navistack.admin.modules.identity.entity.User">
-        SELECT *
-        FROM user
-        <where>
-            <if test="id != null">AND id = #{id}</if>
-            <if test="nickName != null and !nickName.isEmpty()">AND nick_name LIKE #{nickName} '%'</if>
-            <if test="loginName != null and !loginName.isEmpty()">AND login_name = #{loginName}</if>
-            <if test="mobileNumber != null and !mobileNumber.isEmpty()">AND mobile_number = #{mobileNumber}</if>
-            <if test="emailAddress != null and !emailAddress.isEmpty()">AND email_address = #{emailAddress}</if>
-            <if test="status != null">AND status = #{status}</if>
-        </where>
-    </select>
-
-    <select id="selectByLoginName" resultType="org.navistack.admin.modules.identity.entity.User">
+    <select id="selectByLoginName" resultType="org.navistack.admin.modules.identity.dtobj.UserDo">
         SELECT *
           FROM user
          WHERE login_name = #{loginName}
@@ -99,7 +58,7 @@
             OR email_address = #{emailAddress}
     </select>
 
-    <select id="selectById" resultType="org.navistack.admin.modules.identity.entity.User">
+    <select id="selectById" resultType="org.navistack.admin.modules.identity.dtobj.UserDo">
         SELECT *
           FROM user
          WHERE id = #{id}

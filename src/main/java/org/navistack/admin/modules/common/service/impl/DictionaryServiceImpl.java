@@ -2,15 +2,15 @@ package org.navistack.admin.modules.common.service.impl;
 
 import org.navistack.admin.modules.common.dao.DictionaryDao;
 import org.navistack.admin.modules.common.dao.DictionaryItemDao;
-import org.navistack.admin.modules.common.entity.Dictionary;
-import org.navistack.admin.modules.common.entity.DictionaryItem;
+import org.navistack.admin.modules.common.dtobj.DictionaryDo;
+import org.navistack.admin.modules.common.dtobj.DictionaryItemDo;
 import org.navistack.admin.modules.common.query.DictionaryItemQuery;
 import org.navistack.admin.modules.common.query.DictionaryQuery;
 import org.navistack.admin.modules.common.service.DictionaryService;
-import org.navistack.admin.modules.common.service.convert.DictionaryConverter;
-import org.navistack.admin.modules.common.service.convert.DictionaryDtoConverter;
-import org.navistack.admin.modules.common.service.convert.DictionaryItemConverter;
-import org.navistack.admin.modules.common.service.convert.DictionaryItemDtoConverter;
+import org.navistack.admin.modules.common.service.convert.DictionaryDoConvert;
+import org.navistack.admin.modules.common.service.convert.DictionaryDtoConvert;
+import org.navistack.admin.modules.common.service.convert.DictionaryItemDoConvert;
+import org.navistack.admin.modules.common.service.convert.DictionaryItemDtoConvert;
 import org.navistack.admin.modules.common.service.dto.DictionaryDto;
 import org.navistack.admin.modules.common.service.dto.DictionaryItemDto;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
@@ -19,13 +19,9 @@ import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageBuilder;
-import org.navistack.framework.data.PageImpl;
 import org.navistack.framework.data.Pageable;
 import org.navistack.framework.utils.Asserts;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.List;
 
 @Service
 public class DictionaryServiceImpl implements DictionaryService {
@@ -46,7 +42,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         }
         return dao.paginateByQuery(query, pageable)
                 .stream()
-                .map(DictionaryConverter.INSTANCE::toDto)
+                .map(DictionaryDtoConvert.INSTANCE::from)
                 .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
@@ -54,9 +50,9 @@ public class DictionaryServiceImpl implements DictionaryService {
     public void create(DictionaryDto dto) {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Dictionary code has been taken already"));
 
-        Dictionary entity = DictionaryDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.created(entity);
-        dao.insert(entity);
+        DictionaryDo dtObj = DictionaryDoConvert.INSTANCE.from(dto);
+        AuditingPropertiesSupport.created(dtObj);
+        dao.insert(dtObj);
     }
 
     @Override
@@ -64,9 +60,9 @@ public class DictionaryServiceImpl implements DictionaryService {
         Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Dictionary code has been taken already"));
 
-        Dictionary entity = DictionaryDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.updated(entity);
-        dao.updateById(entity);
+        DictionaryDo dtObj = DictionaryDoConvert.INSTANCE.from(dto);
+        AuditingPropertiesSupport.updated(dtObj);
+        dao.updateById(dtObj);
     }
 
     @Override
@@ -84,7 +80,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         }
         return itemDao.paginateByQuery(query, pageable)
                 .stream()
-                .map(DictionaryItemConverter.INSTANCE::toDto)
+                .map(DictionaryItemDtoConvert.INSTANCE::from)
                 .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
@@ -93,9 +89,9 @@ public class DictionaryServiceImpl implements DictionaryService {
         Asserts.state(dto.getDictionaryId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
         Asserts.state(this.validateItemAvailabilityOfCode(dto.getCode(), dto.getDictionaryId(), dto.getId()), () -> new DomainValidationException("Dictionary item code has been taken already"));
 
-        DictionaryItem entity = DictionaryItemDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.created(entity);
-        itemDao.insert(entity);
+        DictionaryItemDo dtObj = DictionaryItemDoConvert.INSTANCE.from(dto);
+        AuditingPropertiesSupport.created(dtObj);
+        itemDao.insert(dtObj);
     }
 
     @Override
@@ -104,9 +100,9 @@ public class DictionaryServiceImpl implements DictionaryService {
         Asserts.state(dto.getDictionaryId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
         Asserts.state(this.validateItemAvailabilityOfCode(dto.getCode(), dto.getDictionaryId(), dto.getId()), () -> new DomainValidationException("Dictionary item code has been taken already"));
 
-        DictionaryItem entity = DictionaryItemDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.updated(entity);
-        itemDao.updateById(entity);
+        DictionaryItemDo dtObj = DictionaryItemDoConvert.INSTANCE.from(dto);
+        AuditingPropertiesSupport.updated(dtObj);
+        itemDao.updateById(dtObj);
     }
 
     @Override

@@ -1,40 +1,25 @@
 package org.navistack.admin.modules.identity.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.navistack.admin.modules.identity.entity.UserRole;
-import org.navistack.admin.modules.identity.query.UserRoleQuery;
-import org.navistack.framework.data.Pageable;
+import org.navistack.admin.modules.identity.dtobj.UserRoleDo;
 
 import java.util.List;
 
 @Mapper
 public interface UserRoleDao {
-
-    List<UserRole> selectAllByQuery(UserRoleQuery query);
-
     List<Long> selectAllRoleIdsByUserId(Long userId);
 
-    boolean existsByQuery(UserRoleQuery query);
-
-    long countByQuery(UserRoleQuery query);
-
-    List<UserRole> paginateByQuery(UserRoleQuery query, Pageable pageable);
-
-    UserRole selectByQuery(UserRoleQuery query);
-
-    UserRole selectById(Long id);
+    UserRoleDo selectById(Long id);
 
     boolean existsByRoleId(Long roleId);
 
-    int insert(UserRole entity);
+    int insert(UserRoleDo dtObj);
 
-    int insertAll(List<UserRole> entities);
+    int insertAll(List<UserRoleDo> dtObjs);
 
-    int updateById(UserRole entity);
+    int updateById(UserRoleDo dtObj);
 
     int deleteById(Long id);
-
-    int deleteAllByQuery(UserRoleQuery query);
 
     int deleteAllByUserId(Long userId);
 }

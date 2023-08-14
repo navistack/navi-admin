@@ -3,7 +3,7 @@ package org.navistack.admin.modules.identity.dao;
 import lombok.Setter;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
-import org.navistack.admin.modules.identity.entity.Organization;
+import org.navistack.admin.modules.identity.dtobj.OrganizationDo;
 import org.navistack.admin.modules.identity.query.OrganizationQuery;
 import org.navistack.boot.testsupport.testcontainers.MysqlContainer;
 import org.navistack.framework.data.PageRequest;
@@ -41,50 +41,6 @@ class OrganizationDaoTest {
     }
 
     @Test
-    void selectAllByQuery_shouldWorkAsExpected() {
-        assertThat(dao.selectAllByQuery(OrganizationQuery.builder().id(1L).build()))
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "superId")
-                .containsExactly(
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 1L).set(Organization::setCode, "ORG_CODE_01").set(Organization::setName, "ORG NAME 01").build()
-                );
-        assertThat(dao.selectAllByQuery(OrganizationQuery.builder().code("ORG_CODE_01").build()))
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "superId")
-                .containsExactly(
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 1L).set(Organization::setCode, "ORG_CODE_01").set(Organization::setName, "ORG NAME 01").build()
-                );
-        assertThat(dao.selectAllByQuery(OrganizationQuery.builder().name("ORG NAME 01").build()))
-                .hasSize(1)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "superId")
-                .containsExactly(
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 1L).set(Organization::setCode, "ORG_CODE_01").set(Organization::setName, "ORG NAME 01").build()
-                );
-        assertThat(dao.selectAllByQuery(OrganizationQuery.builder().superId(1L).build()))
-                .hasSize(4)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "superId")
-                .containsExactly(
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 2L).set(Organization::setCode, "ORG_CODE_02").set(Organization::setName, "ORG NAME 02").set(Organization::setSuperId, 1L).build(),
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 3L).set(Organization::setCode, "ORG_CODE_03").set(Organization::setName, "ORG NAME 03").set(Organization::setSuperId, 1L).build(),
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 4L).set(Organization::setCode, "ORG_CODE_04").set(Organization::setName, "ORG NAME 04").set(Organization::setSuperId, 1L).build(),
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 5L).set(Organization::setCode, "ORG_CODE_05").set(Organization::setName, "ORG NAME 05").set(Organization::setSuperId, 1L).build()
-                );
-    }
-
-    @Test
-    void existsByQuery_shouldWorkAsExpected() {
-        assertThat(dao.existsByQuery(OrganizationQuery.builder().id(1L).build())).isTrue();
-        assertThat(dao.existsByQuery(OrganizationQuery.builder().code("ORG_CODE_01").build())).isTrue();
-        assertThat(dao.existsByQuery(OrganizationQuery.builder().name("ORG NAME 01").build())).isTrue();
-        assertThat(dao.existsByQuery(OrganizationQuery.builder().superId(1L).build())).isTrue();
-
-        assertThat(dao.existsByQuery(OrganizationQuery.builder().id(100L).build())).isFalse();
-        assertThat(dao.existsByQuery(OrganizationQuery.builder().code("ORG_CODE_100").build())).isFalse();
-        assertThat(dao.existsByQuery(OrganizationQuery.builder().name("ORG NAME 100").build())).isFalse();
-        assertThat(dao.existsByQuery(OrganizationQuery.builder().superId(100L).build())).isFalse();
-    }
-
-    @Test
     void countByQuery_shouldWorkAsExpected() {
         assertThat(dao.countByQuery(OrganizationQuery.builder().id(1L).build())).isEqualTo(1L);
         assertThat(dao.countByQuery(OrganizationQuery.builder().code("ORG_CODE_01").build())).isEqualTo(1L);
@@ -106,33 +62,11 @@ class OrganizationDaoTest {
                 .hasSize(4)
                 .usingRecursiveFieldByFieldElementComparatorOnFields("id", "code", "name", "superId")
                 .containsExactlyInAnyOrder(
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 2L).set(Organization::setCode, "ORG_CODE_02").set(Organization::setName, "ORG NAME 02").set(Organization::setSuperId, 1L).build(),
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 3L).set(Organization::setCode, "ORG_CODE_03").set(Organization::setName, "ORG NAME 03").set(Organization::setSuperId, 1L).build(),
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 4L).set(Organization::setCode, "ORG_CODE_04").set(Organization::setName, "ORG NAME 04").set(Organization::setSuperId, 1L).build(),
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 5L).set(Organization::setCode, "ORG_CODE_05").set(Organization::setName, "ORG NAME 05").set(Organization::setSuperId, 1L).build()
-                ).isSortedAccordingTo(Comparator.comparingLong(Organization::getId).reversed());
-    }
-
-    @Test
-    void selectByQuery_shouldWorkAsExpected() {
-        assertThat(dao.selectByQuery(OrganizationQuery.builder().id(1L).build()))
-                .usingRecursiveComparison()
-                .comparingOnlyFields("id", "code", "name", "superId")
-                .isEqualTo(
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 1L).set(Organization::setCode, "ORG_CODE_01").set(Organization::setName, "ORG NAME 01").build()
-                );
-        assertThat(dao.selectByQuery(OrganizationQuery.builder().code("ORG_CODE_01").build()))
-                .usingRecursiveComparison()
-                .comparingOnlyFields("id", "code", "name", "superId")
-                .isEqualTo(
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 1L).set(Organization::setCode, "ORG_CODE_01").set(Organization::setName, "ORG NAME 01").build()
-                );
-        assertThat(dao.selectByQuery(OrganizationQuery.builder().name("ORG NAME 01").build()))
-                .usingRecursiveComparison()
-                .comparingOnlyFields("id", "code", "name", "superId")
-                .isEqualTo(
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 1L).set(Organization::setCode, "ORG_CODE_01").set(Organization::setName, "ORG NAME 01").build()
-                );
+                        GenericBuilder.of(OrganizationDo::new).set(OrganizationDo::setId, 2L).set(OrganizationDo::setCode, "ORG_CODE_02").set(OrganizationDo::setName, "ORG NAME 02").set(OrganizationDo::setSuperId, 1L).build(),
+                        GenericBuilder.of(OrganizationDo::new).set(OrganizationDo::setId, 3L).set(OrganizationDo::setCode, "ORG_CODE_03").set(OrganizationDo::setName, "ORG NAME 03").set(OrganizationDo::setSuperId, 1L).build(),
+                        GenericBuilder.of(OrganizationDo::new).set(OrganizationDo::setId, 4L).set(OrganizationDo::setCode, "ORG_CODE_04").set(OrganizationDo::setName, "ORG NAME 04").set(OrganizationDo::setSuperId, 1L).build(),
+                        GenericBuilder.of(OrganizationDo::new).set(OrganizationDo::setId, 5L).set(OrganizationDo::setCode, "ORG_CODE_05").set(OrganizationDo::setName, "ORG NAME 05").set(OrganizationDo::setSuperId, 1L).build()
+                ).isSortedAccordingTo(Comparator.comparingLong(OrganizationDo::getId).reversed());
     }
 
     @Test
@@ -141,7 +75,7 @@ class OrganizationDaoTest {
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "superId")
                 .isEqualTo(
-                        GenericBuilder.of(Organization::new).set(Organization::setId, 1L).set(Organization::setCode, "ORG_CODE_01").set(Organization::setName, "ORG NAME 01").build()
+                        GenericBuilder.of(OrganizationDo::new).set(OrganizationDo::setId, 1L).set(OrganizationDo::setCode, "ORG_CODE_01").set(OrganizationDo::setName, "ORG NAME 01").build()
                 );
     }
 
@@ -166,31 +100,31 @@ class OrganizationDaoTest {
     @Test
     @Transactional
     void insert_shouldWorkAsExpected() {
-        Organization entity = GenericBuilder.of(Organization::new)
-                .set(Organization::setCode, "ORG_CODE_11")
-                .set(Organization::setName, "ORG NAME 11")
+        OrganizationDo dtObj = GenericBuilder.of(OrganizationDo::new)
+                .set(OrganizationDo::setCode, "ORG_CODE_11")
+                .set(OrganizationDo::setName, "ORG NAME 11")
                 .build();
-        assertThat(dao.insert(entity)).isEqualTo(1);
-        assertThat(entity.getId()).isNotNull();
-        assertThat(dao.selectById(entity.getId()))
+        assertThat(dao.insert(dtObj)).isEqualTo(1);
+        assertThat(dtObj.getId()).isNotNull();
+        assertThat(dao.selectById(dtObj.getId()))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "superId")
-                .isEqualTo(entity);
+                .isEqualTo(dtObj);
     }
 
     @Test
     @Transactional
     void updateById_shouldWorkAsExpected() {
-        Organization entity = GenericBuilder.of(Organization::new)
-                .set(Organization::setId, 1L)
-                .set(Organization::setCode, "ORG_CODE_12")
-                .set(Organization::setName, "ORG NAME 12")
+        OrganizationDo dtObj = GenericBuilder.of(OrganizationDo::new)
+                .set(OrganizationDo::setId, 1L)
+                .set(OrganizationDo::setCode, "ORG_CODE_12")
+                .set(OrganizationDo::setName, "ORG NAME 12")
                 .build();
-        assertThat(dao.updateById(entity)).isEqualTo(1);
+        assertThat(dao.updateById(dtObj)).isEqualTo(1);
         assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "code", "name", "superId")
-                .isEqualTo(entity);
+                .isEqualTo(dtObj);
     }
 
     @Test

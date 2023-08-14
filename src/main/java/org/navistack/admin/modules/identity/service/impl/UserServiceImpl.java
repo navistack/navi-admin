@@ -3,13 +3,13 @@ package org.navistack.admin.modules.identity.service.impl;
 import org.navistack.admin.modules.identity.dao.RoleDao;
 import org.navistack.admin.modules.identity.dao.UserDao;
 import org.navistack.admin.modules.identity.dao.UserRoleDao;
-import org.navistack.admin.modules.identity.entity.User;
-import org.navistack.admin.modules.identity.entity.UserRole;
+import org.navistack.admin.modules.identity.dtobj.UserDo;
+import org.navistack.admin.modules.identity.dtobj.UserRoleDo;
 import org.navistack.admin.modules.identity.query.UserQuery;
 import org.navistack.admin.modules.identity.service.UserService;
-import org.navistack.admin.modules.identity.service.convert.UserConverter;
-import org.navistack.admin.modules.identity.service.convert.UserDetailVmConverter;
-import org.navistack.admin.modules.identity.service.convert.UserDtoConverter;
+import org.navistack.admin.modules.identity.service.convert.UserDetailVmConvert;
+import org.navistack.admin.modules.identity.service.convert.UserDoConvert;
+import org.navistack.admin.modules.identity.service.convert.UserDtoConvert;
 import org.navistack.admin.modules.identity.service.dto.UserDto;
 import org.navistack.admin.modules.identity.service.vm.UserDetailVm;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
@@ -19,6 +19,9 @@ import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageBuilder;
 import org.navistack.framework.data.Pageable;
 import org.navistack.framework.utils.Asserts;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +34,28 @@ public class UserServiceImpl implements UserService {
     private final UserDao dao;
     private final RoleDao roleDao;
     private final UserRoleDao userRoleDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserDao userDao, RoleDao roleDao, UserRoleDao userRoleDao) {
+    @Autowired
+    public UserServiceImpl(UserDao userDao,
+                           RoleDao roleDao,
+                           UserRoleDao userRoleDao,
+                           PasswordEncoder passwordEncoder) {
         this.dao = userDao;
         this.roleDao = roleDao;
         this.userRoleDao = userRoleDao;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public UserServiceImpl(UserDao userDao,
+                           RoleDao roleDao,
+                           UserRoleDao userRoleDao) {
+        this(
+                userDao,
+                roleDao,
+                userRoleDao,
+                PasswordEncoderFactories.createDelegatingPasswordEncoder()
+        );
     }
 
     @Override
@@ -46,15 +66,15 @@ public class UserServiceImpl implements UserService {
         }
         return dao.paginateByQuery(query, pageable)
                 .stream()
-                .map(UserConverter.INSTANCE::toDto)
+                .map(UserDtoConvert.INSTANCE::from)
                 .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
     @Override
     public UserDetailVm queryDetailById(Long id) {
-        User user = Optional.ofNullable(dao.selectById(id))
+        UserDo user = Optional.ofNullable(dao.selectById(id))
                 .orElseThrow(() -> new NoSuchEntityException("User does not exist"));
-        UserDetailVm vm = UserDetailVmConverter.INSTANCE.fromEntity(user);
+        UserDetailVm vm = UserDetailVmConvert.INSTANCE.from(user);
         List<Long> roleIds = userRoleDao.selectAllRoleIdsByUserId(id);
         vm.setRoleIds(roleIds);
         return vm;
@@ -67,10 +87,14 @@ public class UserServiceImpl implements UserService {
         Asserts.state(dto.getMobileNumber(), dto.getId(), this::validateAvailabilityOfMobileNumber, () -> new DomainValidationException("Mobile number has been taken already"));
         Asserts.state(dto.getEmailAddress(), dto.getId(), this::validateAvailabilityOfEmailAddress, () -> new DomainValidationException("Email address has been taken already"));
 
-        User entity = UserDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.created(entity);
-        dao.insert(entity);
-        replaceRolesOf(entity.getId(), dto.getRoleIds());
+        String plainPassword = dto.getPassword();
+        String password = passwordEncoder.encode(plainPassword);
+
+        UserDo dtObj = UserDoConvert.INSTANCE.from(dto);
+        dtObj.setPassword(password);
+        AuditingPropertiesSupport.created(dtObj);
+        dao.insert(dtObj);
+        replaceRolesOf(dtObj.getId(), dto.getRoleIds());
     }
 
     @Override
@@ -81,11 +105,16 @@ public class UserServiceImpl implements UserService {
         Asserts.state(dto.getMobileNumber(), dto.getId(), this::validateAvailabilityOfMobileNumber, () -> new DomainValidationException("Mobile number has been taken already"));
         Asserts.state(dto.getEmailAddress(), dto.getId(), this::validateAvailabilityOfEmailAddress, () -> new DomainValidationException("Email address has been taken already"));
 
+        String plainPassword = dto.getPassword();
+        String password = plainPassword != null
+                ? passwordEncoder.encode(plainPassword)
+                : null;
 
-        User entity = UserDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.updated(entity);
-        dao.updateById(entity);
-        replaceRolesOf(entity.getId(), dto.getRoleIds());
+        UserDo dtObj = UserDoConvert.INSTANCE.from(dto);
+        dtObj.setPassword(password);
+        AuditingPropertiesSupport.updated(dtObj);
+        dao.updateById(dtObj);
+        replaceRolesOf(dtObj.getId(), dto.getRoleIds());
     }
 
     @Override
@@ -104,8 +133,8 @@ public class UserServiceImpl implements UserService {
         }
 
         roleIds = roleDao.selectAllIdsByIds(roleIds);
-        List<UserRole> userRoles = roleIds.stream()
-                .map(roleId -> UserRole.of(userId, roleId))
+        List<UserRoleDo> userRoles = roleIds.stream()
+                .map(roleId -> UserRoleDo.of(userId, roleId))
                 .collect(Collectors.toList());
         userRoleDao.insertAll(userRoles);
     }

@@ -1,7 +1,7 @@
 package org.navistack.admin.modules.common.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.navistack.admin.modules.common.entity.Region;
+import org.navistack.admin.modules.common.dtobj.RegionDo;
 import org.navistack.admin.modules.common.query.RegionQuery;
 import org.navistack.framework.data.Pageable;
 
@@ -9,25 +9,17 @@ import java.util.List;
 
 @Mapper
 public interface RegionDao {
-    List<Region> selectAll();
+    List<RegionDo> selectAll();
 
-    List<Region> selectAllByQuery(RegionQuery query);
+    List<RegionDo> selectAllHierarchicalByCode(String code);
 
-    List<Region> selectAllByQueryRecursively(RegionQuery query);
-
-    List<Region> selectAllHierarchicalByCode(String code);
-
-    List<Region> selectAllByParentCode(String parentCode);
-
-    boolean existsByQuery(RegionQuery query);
+    List<RegionDo> selectAllByParentCode(String parentCode);
 
     long countByQuery(RegionQuery query);
 
-    List<Region> paginateByQuery(RegionQuery query, Pageable pageable);
+    List<RegionDo> paginateByQuery(RegionQuery query, Pageable pageable);
 
-    Region selectByQuery(RegionQuery query);
-
-    Region selectById(Long id);
+    RegionDo selectById(Long id);
 
     Long selectIdByCode(String code);
 
@@ -39,9 +31,9 @@ public interface RegionDao {
 
     boolean existsByParentCode(String regionCode);
 
-    int insert(Region entity);
+    int insert(RegionDo dtObj);
 
-    int updateById(Region entity);
+    int updateById(RegionDo dtObj);
 
     int deleteById(Long id);
 }

@@ -1,32 +1,15 @@
 package org.navistack.admin.modules.identity.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.navistack.admin.modules.identity.entity.UserOrganization;
-import org.navistack.admin.modules.identity.query.UserOrganizationQuery;
-import org.navistack.framework.data.Pageable;
-
-import java.util.List;
+import org.navistack.admin.modules.identity.dtobj.UserOrganizationDo;
 
 @Mapper
 public interface UserOrganizationDao {
+    UserOrganizationDo selectById(Long id);
 
-    List<UserOrganization> selectAllByQuery(UserOrganizationQuery query);
+    int insert(UserOrganizationDo dtObj);
 
-    boolean existsByQuery(UserOrganizationQuery query);
-
-    long countByQuery(UserOrganizationQuery query);
-
-    List<UserOrganization> paginateByQuery(UserOrganizationQuery query, Pageable pageable);
-
-    UserOrganization selectByQuery(UserOrganizationQuery query);
-
-    UserOrganization selectById(Long id);
-
-    int insert(UserOrganization entity);
-
-    int updateById(UserOrganization entity);
+    int updateById(UserOrganizationDo dtObj);
 
     int deleteById(Long id);
-
-    int deleteAllByQuery(UserOrganizationQuery query);
 }

@@ -3,18 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.navistack.admin.modules.identity.dao.PrivilegeDao">
-    <select id="selectAllByQuery" resultType="org.navistack.admin.modules.identity.entity.Privilege">
-        SELECT *
-          FROM privilege
-        <where>
-            <if test="id != null">AND id = #{id}</if>
-            <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
-            <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
-            <if test="parentId != null">AND parent_id = #{parentId}</if>
-        </where>
-    </select>
-
-    <select id="selectAllByIds" resultType="org.navistack.admin.modules.identity.entity.Privilege">
+    <select id="selectAllByIds" resultType="org.navistack.admin.modules.identity.dtobj.PrivilegeDo">
         SELECT *
           FROM privilege
         <where>
@@ -30,19 +19,6 @@
         </where>
     </select>
 
-    <select id="existsByQuery" resultType="java.lang.Boolean">
-        SELECT EXISTS(
-            SELECT *
-              FROM privilege
-        <where>
-            <if test="id != null">AND id = #{id}</if>
-            <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
-            <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
-            <if test="parentId != null">AND parent_id = #{parentId}</if>
-        </where>
-        )
-    </select>
-
     <select id="countByQuery" resultType="java.lang.Long">
         SELECT COUNT(*)
         FROM privilege
@@ -54,7 +30,7 @@
         </where>
     </select>
 
-    <select id="paginateByQuery" resultType="org.navistack.admin.modules.identity.entity.Privilege">
+    <select id="paginateByQuery" resultType="org.navistack.admin.modules.identity.dtobj.PrivilegeDo">
         SELECT *
           FROM privilege
         <where>
@@ -88,18 +64,7 @@
         </if>
     </select>
 
-    <select id="selectByQuery" resultType="org.navistack.admin.modules.identity.entity.Privilege">
-        SELECT *
-        FROM privilege
-        <where>
-            <if test="id != null">AND id = #{id}</if>
-            <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
-            <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
-            <if test="parentId != null">AND parent_id = #{parentId}</if>
-        </where>
-    </select>
-
-    <select id="selectById" resultType="org.navistack.admin.modules.identity.entity.Privilege">
+    <select id="selectById" resultType="org.navistack.admin.modules.identity.dtobj.PrivilegeDo">
         SELECT *
           FROM privilege
          WHERE id = #{id}

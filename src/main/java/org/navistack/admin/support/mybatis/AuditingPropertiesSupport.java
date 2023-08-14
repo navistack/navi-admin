@@ -9,27 +9,27 @@ import java.time.Instant;
 
 @UtilityClass
 public class AuditingPropertiesSupport {
-    public void created(AuditingProperties<Long> entity) {
-        entity.setCreatedAt(Instant.now());
+    public void created(AuditingProperties<Long> obj) {
+        obj.setCreatedAt(Instant.now());
 
         AuthContext.currentUser()
                 .map(LoginUser::getId)
-                .ifPresent(entity::setCreatedBy);
+                .ifPresent(obj::setCreatedBy);
     }
 
-    public void updated(AuditingProperties<Long> entity) {
-        entity.setUpdatedAt(Instant.now());
+    public void updated(AuditingProperties<Long> obj) {
+        obj.setUpdatedAt(Instant.now());
 
         AuthContext.currentUser()
                 .map(LoginUser::getId)
-                .ifPresent(entity::setUpdatedBy);
+                .ifPresent(obj::setUpdatedBy);
     }
 
-    public void deleted(AuditingProperties<Long> entity) {
-        entity.setDeletedAt(Instant.now());
+    public void deleted(AuditingProperties<Long> obj) {
+        obj.setDeletedAt(Instant.now());
 
         AuthContext.currentUser()
                 .map(LoginUser::getId)
-                .ifPresent(entity::setDeletedBy);
+                .ifPresent(obj::setDeletedBy);
     }
 }

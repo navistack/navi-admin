@@ -1,11 +1,11 @@
 package org.navistack.admin.modules.identity.service.impl;
 
 import org.navistack.admin.modules.identity.dao.OrganizationDao;
-import org.navistack.admin.modules.identity.entity.Organization;
+import org.navistack.admin.modules.identity.dtobj.OrganizationDo;
 import org.navistack.admin.modules.identity.query.OrganizationQuery;
 import org.navistack.admin.modules.identity.service.OrganizationService;
-import org.navistack.admin.modules.identity.service.convert.OrganizationConverter;
-import org.navistack.admin.modules.identity.service.convert.OrganizationDtoConverter;
+import org.navistack.admin.modules.identity.service.convert.OrganizationDoConvert;
+import org.navistack.admin.modules.identity.service.convert.OrganizationDtoConvert;
 import org.navistack.admin.modules.identity.service.dto.OrganizationDto;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
 import org.navistack.framework.core.error.ConstraintViolationException;
@@ -33,7 +33,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
         return dao.paginateByQuery(query, pageable)
                 .stream()
-                .map(OrganizationConverter.INSTANCE::toDto)
+                .map(OrganizationDtoConvert.INSTANCE::from)
                 .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
@@ -42,9 +42,9 @@ public class OrganizationServiceImpl implements OrganizationService {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Organization code has been taken already"));
         Asserts.state(dto.getSuperId(), this::validateExistenceById, () -> new NoSuchEntityException("Superior does not exist"));
 
-        Organization entity = OrganizationDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.created(entity);
-        dao.insert(entity);
+        OrganizationDo dtObj = OrganizationDoConvert.INSTANCE.from(dto);
+        AuditingPropertiesSupport.created(dtObj);
+        dao.insert(dtObj);
     }
 
     @Override
@@ -53,9 +53,9 @@ public class OrganizationServiceImpl implements OrganizationService {
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Organization code has been taken already"));
         Asserts.state(dto.getSuperId(), this::validateExistenceById, () -> new NoSuchEntityException("Superior does not exist"));
 
-        Organization entity = OrganizationDtoConverter.INSTANCE.toEntity(dto);
-        AuditingPropertiesSupport.updated(entity);
-        dao.updateById(entity);
+        OrganizationDo dtObj = OrganizationDoConvert.INSTANCE.from(dto);
+        AuditingPropertiesSupport.updated(dtObj);
+        dao.updateById(dtObj);
     }
 
     @Override

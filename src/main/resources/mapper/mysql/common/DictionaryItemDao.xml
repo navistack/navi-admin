@@ -3,39 +3,15 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.navistack.admin.modules.common.dao.DictionaryItemDao">
-    <select id="selectAll" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
+    <select id="selectAll" resultType="org.navistack.admin.modules.common.dtobj.DictionaryItemDo">
         SELECT *
           FROM dictionary_item
     </select>
 
-    <select id="selectAllByQuery" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
-        SELECT *
-          FROM dictionary_item
-        <where>
-            <if test="id != null">AND id = #{id}</if>
-            <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
-            <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
-            <if test="dictionaryId != null">AND dictionary_id = #{dictionaryId}</if>
-        </where>
-    </select>
-
-    <select id="selectAllByDictionaryId" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
+    <select id="selectAllByDictionaryId" resultType="org.navistack.admin.modules.common.dtobj.DictionaryItemDo">
         SELECT *
           FROM dictionary_item
          WHERE dictionary_id = #{dictionaryId}
-    </select>
-
-    <select id="existsByQuery" resultType="java.lang.Boolean">
-        SELECT EXISTS(
-            SELECT *
-              FROM dictionary_item
-            <where>
-                <if test="id != null">AND id = #{id}</if>
-                <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
-                <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
-                <if test="dictionaryId != null">AND dictionary_id = #{dictionaryId}</if>
-            </where>
-        )
     </select>
 
     <select id="countByQuery" resultType="java.lang.Long">
@@ -49,7 +25,7 @@
         </where>
     </select>
 
-    <select id="paginateByQuery" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
+    <select id="paginateByQuery" resultType="org.navistack.admin.modules.common.dtobj.DictionaryItemDo">
         SELECT *
           FROM dictionary_item
         <where>
@@ -83,18 +59,7 @@
         </if>
     </select>
 
-    <select id="selectByQuery" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
-        SELECT *
-        FROM dictionary_item
-        <where>
-            <if test="id != null">AND id = #{id}</if>
-            <if test="code != null and !code.isEmpty()">AND code = #{code}</if>
-            <if test="name != null and !name.isEmpty()">AND name LIKE #{name} '%'</if>
-            <if test="dictionaryId != null">AND dictionary_id = #{dictionaryId}</if>
-        </where>
-    </select>
-
-    <select id="selectById" resultType="org.navistack.admin.modules.common.entity.DictionaryItem">
+    <select id="selectById" resultType="org.navistack.admin.modules.common.dtobj.DictionaryItemDo">
         SELECT *
           FROM dictionary_item
          WHERE id = #{id}

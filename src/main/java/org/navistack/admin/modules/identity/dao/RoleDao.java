@@ -1,7 +1,7 @@
 package org.navistack.admin.modules.identity.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.navistack.admin.modules.identity.entity.Role;
+import org.navistack.admin.modules.identity.dtobj.RoleDo;
 import org.navistack.admin.modules.identity.query.RoleQuery;
 import org.navistack.framework.data.Pageable;
 
@@ -9,18 +9,11 @@ import java.util.List;
 
 @Mapper
 public interface RoleDao {
-
-    List<Role> selectAllByQuery(RoleQuery query);
-
-    boolean existsByQuery(RoleQuery query);
-
     long countByQuery(RoleQuery query);
 
-    List<Role> paginateByQuery(RoleQuery query, Pageable pageable);
+    List<RoleDo> paginateByQuery(RoleQuery query, Pageable pageable);
 
-    Role selectByQuery(RoleQuery query);
-
-    Role selectById(Long id);
+    RoleDo selectById(Long id);
 
     Long selectIdByCode(String code);
 
@@ -28,9 +21,9 @@ public interface RoleDao {
 
     boolean existsById(Long id);
 
-    int insert(Role entity);
+    int insert(RoleDo dtObj);
 
-    int updateById(Role entity);
+    int updateById(RoleDo dtObj);
 
     int deleteById(Long id);
 }
