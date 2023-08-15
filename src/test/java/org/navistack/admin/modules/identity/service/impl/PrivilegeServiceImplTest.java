@@ -6,7 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.navistack.admin.modules.identity.dao.PrivilegeDao;
-import org.navistack.admin.modules.identity.service.dto.PrivilegeDto;
+import org.navistack.admin.modules.identity.service.dto.PrivilegeCreateDto;
+import org.navistack.admin.modules.identity.service.dto.PrivilegeModifyDto;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
@@ -30,7 +31,7 @@ class PrivilegeServiceImplTest {
                 .thenReturn(true);
         when(dao.selectIdByCode("sys:privilege:create"))
                 .thenReturn(null);
-        PrivilegeDto dto = new PrivilegeDto();
+        PrivilegeCreateDto dto = new PrivilegeCreateDto();
         dto.setCode("sys:privilege:create");
         dto.setName("Create new record of privilege");
         dto.setParentId(1L);
@@ -44,7 +45,7 @@ class PrivilegeServiceImplTest {
         when(dao.selectIdByCode("sys:privilege:query"))
                 .thenReturn(2L);
         assertThatThrownBy(() -> {
-            PrivilegeDto dto = new PrivilegeDto();
+            PrivilegeCreateDto dto = new PrivilegeCreateDto();
             dto.setCode("sys:privilege:query");
             dto.setName("Query information on Privilege");
             dto.setParentId(1L);
@@ -60,14 +61,14 @@ class PrivilegeServiceImplTest {
         when(dao.existsById(0L))
                 .thenReturn(false);
         assertThatThrownBy(() -> {
-            PrivilegeDto dto = new PrivilegeDto();
+            PrivilegeCreateDto dto = new PrivilegeCreateDto();
             dto.setCode("sys:privilege:create");
             dto.setName("Create new record of privilege");
             service.create(dto);
         })
                 .isInstanceOf(NoSuchEntityException.class);
         assertThatThrownBy(() -> {
-            PrivilegeDto dto = new PrivilegeDto();
+            PrivilegeCreateDto dto = new PrivilegeCreateDto();
             dto.setCode("sys:privilege:create");
             dto.setName("Create new record of privilege");
             dto.setParentId(0L);
@@ -84,7 +85,7 @@ class PrivilegeServiceImplTest {
                 .thenReturn(null);
         when(dao.existsById(1L))
                 .thenReturn(true);
-        PrivilegeDto dto = new PrivilegeDto();
+        PrivilegeModifyDto dto = new PrivilegeModifyDto();
         dto.setId(2L);
         dto.setCode("sys:privilege:enumerate");
         dto.setName("Enumerate privileges");
@@ -101,7 +102,7 @@ class PrivilegeServiceImplTest {
         when(dao.selectIdByCode("sys:privilege"))
                 .thenReturn(1L);
         assertThatThrownBy(() -> {
-            PrivilegeDto dto = new PrivilegeDto();
+            PrivilegeModifyDto dto = new PrivilegeModifyDto();
             dto.setId(2L);
             dto.setCode("sys:privilege");
             dto.setName("Enumerate privileges");
@@ -120,7 +121,7 @@ class PrivilegeServiceImplTest {
         when(dao.existsById(0L))
                 .thenReturn(false);
         assertThatThrownBy(() -> {
-            PrivilegeDto dto = new PrivilegeDto();
+            PrivilegeModifyDto dto = new PrivilegeModifyDto();
             dto.setId(2L);
             dto.setCode("sys:privilege:enumerate");
             dto.setName("Enumerate privileges");

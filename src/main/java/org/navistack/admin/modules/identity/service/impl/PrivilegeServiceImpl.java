@@ -5,8 +5,10 @@ import org.navistack.admin.modules.identity.dtobj.PrivilegeDo;
 import org.navistack.admin.modules.identity.query.PrivilegeQuery;
 import org.navistack.admin.modules.identity.service.PrivilegeService;
 import org.navistack.admin.modules.identity.service.convert.PrivilegeDoConvert;
-import org.navistack.admin.modules.identity.service.convert.PrivilegeDtoConvert;
-import org.navistack.admin.modules.identity.service.dto.PrivilegeDto;
+import org.navistack.admin.modules.identity.service.convert.PrivilegeVmConvert;
+import org.navistack.admin.modules.identity.service.dto.PrivilegeCreateDto;
+import org.navistack.admin.modules.identity.service.dto.PrivilegeModifyDto;
+import org.navistack.admin.modules.identity.service.vm.PrivilegeVm;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
@@ -26,20 +28,20 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     }
 
     @Override
-    public Page<PrivilegeDto> paginate(PrivilegeQuery query, Pageable pageable) {
+    public Page<PrivilegeVm> paginate(PrivilegeQuery query, Pageable pageable) {
         long totalRecords = dao.countByQuery(query);
         if (totalRecords <= 0) {
             return PageBuilder.emptyPage();
         }
         return dao.paginateByQuery(query, pageable)
                 .stream()
-                .map(PrivilegeDtoConvert.INSTANCE::from)
+                .map(PrivilegeVmConvert.INSTANCE::from)
                 .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
     @Override
-    public void create(PrivilegeDto dto) {
-        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Privilege code has been taken already"));
+    public void create(PrivilegeCreateDto dto) {
+        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Privilege code has been taken already"));
         Asserts.state(dto.getParentId(), this::validateExistenceById, () -> new NoSuchEntityException("Parent does not exist"));
 
         PrivilegeDo dtObj = PrivilegeDoConvert.INSTANCE.from(dto);
@@ -48,7 +50,7 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     }
 
     @Override
-    public void modify(PrivilegeDto dto) {
+    public void modify(PrivilegeModifyDto dto) {
         Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Privilege does not exist"));
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Privilege code has been taken already"));
         Asserts.state(dto.getParentId(), this::validateExistenceById, () -> new NoSuchEntityException("Parent does not exist"));
@@ -69,6 +71,11 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 
     protected boolean validateExistenceById(Long id) {
         return id != null && dao.existsById(id);
+    }
+
+    protected boolean validateAvailabilityOfCode(String code) {
+        Long currentId = dao.selectIdByCode(code);
+        return currentId == null;
     }
 
     protected boolean validateAvailabilityOfCode(String code, Long modifiedId) {

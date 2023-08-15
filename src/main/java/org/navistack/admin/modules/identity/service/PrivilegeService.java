@@ -1,16 +1,18 @@
 package org.navistack.admin.modules.identity.service;
 
 import org.navistack.admin.modules.identity.query.PrivilegeQuery;
-import org.navistack.admin.modules.identity.service.dto.PrivilegeDto;
+import org.navistack.admin.modules.identity.service.dto.PrivilegeCreateDto;
+import org.navistack.admin.modules.identity.service.dto.PrivilegeModifyDto;
+import org.navistack.admin.modules.identity.service.vm.PrivilegeVm;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.Pageable;
 
 public interface PrivilegeService {
-    Page<PrivilegeDto> paginate(PrivilegeQuery query, Pageable pageable);
+    Page<PrivilegeVm> paginate(PrivilegeQuery query, Pageable pageable);
 
-    void create(PrivilegeDto dto);
+    void create(PrivilegeCreateDto dto);
 
-    void modify(PrivilegeDto dto);
+    void modify(PrivilegeModifyDto dto);
 
     void remove(Long id);
 }

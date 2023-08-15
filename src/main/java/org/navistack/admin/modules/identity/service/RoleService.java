@@ -1,19 +1,21 @@
 package org.navistack.admin.modules.identity.service;
 
 import org.navistack.admin.modules.identity.query.RoleQuery;
-import org.navistack.admin.modules.identity.service.dto.RoleDto;
+import org.navistack.admin.modules.identity.service.dto.RoleCreateDto;
+import org.navistack.admin.modules.identity.service.dto.RoleModifyDto;
 import org.navistack.admin.modules.identity.service.vm.RoleDetailVm;
+import org.navistack.admin.modules.identity.service.vm.RoleVm;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.Pageable;
 
 public interface RoleService {
-    Page<RoleDto> paginate(RoleQuery query, Pageable pageable);
+    Page<RoleVm> paginate(RoleQuery query, Pageable pageable);
 
     RoleDetailVm queryDetailById(Long roleId);
 
-    void create(RoleDto dto);
+    void create(RoleCreateDto dto);
 
-    void modify(RoleDto dto);
+    void modify(RoleModifyDto dto);
 
     void remove(Long id);
 }

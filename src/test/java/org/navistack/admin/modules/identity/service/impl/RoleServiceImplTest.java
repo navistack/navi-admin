@@ -8,7 +8,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.navistack.admin.modules.identity.dao.RoleDao;
 import org.navistack.admin.modules.identity.dao.RolePrivilegeDao;
 import org.navistack.admin.modules.identity.dao.UserRoleDao;
-import org.navistack.admin.modules.identity.service.dto.RoleDto;
+import org.navistack.admin.modules.identity.service.dto.RoleCreateDto;
+import org.navistack.admin.modules.identity.service.dto.RoleModifyDto;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
@@ -36,7 +37,7 @@ class RoleServiceImplTest {
     void create_shouldCreateSuccessfully() {
         when(dao.selectIdByCode("DEPT_MGR"))
                 .thenReturn(null);
-        RoleDto dto = new RoleDto();
+        RoleCreateDto dto = new RoleCreateDto();
         dto.setCode("DEPT_MGR");
         dto.setName("Department Manager");
         service.create(dto);
@@ -49,7 +50,7 @@ class RoleServiceImplTest {
         when(dao.selectIdByCode("DEPT_MGR"))
                 .thenReturn(1L);
         assertThatThrownBy(() -> {
-            RoleDto dto = new RoleDto();
+            RoleCreateDto dto = new RoleCreateDto();
             dto.setCode("DEPT_MGR");
             dto.setName("Department Manager");
             service.create(dto);
@@ -63,7 +64,7 @@ class RoleServiceImplTest {
                 .thenReturn(true);
         when(dao.selectIdByCode("DEPT_MGR"))
                 .thenReturn(null);
-        RoleDto dto = new RoleDto();
+        RoleModifyDto dto = new RoleModifyDto();
         dto.setId(1L);
         dto.setCode("DEPT_MGR");
         dto.setName("Manager of Department");
@@ -79,7 +80,7 @@ class RoleServiceImplTest {
         when(dao.selectIdByCode("GRL_MGR"))
                 .thenReturn(1L);
         assertThatThrownBy(() -> {
-            RoleDto dto = new RoleDto();
+            RoleModifyDto dto = new RoleModifyDto();
             dto.setId(2L);
             dto.setCode("GRL_MGR");
             dto.setName("General Manager");

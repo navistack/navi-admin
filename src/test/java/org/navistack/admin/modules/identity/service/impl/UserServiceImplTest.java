@@ -8,7 +8,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.navistack.admin.modules.identity.dao.UserDao;
 import org.navistack.admin.modules.identity.dao.UserRoleDao;
 import org.navistack.admin.modules.identity.enums.Gender;
-import org.navistack.admin.modules.identity.service.dto.UserDto;
+import org.navistack.admin.modules.identity.service.dto.UserCreateDto;
+import org.navistack.admin.modules.identity.service.dto.UserModifyDto;
 import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,7 +42,7 @@ class UserServiceImplTest {
                 .thenReturn(null);
         when(dao.selectIdByEmailAddress("cynthia_lyons@dayrep.com"))
                 .thenReturn(null);
-        UserDto dto = new UserDto();
+        UserCreateDto dto = new UserCreateDto();
         dto.setNickName("Cynthia G. Lyons");
         dto.setGender(Gender.FEMALE);
         dto.setBirthday(LocalDate.of(2003, 3, 4));
@@ -58,7 +59,7 @@ class UserServiceImplTest {
         when(dao.selectIdByLoginName("cynthia_lyons"))
                 .thenReturn(1L);
         assertThatThrownBy(() -> {
-            UserDto dto = new UserDto();
+            UserCreateDto dto = new UserCreateDto();
             dto.setLoginName("cynthia_lyons");
             dto.setMobileNumber("256-344-0699");
             dto.setEmailAddress("cynthia_lyons@dayrep.com");
@@ -74,7 +75,7 @@ class UserServiceImplTest {
         when(dao.selectIdByMobileNumber("256-344-0699"))
                 .thenReturn(1L);
         assertThatThrownBy(() -> {
-            UserDto dto = new UserDto();
+            UserCreateDto dto = new UserCreateDto();
             dto.setLoginName("cynthia_lyons");
             dto.setMobileNumber("256-344-0699");
             dto.setEmailAddress("cynthia_lyons@dayrep.com");
@@ -92,7 +93,7 @@ class UserServiceImplTest {
         when(dao.selectIdByEmailAddress("cynthia_lyons@dayrep.com"))
                 .thenReturn(1L);
         assertThatThrownBy(() -> {
-            UserDto dto = new UserDto();
+            UserCreateDto dto = new UserCreateDto();
             dto.setLoginName("cynthia_lyons");
             dto.setMobileNumber("256-344-0699");
             dto.setEmailAddress("cynthia_lyons@dayrep.com");
@@ -111,7 +112,7 @@ class UserServiceImplTest {
                 .thenReturn(null);
         when(dao.selectIdByEmailAddress("cynthia_lyons@dayrep.com"))
                 .thenReturn(null);
-        UserDto dto = new UserDto();
+        UserModifyDto dto = new UserModifyDto();
         dto.setId(1L);
         dto.setNickName("Cynthia G. Lyons");
         dto.setGender(Gender.FEMALE);
@@ -131,7 +132,7 @@ class UserServiceImplTest {
         when(dao.selectIdByLoginName("donna_roder"))
                 .thenReturn(2L);
         assertThatThrownBy(() -> {
-            UserDto dto = new UserDto();
+            UserModifyDto dto = new UserModifyDto();
             dto.setId(1L);
             dto.setLoginName("donna_roder");
             dto.setMobileNumber("256-344-0699");
@@ -150,7 +151,7 @@ class UserServiceImplTest {
         when(dao.selectIdByMobileNumber("415-227-5917"))
                 .thenReturn(2L);
         assertThatThrownBy(() -> {
-            UserDto dto = new UserDto();
+            UserModifyDto dto = new UserModifyDto();
             dto.setId(1L);
             dto.setLoginName("cynthia_lyons");
             dto.setMobileNumber("415-227-5917");
@@ -171,7 +172,7 @@ class UserServiceImplTest {
         when(dao.selectIdByEmailAddress("donna_roder@rhyta.com"))
                 .thenReturn(2L);
         assertThatThrownBy(() -> {
-            UserDto dto = new UserDto();
+            UserModifyDto dto = new UserModifyDto();
             dto.setId(1L);
             dto.setLoginName("cynthia_lyons");
             dto.setMobileNumber("256-344-0699");

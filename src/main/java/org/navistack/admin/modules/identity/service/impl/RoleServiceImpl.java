@@ -8,11 +8,13 @@ import org.navistack.admin.modules.identity.dtobj.RoleDo;
 import org.navistack.admin.modules.identity.dtobj.RolePrivilegeDo;
 import org.navistack.admin.modules.identity.query.RoleQuery;
 import org.navistack.admin.modules.identity.service.RoleService;
-import org.navistack.admin.modules.identity.service.convert.RoleDoConvert;
 import org.navistack.admin.modules.identity.service.convert.RoleDetailVmConvert;
-import org.navistack.admin.modules.identity.service.convert.RoleDtoConvert;
-import org.navistack.admin.modules.identity.service.dto.RoleDto;
+import org.navistack.admin.modules.identity.service.convert.RoleDoConvert;
+import org.navistack.admin.modules.identity.service.convert.RoleVmConvert;
+import org.navistack.admin.modules.identity.service.dto.RoleCreateDto;
+import org.navistack.admin.modules.identity.service.dto.RoleModifyDto;
 import org.navistack.admin.modules.identity.service.vm.RoleDetailVm;
+import org.navistack.admin.modules.identity.service.vm.RoleVm;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
@@ -47,14 +49,14 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Page<RoleDto> paginate(RoleQuery query, Pageable pageable) {
+    public Page<RoleVm> paginate(RoleQuery query, Pageable pageable) {
         long totalRecords = dao.countByQuery(query);
         if (totalRecords <= 0) {
             return PageBuilder.emptyPage();
         }
         return dao.paginateByQuery(query, pageable)
                 .stream()
-                .map(RoleDtoConvert.INSTANCE::from)
+                .map(RoleVmConvert.INSTANCE::from)
                 .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
@@ -70,8 +72,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void create(RoleDto dto) {
-        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Role code has been taken already"));
+    public void create(RoleCreateDto dto) {
+        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Role code has been taken already"));
 
         RoleDo dtObj = RoleDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.created(dtObj);
@@ -81,7 +83,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void modify(RoleDto dto) {
+    public void modify(RoleModifyDto dto) {
         Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Role does not exist"));
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Role code has been taken already"));
 
@@ -119,6 +121,11 @@ public class RoleServiceImpl implements RoleService {
 
     protected boolean validateExistenceById(Long id) {
         return id != null && dao.existsById(id);
+    }
+
+    protected boolean validateAvailabilityOfCode(String code) {
+        Long currentId = dao.selectIdByCode(code);
+        return currentId == null;
     }
 
     protected boolean validateAvailabilityOfCode(String code, Long modifiedId) {

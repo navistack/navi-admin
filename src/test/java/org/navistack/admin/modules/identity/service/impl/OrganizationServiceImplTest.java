@@ -6,7 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.navistack.admin.modules.identity.dao.OrganizationDao;
-import org.navistack.admin.modules.identity.service.dto.OrganizationDto;
+import org.navistack.admin.modules.identity.service.dto.OrganizationCreateDto;
+import org.navistack.admin.modules.identity.service.dto.OrganizationModifyDto;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
@@ -29,7 +30,7 @@ class OrganizationServiceImplTest {
                 .thenReturn(true);
         when(dao.selectIdByCode("TK03"))
                 .thenReturn(null);
-        OrganizationDto dto = new OrganizationDto();
+        OrganizationCreateDto dto = new OrganizationCreateDto();
         dto.setCode("TK03");
         dto.setName("Sub-organization 02");
         dto.setSuperId(1L);
@@ -43,7 +44,7 @@ class OrganizationServiceImplTest {
         when(dao.selectIdByCode("TK02"))
                 .thenReturn(2L);
         assertThatThrownBy(() -> {
-            OrganizationDto dto = new OrganizationDto();
+            OrganizationCreateDto dto = new OrganizationCreateDto();
             dto.setCode("TK02");
             dto.setName("Sub-organization 01");
             dto.setSuperId(1L);
@@ -59,14 +60,14 @@ class OrganizationServiceImplTest {
         when(dao.existsById(0L))
                 .thenReturn(false);
         assertThatThrownBy(() -> {
-            OrganizationDto dto = new OrganizationDto();
+            OrganizationCreateDto dto = new OrganizationCreateDto();
             dto.setCode("TK03");
             dto.setName("Sub-organization 02");
             service.create(dto);
         })
                 .isInstanceOf(NoSuchEntityException.class);
         assertThatThrownBy(() -> {
-            OrganizationDto dto = new OrganizationDto();
+            OrganizationCreateDto dto = new OrganizationCreateDto();
             dto.setCode("TK03");
             dto.setName("Sub-organization 02");
             dto.setSuperId(0L);
@@ -83,7 +84,7 @@ class OrganizationServiceImplTest {
                 .thenReturn(2L);
         when(dao.existsById(1L))
                 .thenReturn(true);
-        OrganizationDto dto = new OrganizationDto();
+        OrganizationModifyDto dto = new OrganizationModifyDto();
         dto.setId(2L);
         dto.setCode("TK04");
         dto.setName("Sub-organization 03");
@@ -100,7 +101,7 @@ class OrganizationServiceImplTest {
         when(dao.selectIdByCode("TK01"))
                 .thenReturn(3L);
         assertThatThrownBy(() -> {
-            OrganizationDto dto = new OrganizationDto();
+            OrganizationModifyDto dto = new OrganizationModifyDto();
             dto.setId(2L);
             dto.setCode("TK01");
             dto.setName("Sub-organization 03");
@@ -119,7 +120,7 @@ class OrganizationServiceImplTest {
         when(dao.existsById(0L))
                 .thenReturn(false);
         assertThatThrownBy(() -> {
-            OrganizationDto dto = new OrganizationDto();
+            OrganizationModifyDto dto = new OrganizationModifyDto();
             dto.setId(2L);
             dto.setCode("TK04");
             dto.setName("Sub-organization 03");
@@ -127,7 +128,7 @@ class OrganizationServiceImplTest {
         })
                 .isInstanceOf(NoSuchEntityException.class);
         assertThatThrownBy(() -> {
-            OrganizationDto dto = new OrganizationDto();
+            OrganizationModifyDto dto = new OrganizationModifyDto();
             dto.setId(2L);
             dto.setCode("TK04");
             dto.setName("Sub-organization 03");

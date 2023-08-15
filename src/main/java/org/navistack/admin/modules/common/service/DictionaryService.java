@@ -2,25 +2,28 @@ package org.navistack.admin.modules.common.service;
 
 import org.navistack.admin.modules.common.query.DictionaryItemQuery;
 import org.navistack.admin.modules.common.query.DictionaryQuery;
-import org.navistack.admin.modules.common.service.dto.DictionaryDto;
-import org.navistack.admin.modules.common.service.dto.DictionaryItemDto;
+import org.navistack.admin.modules.common.service.dto.DictionaryCreateDto;
+import org.navistack.admin.modules.common.service.dto.DictionaryItemModifyDto;
+import org.navistack.admin.modules.common.service.dto.DictionaryModifyDto;
+import org.navistack.admin.modules.common.service.vm.DictionaryVm;
+import org.navistack.admin.modules.system.web.rest.vm.DictionaryItemVm;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.Pageable;
 
 public interface DictionaryService {
-    Page<DictionaryDto> paginate(DictionaryQuery query, Pageable pageable);
+    Page<DictionaryVm> paginate(DictionaryQuery query, Pageable pageable);
 
-    void create(DictionaryDto dto);
+    void create(DictionaryCreateDto dto);
 
-    void modify(DictionaryDto dto);
+    void modify(DictionaryModifyDto dto);
 
     void remove(Long id);
 
-    Page<DictionaryItemDto> paginateItem(DictionaryItemQuery query, Pageable pageable);
+    Page<DictionaryItemVm> paginateItem(DictionaryItemQuery query, Pageable pageable);
 
-    void createItem(DictionaryItemDto dto);
+    void createItem(DictionaryItemModifyDto dto);
 
-    void modifyItem(DictionaryItemDto dto);
+    void modifyItem(DictionaryItemModifyDto dto);
 
     void removeItem(Long id);
 }

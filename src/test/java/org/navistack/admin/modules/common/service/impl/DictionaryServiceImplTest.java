@@ -7,8 +7,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.navistack.admin.modules.common.dao.DictionaryDao;
 import org.navistack.admin.modules.common.dao.DictionaryItemDao;
-import org.navistack.admin.modules.common.service.dto.DictionaryDto;
-import org.navistack.admin.modules.common.service.dto.DictionaryItemDto;
+import org.navistack.admin.modules.common.service.dto.DictionaryCreateDto;
+import org.navistack.admin.modules.common.service.dto.DictionaryItemModifyDto;
+import org.navistack.admin.modules.common.service.dto.DictionaryModifyDto;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
@@ -32,7 +33,7 @@ class DictionaryServiceImplTest {
     void create_shouldCreateSuccessfully() {
         when(dao.selectIdByCode("TCP_STATE"))
                 .thenReturn(null);
-        DictionaryDto dto = new DictionaryDto();
+        DictionaryCreateDto dto = new DictionaryCreateDto();
         dto.setCode("TCP_STATE");
         dto.setName("TCP State");
         service.create(dto);
@@ -45,7 +46,7 @@ class DictionaryServiceImplTest {
         when(dao.selectIdByCode("TCP_STATE"))
                 .thenReturn(1L);
         assertThatThrownBy(() -> {
-            DictionaryDto dto = new DictionaryDto();
+            DictionaryCreateDto dto = new DictionaryCreateDto();
             dto.setCode("TCP_STATE");
             dto.setName("TCP State");
             service.create(dto);
@@ -59,7 +60,7 @@ class DictionaryServiceImplTest {
                 .thenReturn(true);
         when(dao.selectIdByCode("TCP_STATE"))
                 .thenReturn(1L);
-        DictionaryDto dto = new DictionaryDto();
+        DictionaryModifyDto dto = new DictionaryModifyDto();
         dto.setId(1L);
         dto.setCode("TCP_STATE");
         dto.setName("TCP States");
@@ -75,7 +76,7 @@ class DictionaryServiceImplTest {
         when(dao.selectIdByCode("TCP_STATE"))
                 .thenReturn(1L);
         assertThatThrownBy(() -> {
-            DictionaryDto dto = new DictionaryDto();
+            DictionaryModifyDto dto = new DictionaryModifyDto();
             dto.setId(2L);
             dto.setCode("TCP_STATE");
             dto.setName("TCP State");
@@ -117,7 +118,7 @@ class DictionaryServiceImplTest {
                 .thenReturn(true);
         when(itemDao.selectIdByCodeAndDictionaryId("LISTEN", 1L))
                 .thenReturn(null);
-        DictionaryItemDto dto = new DictionaryItemDto();
+        DictionaryItemModifyDto dto = new DictionaryItemModifyDto();
         dto.setCode("LISTEN");
         dto.setName("Listen");
         dto.setDictionaryId(1L);
@@ -133,7 +134,7 @@ class DictionaryServiceImplTest {
         when(itemDao.selectIdByCodeAndDictionaryId("LISTEN", 1L))
                 .thenReturn(1L);
         assertThatThrownBy(() -> {
-            DictionaryItemDto dto = new DictionaryItemDto();
+            DictionaryItemModifyDto dto = new DictionaryItemModifyDto();
             dto.setCode("LISTEN");
             dto.setName("Listen");
             dto.setDictionaryId(1L);
@@ -145,7 +146,7 @@ class DictionaryServiceImplTest {
     @Test
     void createItem_shouldThrowNoSuchEntityExceptionWhenDictionaryIdIsWrong() {
         assertThatThrownBy(() -> {
-            DictionaryItemDto dto = new DictionaryItemDto();
+            DictionaryItemModifyDto dto = new DictionaryItemModifyDto();
             dto.setCode("LISTEN");
             dto.setName("Listen");
             dto.setDictionaryId(100L);
@@ -162,7 +163,7 @@ class DictionaryServiceImplTest {
                 .thenReturn(true);
         when(itemDao.selectIdByCodeAndDictionaryId("LISTEN", 1L))
                 .thenReturn(1L);
-        DictionaryItemDto dto = new DictionaryItemDto();
+        DictionaryItemModifyDto dto = new DictionaryItemModifyDto();
         dto.setId(1L);
         dto.setCode("LISTEN");
         dto.setName("Listen");
@@ -181,7 +182,7 @@ class DictionaryServiceImplTest {
         when(itemDao.selectIdByCodeAndDictionaryId("LISTEN", 1L))
                 .thenReturn(1L);
         assertThatThrownBy(() -> {
-            DictionaryItemDto dto = new DictionaryItemDto();
+            DictionaryItemModifyDto dto = new DictionaryItemModifyDto();
             dto.setId(2L);
             dto.setCode("LISTEN");
             dto.setName("Listen");
@@ -196,7 +197,7 @@ class DictionaryServiceImplTest {
         when(itemDao.existsById(1L))
                 .thenReturn(true);
         assertThatThrownBy(() -> {
-            DictionaryItemDto dto = new DictionaryItemDto();
+            DictionaryItemModifyDto dto = new DictionaryItemModifyDto();
             dto.setId(1L);
             dto.setCode("LISTEN");
             dto.setName("Listen");
@@ -204,7 +205,7 @@ class DictionaryServiceImplTest {
         })
                 .isInstanceOf(NoSuchEntityException.class);
         assertThatThrownBy(() -> {
-            DictionaryItemDto dto = new DictionaryItemDto();
+            DictionaryItemModifyDto dto = new DictionaryItemModifyDto();
             dto.setId(1L);
             dto.setCode("LISTEN");
             dto.setName("Listen");

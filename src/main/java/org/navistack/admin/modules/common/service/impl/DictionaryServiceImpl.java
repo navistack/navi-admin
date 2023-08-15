@@ -8,11 +8,14 @@ import org.navistack.admin.modules.common.query.DictionaryItemQuery;
 import org.navistack.admin.modules.common.query.DictionaryQuery;
 import org.navistack.admin.modules.common.service.DictionaryService;
 import org.navistack.admin.modules.common.service.convert.DictionaryDoConvert;
-import org.navistack.admin.modules.common.service.convert.DictionaryDtoConvert;
 import org.navistack.admin.modules.common.service.convert.DictionaryItemDoConvert;
-import org.navistack.admin.modules.common.service.convert.DictionaryItemDtoConvert;
-import org.navistack.admin.modules.common.service.dto.DictionaryDto;
-import org.navistack.admin.modules.common.service.dto.DictionaryItemDto;
+import org.navistack.admin.modules.common.service.convert.DictionaryItemVmConvert;
+import org.navistack.admin.modules.common.service.convert.DictionaryVmConvert;
+import org.navistack.admin.modules.common.service.dto.DictionaryCreateDto;
+import org.navistack.admin.modules.common.service.dto.DictionaryItemModifyDto;
+import org.navistack.admin.modules.common.service.dto.DictionaryModifyDto;
+import org.navistack.admin.modules.common.service.vm.DictionaryVm;
+import org.navistack.admin.modules.system.web.rest.vm.DictionaryItemVm;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
@@ -35,20 +38,20 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public Page<DictionaryDto> paginate(DictionaryQuery query, Pageable pageable) {
+    public Page<DictionaryVm> paginate(DictionaryQuery query, Pageable pageable) {
         long totalRecords = dao.countByQuery(query);
         if (totalRecords <= 0) {
             return PageBuilder.emptyPage();
         }
         return dao.paginateByQuery(query, pageable)
                 .stream()
-                .map(DictionaryDtoConvert.INSTANCE::from)
+                .map(DictionaryVmConvert.INSTANCE::from)
                 .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
     @Override
-    public void create(DictionaryDto dto) {
-        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Dictionary code has been taken already"));
+    public void create(DictionaryCreateDto dto) {
+        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Dictionary code has been taken already"));
 
         DictionaryDo dtObj = DictionaryDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.created(dtObj);
@@ -56,7 +59,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public void modify(DictionaryDto dto) {
+    public void modify(DictionaryModifyDto dto) {
         Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Dictionary code has been taken already"));
 
@@ -73,19 +76,19 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public Page<DictionaryItemDto> paginateItem(DictionaryItemQuery query, Pageable pageable) {
+    public Page<DictionaryItemVm> paginateItem(DictionaryItemQuery query, Pageable pageable) {
         long totalRecords = itemDao.countByQuery(query);
         if (totalRecords <= 0) {
             return PageBuilder.emptyPage();
         }
         return itemDao.paginateByQuery(query, pageable)
                 .stream()
-                .map(DictionaryItemDtoConvert.INSTANCE::from)
+                .map(DictionaryItemVmConvert.INSTANCE::from)
                 .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
     @Override
-    public void createItem(DictionaryItemDto dto) {
+    public void createItem(DictionaryItemModifyDto dto) {
         Asserts.state(dto.getDictionaryId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
         Asserts.state(this.validateItemAvailabilityOfCode(dto.getCode(), dto.getDictionaryId(), dto.getId()), () -> new DomainValidationException("Dictionary item code has been taken already"));
 
@@ -95,7 +98,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public void modifyItem(DictionaryItemDto dto) {
+    public void modifyItem(DictionaryItemModifyDto dto) {
         Asserts.state(dto.getId(), this::validateItemExistenceById, () -> new NoSuchEntityException("Dictionary item does not exist"));
         Asserts.state(dto.getDictionaryId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
         Asserts.state(this.validateItemAvailabilityOfCode(dto.getCode(), dto.getDictionaryId(), dto.getId()), () -> new DomainValidationException("Dictionary item code has been taken already"));
@@ -115,6 +118,11 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     protected boolean validateExistenceById(Long id) {
         return id != null && dao.existsById(id);
+    }
+
+    protected boolean validateAvailabilityOfCode(String code) {
+        Long currentId = dao.selectIdByCode(code);
+        return currentId == null;
     }
 
     protected boolean validateAvailabilityOfCode(String code, Long modifiedId) {

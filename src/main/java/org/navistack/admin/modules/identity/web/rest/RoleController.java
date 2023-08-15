@@ -3,13 +3,12 @@ package org.navistack.admin.modules.identity.web.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.groups.Default;
 import org.navistack.admin.modules.identity.query.RoleQuery;
 import org.navistack.admin.modules.identity.service.RoleService;
-import org.navistack.admin.modules.identity.service.dto.RoleDto;
+import org.navistack.admin.modules.identity.service.dto.RoleCreateDto;
+import org.navistack.admin.modules.identity.service.dto.RoleModifyDto;
 import org.navistack.admin.modules.identity.service.vm.RoleDetailVm;
-import org.navistack.admin.support.validation.groups.Create;
-import org.navistack.admin.support.validation.groups.Modify;
+import org.navistack.admin.modules.identity.service.vm.RoleVm;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +29,7 @@ public class RoleController {
     @GetMapping
     @PreAuthorize("hasAuthority('sys:role:query')")
     @Operation(summary = "Query Paged list of roles")
-    public Page<RoleDto> paginate(RoleQuery query, PageRequest pageRequest) {
+    public Page<RoleVm> paginate(RoleQuery query, PageRequest pageRequest) {
         return service.paginate(query, pageRequest);
     }
 
@@ -44,14 +43,14 @@ public class RoleController {
     @PostMapping
     @PreAuthorize("hasAuthority('sys:role:create')")
     @Operation(summary = "Create a role")
-    public void create(@Validated({Default.class, Create.class}) RoleDto dto) {
+    public void create(@Validated RoleCreateDto dto) {
         service.create(dto);
     }
 
     @PatchMapping
     @PreAuthorize("hasAuthority('sys:role:modify')")
     @Operation(summary = "Modify role")
-    public void modify(@Validated({Default.class, Modify.class}) RoleDto dto) {
+    public void modify(@Validated RoleModifyDto dto) {
         service.modify(dto);
     }
 

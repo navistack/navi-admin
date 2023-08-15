@@ -5,8 +5,10 @@ import org.navistack.admin.modules.common.dtobj.RegionDo;
 import org.navistack.admin.modules.common.query.RegionQuery;
 import org.navistack.admin.modules.common.service.RegionService;
 import org.navistack.admin.modules.common.service.convert.RegionDoConvert;
-import org.navistack.admin.modules.common.service.convert.RegionDtoConvert;
-import org.navistack.admin.modules.common.service.dto.RegionDto;
+import org.navistack.admin.modules.common.service.convert.RegionVmConvert;
+import org.navistack.admin.modules.common.service.dto.RegionCreateDto;
+import org.navistack.admin.modules.common.service.dto.RegionModifyDto;
+import org.navistack.admin.modules.system.web.rest.vm.RegionVm;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
@@ -27,20 +29,20 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public Page<RegionDto> paginate(RegionQuery query, Pageable pageable) {
+    public Page<RegionVm> paginate(RegionQuery query, Pageable pageable) {
         long totalRecords = dao.countByQuery(query);
         if (totalRecords <= 0) {
             return PageBuilder.emptyPage();
         }
         return dao.paginateByQuery(query, pageable)
                 .stream()
-                .map(RegionDtoConvert.INSTANCE::from)
+                .map(RegionVmConvert.INSTANCE::from)
                 .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
     @Override
-    public void create(RegionDto dto) {
-        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Region code has been taken already"));
+    public void create(RegionCreateDto dto) {
+        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Region code has been taken already"));
         Asserts.state(dto.getParentCode(), this::validateExistenceByCode, () -> new NoSuchEntityException("Parent does not exist"));
 
         RegionDo dtObj = RegionDoConvert.INSTANCE.from(dto);
@@ -49,7 +51,7 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public void modify(RegionDto dto) {
+    public void modify(RegionModifyDto dto) {
         Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Region does not exist"));
         Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Region code has been taken already"));
         Asserts.state(dto.getParentCode(), this::validateExistenceByCode, () -> new NoSuchEntityException("Parent does not exist"));
@@ -75,6 +77,11 @@ public class RegionServiceImpl implements RegionService {
 
     protected boolean validateExistenceByCode(String code) {
         return code != null && dao.existsByCode(code);
+    }
+
+    protected boolean validateAvailabilityOfCode(String code) {
+        Long currentId = dao.selectIdByCode(code);
+        return currentId == null;
     }
 
     protected boolean validateAvailabilityOfCode(String code, Long modifiedId) {

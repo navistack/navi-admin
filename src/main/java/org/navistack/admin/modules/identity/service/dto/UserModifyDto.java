@@ -4,16 +4,13 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.navistack.admin.modules.identity.enums.Gender;
 import org.navistack.admin.modules.identity.enums.UserStatus;
-import org.navistack.admin.support.validation.groups.Create;
-import org.navistack.admin.support.validation.groups.Modify;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class UserDto {
-    @Null(groups = Create.class)
-    @NotNull(groups = Modify.class)
+public class UserModifyDto {
+    @NotNull
     private Long id;
 
     @NotEmpty

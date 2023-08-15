@@ -6,7 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.navistack.admin.modules.common.dao.RegionDao;
-import org.navistack.admin.modules.common.service.dto.RegionDto;
+import org.navistack.admin.modules.common.service.dto.RegionCreateDto;
+import org.navistack.admin.modules.common.service.dto.RegionModifyDto;
 import org.navistack.framework.core.error.ConstraintViolationException;
 import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
@@ -29,7 +30,7 @@ class RegionServiceImplTest {
                 .thenReturn(true);
         when(dao.selectIdByCode("RG-01"))
                 .thenReturn(null);
-        RegionDto dto = new RegionDto();
+        RegionCreateDto dto = new RegionCreateDto();
         dto.setCode("RG-01");
         dto.setName("Sub-region 01");
         dto.setParentCode("RG");
@@ -43,7 +44,7 @@ class RegionServiceImplTest {
         when(dao.selectIdByCode("RG-01"))
                 .thenReturn(2L);
         assertThatThrownBy(() -> {
-            RegionDto dto = new RegionDto();
+            RegionCreateDto dto = new RegionCreateDto();
             dto.setCode("RG-01");
             dto.setName("Sub-region 01");
             dto.setParentCode("RG");
@@ -57,14 +58,14 @@ class RegionServiceImplTest {
         when(dao.selectIdByCode("RG-02"))
                 .thenReturn(null);
         assertThatThrownBy(() -> {
-            RegionDto dto = new RegionDto();
+            RegionCreateDto dto = new RegionCreateDto();
             dto.setCode("RG-02");
             dto.setName("Sub-region 02");
             service.create(dto);
         })
                 .isInstanceOf(NoSuchEntityException.class);
         assertThatThrownBy(() -> {
-            RegionDto dto = new RegionDto();
+            RegionCreateDto dto = new RegionCreateDto();
             dto.setCode("RG-02");
             dto.setName("Sub-region 02");
             dto.setParentCode("RH");
@@ -81,7 +82,7 @@ class RegionServiceImplTest {
                 .thenReturn(true);
         when(dao.selectIdByCode("RG-02"))
                 .thenReturn(null);
-        RegionDto dto = new RegionDto();
+        RegionModifyDto dto = new RegionModifyDto();
         dto.setId(2L);
         dto.setCode("RG-02");
         dto.setName("Sub-region 02");
@@ -98,7 +99,7 @@ class RegionServiceImplTest {
         when(dao.selectIdByCode("RG"))
                 .thenReturn(1L);
         assertThatThrownBy(() -> {
-            RegionDto dto = new RegionDto();
+            RegionModifyDto dto = new RegionModifyDto();
             dto.setId(2L);
             dto.setCode("RG");
             dto.setName("Sub-region 02");
@@ -115,7 +116,7 @@ class RegionServiceImplTest {
         when(dao.selectIdByCode("RG-03"))
                 .thenReturn(2L);
         assertThatThrownBy(() -> {
-            RegionDto dto = new RegionDto();
+            RegionModifyDto dto = new RegionModifyDto();
             dto.setId(2L);
             dto.setCode("RG-03");
             dto.setName("Sub-region 03");
@@ -123,7 +124,7 @@ class RegionServiceImplTest {
         })
                 .isInstanceOf(NoSuchEntityException.class);
         assertThatThrownBy(() -> {
-            RegionDto dto = new RegionDto();
+            RegionModifyDto dto = new RegionModifyDto();
             dto.setId(2L);
             dto.setCode("RG-03");
             dto.setName("Sub-region 03");

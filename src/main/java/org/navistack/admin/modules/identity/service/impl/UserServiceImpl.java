@@ -9,9 +9,11 @@ import org.navistack.admin.modules.identity.query.UserQuery;
 import org.navistack.admin.modules.identity.service.UserService;
 import org.navistack.admin.modules.identity.service.convert.UserDetailVmConvert;
 import org.navistack.admin.modules.identity.service.convert.UserDoConvert;
-import org.navistack.admin.modules.identity.service.convert.UserDtoConvert;
-import org.navistack.admin.modules.identity.service.dto.UserDto;
+import org.navistack.admin.modules.identity.service.convert.UserVmConvert;
+import org.navistack.admin.modules.identity.service.dto.UserCreateDto;
+import org.navistack.admin.modules.identity.service.dto.UserModifyDto;
 import org.navistack.admin.modules.identity.service.vm.UserDetailVm;
+import org.navistack.admin.modules.identity.service.vm.UserVm;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
 import org.navistack.framework.core.error.DomainValidationException;
 import org.navistack.framework.core.error.NoSuchEntityException;
@@ -59,14 +61,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserDto> paginate(UserQuery query, Pageable pageable) {
+    public Page<UserVm> paginate(UserQuery query, Pageable pageable) {
         long totalRecords = dao.countByQuery(query);
         if (totalRecords <= 0) {
             return PageBuilder.emptyPage();
         }
         return dao.paginateByQuery(query, pageable)
                 .stream()
-                .map(UserDtoConvert.INSTANCE::from)
+                .map(UserVmConvert.INSTANCE::from)
                 .collect(PageBuilder.collector(pageable, totalRecords));
     }
 
@@ -82,10 +84,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void create(UserDto dto) {
-        Asserts.state(dto.getLoginName(), dto.getId(), this::validateAvailabilityOfLoginName, () -> new DomainValidationException("Login name has been taken already"));
-        Asserts.state(dto.getMobileNumber(), dto.getId(), this::validateAvailabilityOfMobileNumber, () -> new DomainValidationException("Mobile number has been taken already"));
-        Asserts.state(dto.getEmailAddress(), dto.getId(), this::validateAvailabilityOfEmailAddress, () -> new DomainValidationException("Email address has been taken already"));
+    public void create(UserCreateDto dto) {
+        Asserts.state(dto.getLoginName(), this::validateAvailabilityOfLoginName, () -> new DomainValidationException("Login name has been taken already"));
+        Asserts.state(dto.getMobileNumber(), this::validateAvailabilityOfMobileNumber, () -> new DomainValidationException("Mobile number has been taken already"));
+        Asserts.state(dto.getEmailAddress(), this::validateAvailabilityOfEmailAddress, () -> new DomainValidationException("Email address has been taken already"));
 
         String plainPassword = dto.getPassword();
         String password = passwordEncoder.encode(plainPassword);
@@ -99,7 +101,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void modify(UserDto dto) {
+    public void modify(UserModifyDto dto) {
         Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("User does not exist"));
         Asserts.state(dto.getLoginName(), dto.getId(), this::validateAvailabilityOfLoginName, () -> new DomainValidationException("Login name has been taken already"));
         Asserts.state(dto.getMobileNumber(), dto.getId(), this::validateAvailabilityOfMobileNumber, () -> new DomainValidationException("Mobile number has been taken already"));
@@ -145,14 +147,29 @@ public class UserServiceImpl implements UserService {
         return id != null && dao.existsById(id);
     }
 
+    protected boolean validateAvailabilityOfLoginName(String loginName) {
+        Long currentId = dao.selectIdByLoginName(loginName);
+        return currentId == null;
+    }
+
     protected boolean validateAvailabilityOfLoginName(String loginName, Long modifiedId) {
         Long currentId = dao.selectIdByLoginName(loginName);
         return currentId == null || currentId.equals(modifiedId);
     }
 
+    protected boolean validateAvailabilityOfMobileNumber(String mobileNumber) {
+        Long currentId = dao.selectIdByMobileNumber(mobileNumber);
+        return currentId == null;
+    }
+
     protected boolean validateAvailabilityOfMobileNumber(String mobileNumber, Long modifiedId) {
         Long currentId = dao.selectIdByMobileNumber(mobileNumber);
         return currentId == null || currentId.equals(modifiedId);
+    }
+
+    protected boolean validateAvailabilityOfEmailAddress(String emailAddress) {
+        Long currentId = dao.selectIdByEmailAddress(emailAddress);
+        return currentId == null;
     }
 
     protected boolean validateAvailabilityOfEmailAddress(String emailAddress, Long modifiedId) {
