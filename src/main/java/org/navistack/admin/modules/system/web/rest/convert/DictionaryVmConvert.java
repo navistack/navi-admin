@@ -6,8 +6,8 @@ import org.navistack.admin.modules.common.dtobj.DictionaryDo;
 import org.navistack.admin.modules.system.web.rest.vm.DictionaryVm;
 
 @Mapper
-public interface DictionaryVmConverter {
-    DictionaryVmConverter INSTANCE = Mappers.getMapper(DictionaryVmConverter.class);
+public interface DictionaryVmConvert {
+    DictionaryVmConvert INSTANCE = Mappers.getMapper(DictionaryVmConvert.class);
 
     DictionaryVm from(DictionaryDo dtObj);
 }

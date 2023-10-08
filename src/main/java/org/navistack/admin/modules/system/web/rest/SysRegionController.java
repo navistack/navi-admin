@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.navistack.admin.modules.common.dao.RegionDao;
 import org.navistack.admin.modules.common.dtobj.RegionDo;
-import org.navistack.admin.modules.system.web.rest.convert.RegionVmConverter;
+import org.navistack.admin.modules.system.web.rest.convert.RegionVmConvert;
 import org.navistack.admin.modules.system.web.rest.vm.RegionVm;
 import org.navistack.framework.data.TreeBuilder;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +29,7 @@ public class SysRegionController {
     public Collection<RegionVm> get() {
         List<RegionDo> regions = regionDao.selectAll();
         return regions.stream()
-                .map(RegionVmConverter.INSTANCE::from)
+                .map(RegionVmConvert.INSTANCE::from)
                 .collect(Collectors.toList());
     }
 
@@ -47,7 +47,7 @@ public class SysRegionController {
         }
 
         return regions.stream()
-                .map(RegionVmConverter.INSTANCE::from)
-                .collect(TreeBuilder.<RegionVm>of().orphanAsRoot(true).toCollector());
+                .map(RegionVmConvert.INSTANCE::from)
+                .collect(TreeBuilder.collector());
     }
 }

@@ -6,8 +6,8 @@ import org.navistack.admin.modules.common.dao.DictionaryDao;
 import org.navistack.admin.modules.common.dao.DictionaryItemDao;
 import org.navistack.admin.modules.common.dtobj.DictionaryDo;
 import org.navistack.admin.modules.common.dtobj.DictionaryItemDo;
-import org.navistack.admin.modules.system.web.rest.convert.DictionaryItemVmConverter;
-import org.navistack.admin.modules.system.web.rest.convert.DictionaryVmConverter;
+import org.navistack.admin.modules.system.web.rest.convert.DictionaryItemVmConvert;
+import org.navistack.admin.modules.system.web.rest.convert.DictionaryVmConvert;
 import org.navistack.admin.modules.system.web.rest.vm.DictionaryItemVm;
 import org.navistack.admin.modules.system.web.rest.vm.DictionaryVm;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,14 +41,14 @@ public class SysDictionaryController {
         List<DictionaryItemDo> items = dictionaryItemDao.selectAll();
         if (items.isEmpty()) {
             return dictionaries.stream()
-                    .map(DictionaryVmConverter.INSTANCE::from)
+                    .map(DictionaryVmConvert.INSTANCE::from)
                     .collect(Collectors.toList());
         }
 
         Collection<DictionaryVm> dictionaryVms = new ArrayList<>(dictionaries.size());
         Map<Long, DictionaryVm> dictVmMap = new HashMap<>(dictionaries.size());
         for (DictionaryDo dict : dictionaries) {
-            DictionaryVm vm = DictionaryVmConverter.INSTANCE.from(dict);
+            DictionaryVm vm = DictionaryVmConvert.INSTANCE.from(dict);
             dictVmMap.put(dict.getId(), vm);
         }
 
@@ -62,7 +62,7 @@ public class SysDictionaryController {
                 vmItems = new ArrayList<>();
                 dictionaryVm.setItems(vmItems);
             }
-            DictionaryItemVm itemVm = DictionaryItemVmConverter.INSTANCE.from(item);
+            DictionaryItemVm itemVm = DictionaryItemVmConvert.INSTANCE.from(item);
             vmItems.add(itemVm);
         }
 
@@ -77,14 +77,14 @@ public class SysDictionaryController {
             return null;
         }
 
-        DictionaryVm dictionaryVm = DictionaryVmConverter.INSTANCE.from(dictionary);
+        DictionaryVm dictionaryVm = DictionaryVmConvert.INSTANCE.from(dictionary);
         List<DictionaryItemDo> items = dictionaryItemDao.selectAllByDictionaryId(dictionary.getId());
         if (items.isEmpty()) {
             return dictionaryVm;
         }
 
         Collection<DictionaryItemVm> dictionaryItemVms = items.stream()
-                .map(DictionaryItemVmConverter.INSTANCE::from)
+                .map(DictionaryItemVmConvert.INSTANCE::from)
                 .collect(Collectors.toList());
         dictionaryVm.setItems(dictionaryItemVms);
         return dictionaryVm;
@@ -104,7 +104,7 @@ public class SysDictionaryController {
         }
 
         return items.stream()
-                .map(DictionaryItemVmConverter.INSTANCE::from)
+                .map(DictionaryItemVmConvert.INSTANCE::from)
                 .collect(Collectors.toList());
     }
 }

@@ -6,8 +6,8 @@ import org.navistack.admin.modules.common.dtobj.RegionDo;
 import org.navistack.admin.modules.system.web.rest.vm.RegionVm;
 
 @Mapper
-public interface RegionVmConverter {
-    RegionVmConverter INSTANCE = Mappers.getMapper(RegionVmConverter.class);
+public interface RegionVmConvert {
+    RegionVmConvert INSTANCE = Mappers.getMapper(RegionVmConvert.class);
 
     RegionVm from(RegionDo dtObj);
 }
