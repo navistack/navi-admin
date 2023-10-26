@@ -2,12 +2,10 @@ package org.navistack.admin.modules.system.web.rest.vm;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import org.navistack.framework.data.AbstractTreeNode;
 import org.navistack.framework.data.TreeNode;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 @Data
 public class RegionVm implements TreeNode<String, RegionVm> {

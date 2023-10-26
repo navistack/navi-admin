@@ -22,7 +22,8 @@ public class UserDo extends IdentifyingDataObject<Long> {
     private String loginName;
 
     /**
-     * aka international mobile dial codes
+     * Mobile Number.
+     * Aka international mobile dial codes
      *
      * @see <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
      */
@@ -31,7 +32,7 @@ public class UserDo extends IdentifyingDataObject<Long> {
     private String emailAddress;
 
     /**
-     * BCrypt hashed password
+     * BCrypt hashed password.
      */
     private String password;
 

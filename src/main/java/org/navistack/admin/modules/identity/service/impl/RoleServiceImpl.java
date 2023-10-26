@@ -73,7 +73,8 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(RoleCreateDto dto) {
-        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Role code has been taken already"));
+        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode,
+                () -> new DomainValidationException("Role code has been taken already"));
 
         RoleDo dtObj = RoleDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.created(dtObj);
@@ -84,8 +85,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void modify(RoleModifyDto dto) {
-        Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Role does not exist"));
-        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Role code has been taken already"));
+        Asserts.state(dto.getId(), this::validateExistenceById,
+                () -> new NoSuchEntityException("Role does not exist"));
+        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode,
+                () -> new DomainValidationException("Role code has been taken already"));
 
         RoleDo dtObj = RoleDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.updated(dtObj);
@@ -96,8 +99,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void remove(Long id) {
-        Asserts.state(id, this::validateExistenceById, () -> new NoSuchEntityException("Role does not exist"));
-        Asserts.state(id, this::validateAbsenceOfUser, () -> new ConstraintViolationException("Role can not be removed due to user(s) attached"));
+        Asserts.state(id, this::validateExistenceById,
+                () -> new NoSuchEntityException("Role does not exist"));
+        Asserts.state(id, this::validateAbsenceOfUser,
+                () -> new ConstraintViolationException("Role can not be removed due to user(s) attached"));
 
         dao.deleteById(id);
         rolePrivilegeDao.deleteAllByRoleId(id);

@@ -51,7 +51,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public void create(DictionaryCreateDto dto) {
-        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Dictionary code has been taken already"));
+        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode,
+                () -> new DomainValidationException("Dictionary code has been taken already"));
 
         DictionaryDo dtObj = DictionaryDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.created(dtObj);
@@ -60,8 +61,10 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public void modify(DictionaryModifyDto dto) {
-        Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
-        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Dictionary code has been taken already"));
+        Asserts.state(dto.getId(), this::validateExistenceById,
+                () -> new NoSuchEntityException("Dictionary does not exist"));
+        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode,
+                () -> new DomainValidationException("Dictionary code has been taken already"));
 
         DictionaryDo dtObj = DictionaryDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.updated(dtObj);
@@ -70,8 +73,10 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public void remove(Long id) {
-        Asserts.state(id, this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
-        Asserts.state(id, this::validateAbsenceOfItem, () -> new ConstraintViolationException("Dictionary can not be removed as item(s) exist(s)"));
+        Asserts.state(id, this::validateExistenceById,
+                () -> new NoSuchEntityException("Dictionary does not exist"));
+        Asserts.state(id, this::validateAbsenceOfItem,
+                () -> new ConstraintViolationException("Dictionary can not be removed as item(s) exist(s)"));
         dao.deleteById(id);
     }
 
@@ -89,8 +94,10 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public void createItem(DictionaryItemModifyDto dto) {
-        Asserts.state(dto.getDictionaryId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
-        Asserts.state(this.validateItemAvailabilityOfCode(dto.getCode(), dto.getDictionaryId(), dto.getId()), () -> new DomainValidationException("Dictionary item code has been taken already"));
+        Asserts.state(dto.getDictionaryId(), this::validateExistenceById,
+                () -> new NoSuchEntityException("Dictionary does not exist"));
+        Asserts.state(this.validateItemAvailabilityOfCode(dto.getCode(), dto.getDictionaryId(), dto.getId()),
+                () -> new DomainValidationException("Dictionary item code has been taken already"));
 
         DictionaryItemDo dtObj = DictionaryItemDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.created(dtObj);
@@ -99,9 +106,12 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public void modifyItem(DictionaryItemModifyDto dto) {
-        Asserts.state(dto.getId(), this::validateItemExistenceById, () -> new NoSuchEntityException("Dictionary item does not exist"));
-        Asserts.state(dto.getDictionaryId(), this::validateExistenceById, () -> new NoSuchEntityException("Dictionary does not exist"));
-        Asserts.state(this.validateItemAvailabilityOfCode(dto.getCode(), dto.getDictionaryId(), dto.getId()), () -> new DomainValidationException("Dictionary item code has been taken already"));
+        Asserts.state(dto.getId(), this::validateItemExistenceById,
+                () -> new NoSuchEntityException("Dictionary item does not exist"));
+        Asserts.state(dto.getDictionaryId(), this::validateExistenceById,
+                () -> new NoSuchEntityException("Dictionary does not exist"));
+        Asserts.state(this.validateItemAvailabilityOfCode(dto.getCode(), dto.getDictionaryId(), dto.getId()),
+                () -> new DomainValidationException("Dictionary item code has been taken already"));
 
         DictionaryItemDo dtObj = DictionaryItemDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.updated(dtObj);
@@ -110,7 +120,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public void removeItem(Long id) {
-        Asserts.state(id, this::validateItemExistenceById, () -> new NoSuchEntityException("Dictionary item does not exist"));
+        Asserts.state(id, this::validateItemExistenceById,
+                () -> new NoSuchEntityException("Dictionary item does not exist"));
         itemDao.deleteById(id);
     }
 

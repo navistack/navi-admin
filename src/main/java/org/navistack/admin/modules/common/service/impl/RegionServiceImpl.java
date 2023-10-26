@@ -42,8 +42,10 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public void create(RegionCreateDto dto) {
-        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Region code has been taken already"));
-        Asserts.state(dto.getParentCode(), this::validateExistenceByCode, () -> new NoSuchEntityException("Parent does not exist"));
+        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode,
+                () -> new DomainValidationException("Region code has been taken already"));
+        Asserts.state(dto.getParentCode(), this::validateExistenceByCode,
+                () -> new NoSuchEntityException("Parent does not exist"));
 
         RegionDo dtObj = RegionDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.created(dtObj);
@@ -52,9 +54,12 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public void modify(RegionModifyDto dto) {
-        Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Region does not exist"));
-        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Region code has been taken already"));
-        Asserts.state(dto.getParentCode(), this::validateExistenceByCode, () -> new NoSuchEntityException("Parent does not exist"));
+        Asserts.state(dto.getId(), this::validateExistenceById,
+                () -> new NoSuchEntityException("Region does not exist"));
+        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode,
+                () -> new DomainValidationException("Region code has been taken already"));
+        Asserts.state(dto.getParentCode(), this::validateExistenceByCode,
+                () -> new NoSuchEntityException("Parent does not exist"));
 
         RegionDo dtObj = RegionDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.updated(dtObj);
@@ -63,8 +68,10 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public void remove(Long id) {
-        Asserts.state(id, this::validateExistenceById, () -> new NoSuchEntityException("Privilege does not exist"));
-        Asserts.state(id, this::validateAbsenceOfSubordinate, () -> new ConstraintViolationException("Privileges can not be removed as sub-privilege(s) exist(s)"));
+        Asserts.state(id, this::validateExistenceById,
+                () -> new NoSuchEntityException("Privilege does not exist"));
+        Asserts.state(id, this::validateAbsenceOfSubordinate,
+                () -> new ConstraintViolationException("Privileges can not be removed as sub-privilege(s) exist(s)"));
 
         dao.deleteById(id);
     }

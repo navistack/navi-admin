@@ -41,8 +41,10 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 
     @Override
     public void create(PrivilegeCreateDto dto) {
-        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Privilege code has been taken already"));
-        Asserts.state(dto.getParentId(), this::validateExistenceById, () -> new NoSuchEntityException("Parent does not exist"));
+        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode,
+                () -> new DomainValidationException("Privilege code has been taken already"));
+        Asserts.state(dto.getParentId(), this::validateExistenceById,
+                () -> new NoSuchEntityException("Parent does not exist"));
 
         PrivilegeDo dtObj = PrivilegeDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.created(dtObj);
@@ -51,9 +53,12 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 
     @Override
     public void modify(PrivilegeModifyDto dto) {
-        Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Privilege does not exist"));
-        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Privilege code has been taken already"));
-        Asserts.state(dto.getParentId(), this::validateExistenceById, () -> new NoSuchEntityException("Parent does not exist"));
+        Asserts.state(dto.getId(), this::validateExistenceById,
+                () -> new NoSuchEntityException("Privilege does not exist"));
+        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode,
+                () -> new DomainValidationException("Privilege code has been taken already"));
+        Asserts.state(dto.getParentId(), this::validateExistenceById,
+                () -> new NoSuchEntityException("Parent does not exist"));
 
         PrivilegeDo dtObj = PrivilegeDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.updated(dtObj);
@@ -62,8 +67,10 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 
     @Override
     public void remove(Long id) {
-        Asserts.state(id, this::validateExistenceById, () -> new NoSuchEntityException("Privilege does not exist"));
-        Asserts.state(id, this::validateAbsenceOfSubordinate, () -> new ConstraintViolationException("Privileges can not be removed as sub-privilege(s) exist(s)"));
+        Asserts.state(id, this::validateExistenceById,
+                () -> new NoSuchEntityException("Privilege does not exist"));
+        Asserts.state(id, this::validateAbsenceOfSubordinate,
+                () -> new ConstraintViolationException("Privileges can not be removed as sub-privilege(s) exist(s)"));
         dao.deleteById(id);
     }
 

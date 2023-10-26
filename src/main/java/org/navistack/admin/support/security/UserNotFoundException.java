@@ -19,7 +19,10 @@ public class UserNotFoundException extends TokenServiceException {
         super(cause);
     }
 
-    protected UserNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    protected UserNotFoundException(String message,
+                                    Throwable cause,
+                                    boolean enableSuppression,
+                                    boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -85,9 +85,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(UserCreateDto dto) {
-        Asserts.state(dto.getLoginName(), this::validateAvailabilityOfLoginName, () -> new DomainValidationException("Login name has been taken already"));
-        Asserts.state(dto.getMobileNumber(), this::validateAvailabilityOfMobileNumber, () -> new DomainValidationException("Mobile number has been taken already"));
-        Asserts.state(dto.getEmailAddress(), this::validateAvailabilityOfEmailAddress, () -> new DomainValidationException("Email address has been taken already"));
+        Asserts.state(dto.getLoginName(), this::validateAvailabilityOfLoginName,
+                () -> new DomainValidationException("Login name has been taken already"));
+        Asserts.state(dto.getMobileNumber(), this::validateAvailabilityOfMobileNumber,
+                () -> new DomainValidationException("Mobile number has been taken already"));
+        Asserts.state(dto.getEmailAddress(), this::validateAvailabilityOfEmailAddress,
+                () -> new DomainValidationException("Email address has been taken already"));
 
         String plainPassword = dto.getPassword();
         String password = passwordEncoder.encode(plainPassword);
@@ -102,10 +105,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void modify(UserModifyDto dto) {
-        Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("User does not exist"));
-        Asserts.state(dto.getLoginName(), dto.getId(), this::validateAvailabilityOfLoginName, () -> new DomainValidationException("Login name has been taken already"));
-        Asserts.state(dto.getMobileNumber(), dto.getId(), this::validateAvailabilityOfMobileNumber, () -> new DomainValidationException("Mobile number has been taken already"));
-        Asserts.state(dto.getEmailAddress(), dto.getId(), this::validateAvailabilityOfEmailAddress, () -> new DomainValidationException("Email address has been taken already"));
+        Asserts.state(dto.getId(), this::validateExistenceById,
+                () -> new NoSuchEntityException("User does not exist"));
+        Asserts.state(dto.getLoginName(), dto.getId(), this::validateAvailabilityOfLoginName,
+                () -> new DomainValidationException("Login name has been taken already"));
+        Asserts.state(dto.getMobileNumber(), dto.getId(), this::validateAvailabilityOfMobileNumber,
+                () -> new DomainValidationException("Mobile number has been taken already"));
+        Asserts.state(dto.getEmailAddress(), dto.getId(), this::validateAvailabilityOfEmailAddress,
+                () -> new DomainValidationException("Email address has been taken already"));
 
         String plainPassword = dto.getPassword();
         String password = plainPassword != null
@@ -121,7 +128,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void remove(Long id) {
-        Asserts.state(id, this::validateExistenceById, () -> new NoSuchEntityException("User does not exist"));
+        Asserts.state(id, this::validateExistenceById,
+                () -> new NoSuchEntityException("User does not exist"));
 
         dao.deleteById(id);
         userRoleDao.deleteAllByUserId(id);

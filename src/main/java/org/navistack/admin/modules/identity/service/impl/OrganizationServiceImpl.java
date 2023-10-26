@@ -41,8 +41,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void create(OrganizationCreateDto dto) {
-        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Organization code has been taken already"));
-        Asserts.state(dto.getSuperId(), this::validateExistenceById, () -> new NoSuchEntityException("Superior does not exist"));
+        Asserts.state(dto.getCode(), this::validateAvailabilityOfCode,
+                () -> new DomainValidationException("Organization code has been taken already"));
+        Asserts.state(dto.getSuperId(), this::validateExistenceById,
+                () -> new NoSuchEntityException("Superior does not exist"));
 
         OrganizationDo dtObj = OrganizationDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.created(dtObj);
@@ -51,9 +53,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void modify(OrganizationModifyDto dto) {
-        Asserts.state(dto.getId(), this::validateExistenceById, () -> new NoSuchEntityException("Organization does not exist"));
-        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode, () -> new DomainValidationException("Organization code has been taken already"));
-        Asserts.state(dto.getSuperId(), this::validateExistenceById, () -> new NoSuchEntityException("Superior does not exist"));
+        Asserts.state(dto.getId(), this::validateExistenceById,
+                () -> new NoSuchEntityException("Organization does not exist"));
+        Asserts.state(dto.getCode(), dto.getId(), this::validateAvailabilityOfCode,
+                () -> new DomainValidationException("Organization code has been taken already"));
+        Asserts.state(dto.getSuperId(), this::validateExistenceById,
+                () -> new NoSuchEntityException("Superior does not exist"));
 
         OrganizationDo dtObj = OrganizationDoConvert.INSTANCE.from(dto);
         AuditingPropertiesSupport.updated(dtObj);
@@ -62,8 +67,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void remove(Long id) {
-        Asserts.state(id, this::validateExistenceById, () -> new NoSuchEntityException("Organization does not exist"));
-        Asserts.state(id, this::validateAbsenceOfSubordinate, () -> new ConstraintViolationException("Organization can not be removed as sub-organization(s) exist(s)"));
+        Asserts.state(id, this::validateExistenceById,
+                () -> new NoSuchEntityException("Organization does not exist"));
+        Asserts.state(id, this::validateAbsenceOfSubordinate,
+                () -> new ConstraintViolationException("Organization cant be removed as sub-organization(s) exist(s)"));
         dao.deleteById(id);
     }
 

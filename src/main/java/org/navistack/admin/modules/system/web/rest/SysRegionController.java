@@ -7,7 +7,11 @@ import org.navistack.admin.modules.common.dtobj.RegionDo;
 import org.navistack.admin.modules.system.web.rest.convert.RegionVmConvert;
 import org.navistack.admin.modules.system.web.rest.vm.RegionVm;
 import org.navistack.framework.data.TreeBuilder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 import java.util.Collections;
