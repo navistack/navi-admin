@@ -8,9 +8,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.navistack.admin.modules.common.dao.RegionDao;
 import org.navistack.admin.modules.common.service.dto.RegionCreateDto;
 import org.navistack.admin.modules.common.service.dto.RegionModifyDto;
-import org.navistack.framework.core.error.ConstraintViolationException;
-import org.navistack.framework.core.error.DomainValidationException;
-import org.navistack.framework.core.error.NoSuchEntityException;
+import org.navistack.admin.error.ConstraintViolationException;
+import org.navistack.admin.error.DomainValidationException;
+import org.navistack.admin.error.NoSuchEntityException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;

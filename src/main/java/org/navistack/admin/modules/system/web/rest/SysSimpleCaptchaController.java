@@ -31,13 +31,13 @@ public class SysSimpleCaptchaController {
     }
 
     @PostMapping("/challenge")
-    public RestResult<String, ?> challenge() {
-        return RestResult.ok(simpleCaptchaService.challenge());
+    public String challenge() {
+        return simpleCaptchaService.challenge();
     }
 
     @PostMapping("/answer")
-    public RestResult<UserAttemptResult, ?> answer(String challengeId, String answer) {
-        return RestResult.ok(simpleCaptchaService.answer(challengeId, answer));
+    public UserAttemptResult answer(String challengeId, String answer) {
+        return simpleCaptchaService.answer(challengeId, answer);
     }
 
     @GetMapping("/image")

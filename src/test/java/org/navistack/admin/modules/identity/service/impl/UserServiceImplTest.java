@@ -10,8 +10,8 @@ import org.navistack.admin.modules.identity.dao.UserRoleDao;
 import org.navistack.admin.modules.identity.enums.Gender;
 import org.navistack.admin.modules.identity.service.dto.UserCreateDto;
 import org.navistack.admin.modules.identity.service.dto.UserModifyDto;
-import org.navistack.framework.core.error.DomainValidationException;
-import org.navistack.framework.core.error.NoSuchEntityException;
+import org.navistack.admin.error.DomainValidationException;
+import org.navistack.admin.error.NoSuchEntityException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;

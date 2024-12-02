@@ -10,9 +10,9 @@ import org.navistack.admin.modules.identity.dao.RolePrivilegeDao;
 import org.navistack.admin.modules.identity.dao.UserRoleDao;
 import org.navistack.admin.modules.identity.service.dto.RoleCreateDto;
 import org.navistack.admin.modules.identity.service.dto.RoleModifyDto;
-import org.navistack.framework.core.error.ConstraintViolationException;
-import org.navistack.framework.core.error.DomainValidationException;
-import org.navistack.framework.core.error.NoSuchEntityException;
+import org.navistack.admin.error.ConstraintViolationException;
+import org.navistack.admin.error.DomainValidationException;
+import org.navistack.admin.error.NoSuchEntityException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
