@@ -1,8 +1,8 @@
 package org.navistack.admin.error;
 
-import org.navistack.framework.core.error.AbstractUserException;
+import org.navistack.framework.core.error.DomainException;
 
-public class ConstraintViolationException extends AbstractUserException {
+public class ConstraintViolationException extends DomainException {
     public ConstraintViolationException() {
         super();
     }
@@ -21,10 +21,5 @@ public class ConstraintViolationException extends AbstractUserException {
 
     protected ConstraintViolationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
-    }
-
-    @Override
-    public int getSubErrorCode() {
-        return UserErrors.CONSTRAINT_VIOLATION;
     }
 }

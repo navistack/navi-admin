@@ -1,8 +1,8 @@
 package org.navistack.admin.error;
 
-import org.navistack.framework.core.error.AbstractUserException;
+import org.navistack.framework.core.error.DomainException;
 
-public class NoSuchEntityException extends AbstractUserException {
+public class NoSuchEntityException extends DomainException {
     public NoSuchEntityException() {
         super();
     }
@@ -21,10 +21,5 @@ public class NoSuchEntityException extends AbstractUserException {
 
     protected NoSuchEntityException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
-    }
-
-    @Override
-    public int getSubErrorCode() {
-        return UserErrors.NO_SUCH_ENTITY;
     }
 }

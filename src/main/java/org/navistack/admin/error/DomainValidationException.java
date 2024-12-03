@@ -1,8 +1,8 @@
 package org.navistack.admin.error;
 
-import org.navistack.framework.core.error.AbstractUserException;
+import org.navistack.framework.core.error.DomainException;
 
-public class DomainValidationException extends AbstractUserException {
+public class DomainValidationException extends DomainException {
     public DomainValidationException() {
         super();
     }
@@ -21,10 +21,5 @@ public class DomainValidationException extends AbstractUserException {
 
     protected DomainValidationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
-    }
-
-    @Override
-    public int getSubErrorCode() {
-        return UserErrors.DOMAIN_VALIDATION;
     }
 }
