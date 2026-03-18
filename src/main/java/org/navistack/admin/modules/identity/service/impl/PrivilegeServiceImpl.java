@@ -1,5 +1,8 @@
 package org.navistack.admin.modules.identity.service.impl;
 
+import org.navistack.admin.error.ConstraintViolationException;
+import org.navistack.admin.error.DomainValidationException;
+import org.navistack.admin.error.NoSuchEntityException;
 import org.navistack.admin.modules.identity.dao.PrivilegeDao;
 import org.navistack.admin.modules.identity.dtobj.PrivilegeDo;
 import org.navistack.admin.modules.identity.query.PrivilegeQuery;
@@ -10,9 +13,6 @@ import org.navistack.admin.modules.identity.service.dto.PrivilegeCreateDto;
 import org.navistack.admin.modules.identity.service.dto.PrivilegeModifyDto;
 import org.navistack.admin.modules.identity.service.vm.PrivilegeVm;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
-import org.navistack.admin.error.ConstraintViolationException;
-import org.navistack.admin.error.DomainValidationException;
-import org.navistack.admin.error.NoSuchEntityException;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageBuilder;
 import org.navistack.framework.data.Pageable;

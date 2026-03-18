@@ -1,5 +1,8 @@
 package org.navistack.admin.modules.common.service.impl;
 
+import org.navistack.admin.error.ConstraintViolationException;
+import org.navistack.admin.error.DomainValidationException;
+import org.navistack.admin.error.NoSuchEntityException;
 import org.navistack.admin.modules.common.dao.DictionaryDao;
 import org.navistack.admin.modules.common.dao.DictionaryItemDao;
 import org.navistack.admin.modules.common.dtobj.DictionaryDo;
@@ -17,9 +20,6 @@ import org.navistack.admin.modules.common.service.dto.DictionaryModifyDto;
 import org.navistack.admin.modules.common.service.vm.DictionaryVm;
 import org.navistack.admin.modules.system.web.rest.vm.DictionaryItemVm;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
-import org.navistack.admin.error.ConstraintViolationException;
-import org.navistack.admin.error.DomainValidationException;
-import org.navistack.admin.error.NoSuchEntityException;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageBuilder;
 import org.navistack.framework.data.Pageable;

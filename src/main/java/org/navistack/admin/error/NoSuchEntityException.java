@@ -19,7 +19,12 @@ public class NoSuchEntityException extends DomainException {
         super(cause);
     }
 
-    protected NoSuchEntityException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    protected NoSuchEntityException(
+            String message,
+            Throwable cause,
+            boolean enableSuppression,
+            boolean writableStackTrace
+    ) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

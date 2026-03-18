@@ -19,7 +19,12 @@ public class ConstraintViolationException extends DomainException {
         super(cause);
     }
 
-    protected ConstraintViolationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    protected ConstraintViolationException(
+            String message,
+            Throwable cause,
+            boolean enableSuppression,
+            boolean writableStackTrace
+    ) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

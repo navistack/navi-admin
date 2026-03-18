@@ -1,5 +1,7 @@
 package org.navistack.admin.modules.identity.service.impl;
 
+import org.navistack.admin.error.DomainValidationException;
+import org.navistack.admin.error.NoSuchEntityException;
 import org.navistack.admin.modules.identity.dao.RoleDao;
 import org.navistack.admin.modules.identity.dao.UserDao;
 import org.navistack.admin.modules.identity.dao.UserRoleDao;
@@ -15,8 +17,6 @@ import org.navistack.admin.modules.identity.service.dto.UserModifyDto;
 import org.navistack.admin.modules.identity.service.vm.UserDetailVm;
 import org.navistack.admin.modules.identity.service.vm.UserVm;
 import org.navistack.admin.support.mybatis.AuditingPropertiesSupport;
-import org.navistack.admin.error.DomainValidationException;
-import org.navistack.admin.error.NoSuchEntityException;
 import org.navistack.framework.data.Page;
 import org.navistack.framework.data.PageBuilder;
 import org.navistack.framework.data.Pageable;

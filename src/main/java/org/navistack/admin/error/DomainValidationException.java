@@ -19,7 +19,12 @@ public class DomainValidationException extends DomainException {
         super(cause);
     }
 
-    protected DomainValidationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    protected DomainValidationException(
+            String message,
+            Throwable cause,
+            boolean enableSuppression,
+            boolean writableStackTrace
+    ) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
