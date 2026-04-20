@@ -37,8 +37,8 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.navistack.boot</groupId>
-                <artifactId>navi-boot-dependencies</artifactId>
+                <groupId>org.navistack</groupId>
+                <artifactId>navi-bom</artifactId>
                 <version>${navi-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -65,9 +65,19 @@
             <groupId>org.navistack.boot</groupId>
             <artifactId>navi-boot-starter-captcha</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>org.navistack.boot</groupId>
-            <artifactId>navi-boot-starter-batis</artifactId>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.navistack.framework</groupId>
+            <artifactId>navi-batis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.navistack.framework</groupId>
+            <artifactId>navi-testcontainers</artifactId>
         </dependency>
 
         <dependency>
@@ -75,6 +85,10 @@
             <artifactId>mapstruct</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
