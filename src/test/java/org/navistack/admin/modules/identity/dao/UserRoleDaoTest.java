@@ -50,7 +50,7 @@ class UserRoleDaoTest {
     void selectById_shouldWorkAsExpected() {
         assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
-                .comparingOnlyFields("id", "roleId", "privilegeId")
+                .comparingOnlyFields("id", "userId", "roleId")
                 .isEqualTo(
                         GenericBuilder.of(UserRoleDo::new).set(UserRoleDo::setId, 1L).set(UserRoleDo::setRoleId, 1L).set(UserRoleDo::setUserId, 1L).build()
                 );
@@ -73,7 +73,7 @@ class UserRoleDaoTest {
         assertThat(dtObj.getId()).isNotNull();
         assertThat(dao.selectById(dtObj.getId()))
                 .usingRecursiveComparison()
-                .comparingOnlyFields("id", "roleId", "privilegeId")
+                .comparingOnlyFields("id", "userId", "roleId")
                 .isEqualTo(dtObj);
     }
 
@@ -95,7 +95,7 @@ class UserRoleDaoTest {
             assertThat(dtObj.getId()).isNotNull();
             assertThat(dao.selectById(dtObj.getId()))
                     .usingRecursiveComparison()
-                    .comparingOnlyFields("id", "roleId", "privilegeId")
+                    .comparingOnlyFields("id", "userId", "roleId")
                     .isEqualTo(dtObj);
         }
     }
@@ -111,7 +111,7 @@ class UserRoleDaoTest {
         assertThat(dao.updateById(dtObj)).isEqualTo(1);
         assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
-                .comparingOnlyFields("id", "roleId", "privilegeId")
+                .comparingOnlyFields("id", "userId", "roleId")
                 .isEqualTo(dtObj);
     }
 

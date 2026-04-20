@@ -44,7 +44,7 @@ class DictionaryItemDaoTest {
     void selectAll_shouldWorkAsExpected() {
         assertThat(dao.selectAll())
                 .hasSize(10)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "name", "code", "dictionary_id")
+                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "name", "code", "dictionaryId")
                 .containsExactly(
                         GenericBuilder.of(DictionaryItemDo::new).set(DictionaryItemDo::setId, 1L).set(DictionaryItemDo::setName, "DICT ITEM NAME 01").set(DictionaryItemDo::setCode, "DICT_ITEM_CODE_01").set(DictionaryItemDo::setDictionaryId, 1L).build(),
                         GenericBuilder.of(DictionaryItemDo::new).set(DictionaryItemDo::setId, 2L).set(DictionaryItemDo::setName, "DICT ITEM NAME 02").set(DictionaryItemDo::setCode, "DICT_ITEM_CODE_02").set(DictionaryItemDo::setDictionaryId, 1L).build(),
@@ -63,7 +63,7 @@ class DictionaryItemDaoTest {
     void selectAllByDictionaryId_shouldWorkAsExpected() {
         assertThat(dao.selectAllByDictionaryId(1L))
                 .hasSize(5)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "name", "code", "dictionary_id")
+                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "name", "code", "dictionaryId")
                 .containsExactly(
                         GenericBuilder.of(DictionaryItemDo::new).set(DictionaryItemDo::setId, 1L).set(DictionaryItemDo::setName, "DICT ITEM NAME 01").set(DictionaryItemDo::setCode, "DICT_ITEM_CODE_01").set(DictionaryItemDo::setDictionaryId, 1L).build(),
                         GenericBuilder.of(DictionaryItemDo::new).set(DictionaryItemDo::setId, 2L).set(DictionaryItemDo::setName, "DICT ITEM NAME 02").set(DictionaryItemDo::setCode, "DICT_ITEM_CODE_02").set(DictionaryItemDo::setDictionaryId, 1L).build(),
@@ -93,7 +93,7 @@ class DictionaryItemDaoTest {
                 .build();
         assertThat(dao.paginateByQuery(query, pageRequest))
                 .hasSize(5)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "name", "code", "dictionary_id")
+                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "name", "code", "dictionaryId")
                 .containsExactlyInAnyOrder(
                         GenericBuilder.of(DictionaryItemDo::new).set(DictionaryItemDo::setId, 6L).set(DictionaryItemDo::setName, "DICT ITEM NAME 01").set(DictionaryItemDo::setCode, "DICT_ITEM_CODE_01").set(DictionaryItemDo::setDictionaryId, 2L).build(),
                         GenericBuilder.of(DictionaryItemDo::new).set(DictionaryItemDo::setId, 7L).set(DictionaryItemDo::setName, "DICT ITEM NAME 02").set(DictionaryItemDo::setCode, "DICT_ITEM_CODE_02").set(DictionaryItemDo::setDictionaryId, 2L).build(),
@@ -107,7 +107,7 @@ class DictionaryItemDaoTest {
     void selectById_shouldWorkAsExpected() {
         assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
-                .comparingOnlyFields("id", "name", "code", "dictionary_id")
+                .comparingOnlyFields("id", "name", "code", "dictionaryId")
                 .isEqualTo(
                         GenericBuilder.of(DictionaryItemDo::new).set(DictionaryItemDo::setId, 1L).set(DictionaryItemDo::setName, "DICT ITEM NAME 01").set(DictionaryItemDo::setCode, "DICT_ITEM_CODE_01").set(DictionaryItemDo::setDictionaryId, 1L).build()
                 );
@@ -146,7 +146,7 @@ class DictionaryItemDaoTest {
         assertThat(dtObj.getId()).isNotNull();
         assertThat(dao.selectById(dtObj.getId()))
                 .usingRecursiveComparison()
-                .comparingOnlyFields("id", "name", "code", "dictionary_id")
+                .comparingOnlyFields("id", "name", "code", "dictionaryId")
                 .isEqualTo(dtObj);
     }
 
@@ -162,7 +162,7 @@ class DictionaryItemDaoTest {
         assertThat(dao.updateById(dtObj)).isEqualTo(1);
         assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
-                .comparingOnlyFields("id", "name", "code", "dictionary_id")
+                .comparingOnlyFields("id", "name", "code", "dictionaryId")
                 .isEqualTo(dtObj);
     }
 

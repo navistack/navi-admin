@@ -64,7 +64,7 @@ class UserDaoTest {
                 .set(PageRequest::setSort, Sort.by(Sort.Direction.DESC, "id"))
                 .build();
         assertThat(dao.paginateByQuery(query, pageRequest)).hasSize(5)
-                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
+                .usingRecursiveFieldByFieldElementComparatorOnFields("id", "nickName", "avatarUrl", "gender", "birthday", "loginName", "mobileNumber", "emailAddress", "password", "status")
                 .containsExactlyInAnyOrder(
                         GenericBuilder.of(UserDo::new).set(UserDo::setId, 6L).set(UserDo::setNickName, "Test User 06").set(UserDo::setAvatarUrl, "avatar:/1b/23a4eacf6463571edc6d1b28209db6/avatar.jpg").set(UserDo::setGender, Gender.FEMALE).set(UserDo::setBirthday, LocalDate.of(1998, 5, 24)).set(UserDo::setLoginName, "testuser06").set(UserDo::setMobileNumber, "212-403-5257").set(UserDo::setEmailAddress, "maye6@gmail.com").set(UserDo::setPassword, "$2a$10$MKDPkDwWzgDluid0KHAGBuxCPHxyjiM4jf.yg7sxfbH2gLtyx.IB6").set(UserDo::setStatus, UserStatus.NORMAL).build(),
                         GenericBuilder.of(UserDo::new).set(UserDo::setId, 7L).set(UserDo::setNickName, "Test User 07").set(UserDo::setAvatarUrl, "avatar:/d7/0be96ca3a480e1166ddae4e6cc66bc/avatar.jpg").set(UserDo::setGender, Gender.FEMALE).set(UserDo::setBirthday, LocalDate.of(2006, 1, 12)).set(UserDo::setLoginName, "testuser07").set(UserDo::setMobileNumber, "585-548-8890").set(UserDo::setEmailAddress, "lina.hauck90@yahoo.com").set(UserDo::setPassword, "$2a$10$9SeFrv7eVWCDSJro2b4HLOlld8FkhptLqypWLeB87p4EKBVpUdxbu").set(UserDo::setStatus, UserStatus.FORBIDDEN).build(),
@@ -81,14 +81,14 @@ class UserDaoTest {
                 .mobileNumber("813-862-8139")
                 .emailAddress("reilly.durgan49@yahoo.com")
                 .build();
-        assertThat(dao.selectByLoginName(query)).usingRecursiveComparison().comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status").isEqualTo(GenericBuilder.of(UserDo::new).set(UserDo::setId, 1L).set(UserDo::setNickName, "Test User 01").set(UserDo::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(UserDo::setGender, Gender.FEMALE).set(UserDo::setBirthday, LocalDate.of(1975, 2, 15)).set(UserDo::setLoginName, "testuser01").set(UserDo::setMobileNumber, "813-862-8139").set(UserDo::setEmailAddress, "reilly.durgan49@yahoo.com").set(UserDo::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(UserDo::setStatus, UserStatus.FORBIDDEN).build());
+        assertThat(dao.selectByLoginName(query)).usingRecursiveComparison().comparingOnlyFields("id", "nickName", "avatarUrl", "gender", "birthday", "loginName", "mobileNumber", "emailAddress", "password", "status").isEqualTo(GenericBuilder.of(UserDo::new).set(UserDo::setId, 1L).set(UserDo::setNickName, "Test User 01").set(UserDo::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(UserDo::setGender, Gender.FEMALE).set(UserDo::setBirthday, LocalDate.of(1975, 2, 15)).set(UserDo::setLoginName, "testuser01").set(UserDo::setMobileNumber, "813-862-8139").set(UserDo::setEmailAddress, "reilly.durgan49@yahoo.com").set(UserDo::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(UserDo::setStatus, UserStatus.FORBIDDEN).build());
     }
 
     @Test
     void selectById_shouldWorkAsExpected() {
         assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
-                .comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
+                .comparingOnlyFields("id", "nickName", "avatarUrl", "gender", "birthday", "loginName", "mobileNumber", "emailAddress", "password", "status")
                 .isEqualTo(
                         GenericBuilder.of(UserDo::new).set(UserDo::setId, 1L).set(UserDo::setNickName, "Test User 01").set(UserDo::setAvatarUrl, "avatar:/bb/103d5f3fbd2f5a98041dc919752a05/avatar.jpg").set(UserDo::setGender, Gender.FEMALE).set(UserDo::setBirthday, LocalDate.of(1975, 2, 15)).set(UserDo::setLoginName, "testuser01").set(UserDo::setMobileNumber, "813-862-8139").set(UserDo::setEmailAddress, "reilly.durgan49@yahoo.com").set(UserDo::setPassword, "$2a$10$VexWghTW1CbMOR5dmDxNLeDWhjOQCRywkpHcR9cuDWEMDmCelplpy").set(UserDo::setStatus, UserStatus.FORBIDDEN).build()
                 );
@@ -135,7 +135,7 @@ class UserDaoTest {
         assertThat(dao.insert(dtObj)).isEqualTo(1);
         assertThat(dtObj.getId()).isNotNull();
         assertThat(dao.selectById(dtObj.getId()))
-                .usingRecursiveComparison().comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
+                .usingRecursiveComparison().comparingOnlyFields("id", "nickName", "avatarUrl", "gender", "birthday", "loginName", "mobileNumber", "emailAddress", "password", "status")
                 .isEqualTo(dtObj);
     }
 
@@ -157,7 +157,7 @@ class UserDaoTest {
         assertThat(dao.updateById(dtObj)).isEqualTo(1);
         assertThat(dao.selectById(1L))
                 .usingRecursiveComparison()
-                .comparingOnlyFields("id", "nick_name", "avatar_url", "gender", "birthday", "login_name", "mobile_number", "email_address", "password", "status")
+                .comparingOnlyFields("id", "nickName", "avatarUrl", "gender", "birthday", "loginName", "mobileNumber", "emailAddress", "password", "status")
                 .isEqualTo(dtObj);
     }
 
