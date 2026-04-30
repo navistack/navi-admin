@@ -2,7 +2,6 @@ package org.navistack.admin.modules.system.web.rest;
 
 import org.navistack.framework.captcha.simplecaptcha.SimpleCaptchaService;
 import org.navistack.framework.captcha.simplecaptcha.UserAttemptResult;
-import org.navistack.framework.web.rest.RestResult;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
