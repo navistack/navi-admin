@@ -41,7 +41,7 @@ public class JwtPayloadResolver implements org.navistack.framework.security.jwt.
     public Authentication getAuthentication(JwtClaims claims) {
         Optional<UserDo> user = authenticationService.findUserByLoginName(claims.getSubject());
 
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new UserNotFoundException("No such user found");
         }
 
