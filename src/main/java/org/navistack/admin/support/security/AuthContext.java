@@ -10,7 +10,7 @@ import java.util.Optional;
 @UtilityClass
 public class AuthContext {
     public Optional<LoginUser> currentUser() {
-        return Optional.ofNullable(SecurityContextHolder.getContext())
+        return Optional.of(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
                 .map(Authentication::getPrincipal)
                 .map(LoginUser.class::cast);
