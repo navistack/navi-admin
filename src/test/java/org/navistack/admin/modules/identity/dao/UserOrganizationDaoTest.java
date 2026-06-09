@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = "classpath:data/identity/user_organization.sql")
 class UserOrganizationDaoTest {
     @Container
-    static MysqlContainer mysql = new MysqlContainer();
+    static final MysqlContainer mysql = new MysqlContainer();
 
     @Setter(onMethod = @__(@Autowired))
     private UserOrganizationDao dao;

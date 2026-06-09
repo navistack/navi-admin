@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = "classpath:data/identity/user.sql")
 class UserDaoTest {
     @Container
-    static MysqlContainer mysql = new MysqlContainer();
+    static final MysqlContainer mysql = new MysqlContainer();
 
     @Setter(onMethod = @__(@Autowired))
     private UserDao dao;

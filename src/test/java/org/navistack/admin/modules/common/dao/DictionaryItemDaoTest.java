@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = "classpath:data/common/dictionary_item.sql")
 class DictionaryItemDaoTest {
     @Container
-    static MysqlContainer mysql = new MysqlContainer();
+    static final MysqlContainer mysql = new MysqlContainer();
 
     @Setter(onMethod = @__(@Autowired))
     private DictionaryItemDao dao;

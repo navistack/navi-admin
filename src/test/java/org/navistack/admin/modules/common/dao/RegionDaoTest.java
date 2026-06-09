@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = "classpath:data/common/region.sql")
 class RegionDaoTest {
     @Container
-    static MysqlContainer mysql = new MysqlContainer();
+    static final MysqlContainer mysql = new MysqlContainer();
 
     @Setter(onMethod = @__(@Autowired))
     private RegionDao dao;

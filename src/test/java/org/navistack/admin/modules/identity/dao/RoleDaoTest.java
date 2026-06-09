@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = "classpath:data/identity/role.sql")
 class RoleDaoTest {
     @Container
-    static MysqlContainer mysql = new MysqlContainer();
+    static final MysqlContainer mysql = new MysqlContainer();
 
     @Setter(onMethod = @__(@Autowired))
     private RoleDao dao;
