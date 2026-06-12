@@ -31,6 +31,9 @@ public class JwtPayloadResolver implements org.navistack.framework.security.jwt.
     @Override
     public JwtClaims getClaims(Authentication authentication) {
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        if (loginUser == null) {
+            return new DefaultJwtClaims();
+        }
         JwtClaims claims = new DefaultJwtClaims();
         claims.putSubject(loginUser.getUsername());
         claims.put(USER_UID_KEY, loginUser.getId());
